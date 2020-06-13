@@ -5,7 +5,7 @@
 
       <main-app-bar/>
 
-      <v-container>
+      <v-container class="mt-12">
          <router-view></router-view>
       </v-container>
 
