@@ -5,9 +5,11 @@
 
       <main-app-bar/>
 
-      <v-container class="mt-12">
+      <v-container class="my-12">
          <router-view></router-view>
       </v-container>
+
+      <main-footer/>
 
    </v-app>
 
@@ -16,13 +18,15 @@
 <script>
 
    import MainAppBar from "./components/MainAppBar";
+   import MainFooter from "./components/MainFooter";
 
    export default {
 
       name: 'App',
 
       components: {
-         MainAppBar
+         MainAppBar,
+         MainFooter
       },
 
       data(){
