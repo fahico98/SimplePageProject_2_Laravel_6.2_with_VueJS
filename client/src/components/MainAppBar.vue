@@ -27,7 +27,6 @@
       components: {
          MainAppBarNavigation
       }
-
    }
 
 </script>

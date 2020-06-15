@@ -12,9 +12,9 @@
             <p class="subtitle-1 mt-10"><a href="#">¿Olvidó su contraseña?</a></p>
          </v-col>
 
-         <v-col cols="6" class="ma-0 pa-0">
-            <v-row justify="center" class="ml-10">
-               <huge-vuetify-logo/>
+         <v-col cols="6" align-self="center" class="ma-0 pa-0">
+            <v-row justify="center">
+               <huge-logo-animation logos-height="350px"/>
             </v-row>
          </v-col>
 
@@ -27,13 +27,13 @@
 <script>
 
    import LoginForm from "../../components/auth/LoginForm";
-   import HugeVuetifyLogo from "../../components/animations/HugeVuetifyLogo";
+   import HugeLogoAnimation from "../../components/animations/HugeLogoAnimation";
 
    export default {
 
       components: {
          LoginForm,
-         HugeVuetifyLogo
+         HugeLogoAnimation
       }
    }
 
