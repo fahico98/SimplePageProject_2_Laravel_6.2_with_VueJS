@@ -10,6 +10,17 @@ export default {
       user: null
    },
 
+   getters: {
+
+      authenticated(state){
+         return state.token && state.user;
+      },
+
+      user(state){
+         return state.user;
+      }
+   },
+
    mutations: {
 
       SET_TOKEN(state, token){
@@ -25,27 +36,35 @@ export default {
 
       async loginAction({ dispatch }, credentials){
          let response = await axios.post("auth/login", credentials);
-         dispatch("attemptAction", response.data.access_token);
+         return dispatch("meAction", response.data.access_token);
       },
 
-      async attemptAction({ commit }, token){
-         commit("SET_TOKEN", token);
-         try{
+      async meAction({ commit, state }, token){
 
+         if(token){
+            commit("SET_TOKEN", token);
+         }
+
+         if(!state.token){
+            return;
+         }
+
+         try{
             // Cuando se deban agregar headers a la solicitud es mejor no usar alias (axios.post).
-            let response = await axios({
-               method: "post",
-               url: "auth/me",
-               headers: {
-                  "Authorization": "Bearer " + token
-               }
-            });
-            console.log(response.data);
+            let response = await axios.post("auth/me");
             commit("SET_USER", response.data);
          }catch(error){
             commit("SET_TOKEN", null);
             commit("SET_USER", null);
          }
+      },
+
+      logoutAction({ commit }){
+         return axios.post("auth/logout")
+            .then(() => {
+               commit("SET_TOKEN", null);
+               commit("SET_USER", null);
+            });
       }
    },
 

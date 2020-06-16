@@ -19,6 +19,7 @@
 <script>
 
    import { mapActions } from "vuex";
+   import { mapGetters } from "vuex";
 
    export default {
 
@@ -32,14 +33,26 @@
          }
       },
 
+      computed: {
+         ...mapGetters({
+            user: "auth/user"
+         })
+      },
+
       methods: {
 
          ...mapActions({
-            login: "auth/loginAction"
+            loginAction: "auth/loginAction"
          }),
 
          submit(){
-            this.login(this.form);
+            this.loginAction(this.form)
+               .then(() => {
+                  this.$router.push({name: "profile", params: {username: this.user.username}});
+               })
+               .catch((error) => {
+                  console.log(error);
+               });
          }
       }
    }

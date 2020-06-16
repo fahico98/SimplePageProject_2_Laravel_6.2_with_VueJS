@@ -11,7 +11,11 @@
 
          <v-spacer></v-spacer>
 
-         <main-app-bar-navigation/>
+         <div v-if="authenticated">
+            <authenticated-app-bar-navigation/>
+         </div><div v-else>
+            <main-app-bar-navigation/>
+         </div>
 
       </v-app-bar>
    </div>
@@ -21,11 +25,21 @@
 <script>
 
    import MainAppBarNavigation from "./MainAppBarNavigation";
+   import AuthenticatedAppBarNavigation from "./auth/AuthenticatedAppBarNavigation";
+   import { mapGetters } from "vuex";
 
    export default {
 
       components: {
-         MainAppBarNavigation
+         MainAppBarNavigation,
+         AuthenticatedAppBarNavigation
+      },
+
+      computed: {
+         ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user"
+         })
       }
    }
 
