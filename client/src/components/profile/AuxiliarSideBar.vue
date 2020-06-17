@@ -1,7 +1,7 @@
 
 <template>
 
-   <v-navigation-drawer width="25%" permanent clipped app light>
+   <v-navigation-drawer right permanent clipped app light width="25%">
       Hello world...!
    </v-navigation-drawer>
 

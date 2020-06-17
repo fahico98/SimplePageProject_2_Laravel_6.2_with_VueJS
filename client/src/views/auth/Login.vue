@@ -1,13 +1,11 @@
 
 <template>
 
-
    <v-container fluid class="ma-0 pa-0 my-12">
-
-      <v-row class="ma-0 pa-0">
+      <v-row class="ma-0 pa-0 my-10">
 
          <v-col cols="4" class="ma-0 pa-0">
-            <v-card elevation="5" class="pa-8 rounded-0">
+            <v-card elevation="2" class="pa-8">
                <p class="ma-0 pa-0 mb-6 text-h5">Inicie sesión con su nombre de usuario y contraseña</p>
                <p class="ma-0 pa-0 subtitle-1">Si no tiene una cuenta y desea adquirir una puede <a href="#"
                   @click.prevent="$router.push({name: 'register'})">registrarse</a> con sus datos personales.</p>
@@ -24,7 +22,6 @@
          </v-col>
 
       </v-row>
-
    </v-container>
 
 </template>
@@ -32,13 +29,11 @@
 <script>
 
    import LoginForm from "../../components/auth/LoginForm";
-   // import HugeLogoAnimation from "../../components/animations/HugeLogoAnimation";
 
    export default {
 
       components: {
-         LoginForm,
-         // HugeLogoAnimation
+         LoginForm
       }
    }
 

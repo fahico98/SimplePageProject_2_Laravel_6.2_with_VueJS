@@ -14,16 +14,18 @@ class PostsController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function index($username = null){
-      $post = $username
-         ? Post::postByUser($username)->get()
-         : Post::all()->get();
-      if($post->isPublished() || auth()->check()){
-         if(request()->wantsJson()){
-            return $post->load("owner", "category", "tags", "photos");
-         }else{
-            abort(404);
-         }
-      }
+
+      return $username ? Post::postsByUser($username)->get() : Post::allPosts();
+
+      // dd($posts);
+
+      // if($post->isPublished() || auth()->check()){
+      //    if(request()->wantsJson()){
+      //       return $post->load("owner", "category", "tags", "photos");
+      //    }else{
+      //       abort(404);
+      //    }
+      // }
    }
 
    /**

@@ -18,6 +18,6 @@ Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
    Route::post('me', 'AuthController@me');
 });
 
-Route::group(["prefix" => "post"], function(){
+Route::group(["prefix" => "posts"], function(){
    Route::post("index/{username?}", "PostsController@index");
 });

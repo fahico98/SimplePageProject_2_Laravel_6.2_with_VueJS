@@ -42,10 +42,6 @@
          }
       },
 
-      props: [
-         "profileUser"
-      ],
-
       computed: {
          ...mapGetters({
             user: "auth/user"

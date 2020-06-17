@@ -18,6 +18,7 @@ class CreatePostsTable extends Migration{
          $table->bigInteger("post_permission_id")->unsigned();
          $table->string("title", 255);
          $table->text('content');
+         $table->string("post_picture")->default("storage/posts/defaultPostImage.png");
          $table->integer("likes")->default(0);
          $table->integer("dislikes")->default(0);
          $table->softDeletes();

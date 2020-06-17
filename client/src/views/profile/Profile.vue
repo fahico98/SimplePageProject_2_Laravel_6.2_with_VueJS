@@ -1,26 +1,31 @@
 
 <template>
 
-   <v-container class="my-0 py-0" fluid>
-      <v-row>
-         <v-col clos="12">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, facilis! Voluptate unde esse autem magnam dolores impedit, ab corporis quidem eligendi explicabo! In libero amet iste exercitationem iure delectus quibusdam.</p>
+   <v-container class="ma-0 pa-0">
+
+      <v-row v-for="post in posts" :key="post.id">
+         <v-col>
+            <v-card class="mx-auto" width="100%">
+               <v-img :src="postImageUrl(post.post_picture)" width="100%"></v-img>
+
+               <v-card-title>{{ post.title }}</v-card-title>
+
+               <v-card-subtitle>{{ post.content }}</v-card-subtitle>
+
+               <v-card-actions>
+                  <v-btn text>Like</v-btn>
+                  <v-btn color="purple" text>Dislike</v-btn>
+
+                  <v-spacer></v-spacer>
+
+                  <v-btn icon>
+                     <v-icon>{{ 'mdi-chevron-down' /*show ? 'mdi-chevron-up' : 'mdi-chevron-down'*/ }}</v-icon>
+                  </v-btn>
+               </v-card-actions>
+            </v-card>
          </v-col>
       </v-row>
+
    </v-container>
 
 </template>
@@ -31,6 +36,12 @@
    import axios from "axios";
 
    export default {
+
+      data(){
+         return {
+            posts: []
+         }
+      },
 
       props: [
          "username"
@@ -48,7 +59,19 @@
       },
 
       mounted(){
-         axios.post();
+         axios.post("posts/index/" + this.username)
+            .then((response) => {
+               this.posts = response.data;
+            })
+            .catch((error) => {
+               console.log(error);
+            });
+      },
+
+      methods: {
+         postImageUrl(post_picture){
+            return axios.defaults.baseURL.replace("/api", "") + post_picture;
+         },
       }
    }
 
