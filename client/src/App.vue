@@ -3,13 +3,17 @@
 
    <v-app>
 
+      <profile-side-bar v-if="inProfile()"></profile-side-bar>
+
       <main-app-bar/>
 
-      <v-container class="my-12">
-         <router-view></router-view>
-      </v-container>
+      <v-main>
+         <v-container>
+            <router-view></router-view>
+         </v-container>
+      </v-main>
 
-      <main-footer/>
+      <main-footer v-if="!inProfile()"/>
 
    </v-app>
 
@@ -19,6 +23,8 @@
 
    import MainAppBar from "./components/MainAppBar";
    import MainFooter from "./components/MainFooter";
+   import ProfileSideBar from "./components/profile/ProfileSideBar";
+   import { mapGetters } from "vuex";
 
    export default {
 
@@ -26,12 +32,25 @@
 
       components: {
          MainAppBar,
-         MainFooter
+         MainFooter,
+         ProfileSideBar
+      },
+
+      computed: {
+         ...mapGetters({
+            authenticated: "auth/authenticated"
+         })
       },
 
       data(){
          return {
 
+         }
+      },
+
+      methods: {
+         inProfile(){
+            return this.$route.name == "profile";
          }
       }
    };

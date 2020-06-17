@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3223986014",
          "e_mail" => "fahico98@gmail.com",
          "password" => Hash::make("mecatronica1992"),
-         "role_id" => 1
+         "role_id" => 3
       ]);
 
       DB::table('users')->insert([
@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3219998880",
          "e_mail" => "jjcardozo155@hotmail.com",
          "password" => Hash::make("legado2019"),
-         "role_id" => 3
+         "role_id" => 1
       ]);
 
       DB::table('users')->insert([
@@ -58,7 +58,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3120912991",
          "e_mail" => "dani_medra_123@outlook.com",
          "password" => Hash::make("legado2019"),
-         "role_id" => 3
+         "role_id" => 1
       ]);
 
       DB::table('users')->insert([
@@ -70,7 +70,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3113434343",
          "e_mail" => "cagutierrez09@gmail.com",
          "password" => Hash::make("legado2019"),
-         "role_id" => 3
+         "role_id" => 1
       ]);
 
       DB::table('users')->insert([
@@ -82,7 +82,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3133344551",
          "e_mail" => "avejita2019@hotmail.com",
          "password" => Hash::make("legado2019"),
-         "role_id" => 3
+         "role_id" => 1
       ]);
 
       DB::table('users')->insert([
@@ -94,7 +94,7 @@ class UsersTableSeeder extends Seeder{
          "phone_number" => "3220011343",
          "e_mail" => "danicorzo1996@gmail.com",
          "password" => Hash::make("legado2019"),
-         "role_id" => 3
+         "role_id" => 1
       ]);
    }
 }

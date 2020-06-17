@@ -1,24 +1,19 @@
 
 <template>
 
-   <div>
-      <v-app-bar flat dark height="80" color="blue lighten-1">
+   <v-app-bar height="80" color="blue lighten-1" :clipped-left="true" flat dark app>
 
-         <div class="d-flex align-center">
-            <v-img contain alt="Vuetify Logo" class="shrink ml-3" transition="scale-transition" width="40"
-               src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"/>
-         </div>
+      <div class="d-flex align-center">
+         <v-img contain alt="Vuetify Logo" class="shrink ml-3" width="40px" @click.prevent="$router.push({name: 'home'});"
+            src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"/>
+      </div>
 
-         <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
 
-         <div v-if="authenticated">
-            <authenticated-app-bar-navigation/>
-         </div><div v-else>
-            <main-app-bar-navigation/>
-         </div>
+      <authenticated-app-bar-navigation v-if="authenticated"/>
+      <main-app-bar-navigation v-else/>
 
-      </v-app-bar>
-   </div>
+   </v-app-bar>
 
 </template>
 
