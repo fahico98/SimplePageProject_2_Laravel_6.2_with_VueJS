@@ -16,7 +16,8 @@ class User extends Authenticatable implements JWTSubject{
     *
     * @var array
     */
-   protected $fillable = [
+    protected $fillable = [
+      "id",
       "username",
       "name",
       "lastname",
@@ -37,7 +38,6 @@ class User extends Authenticatable implements JWTSubject{
     * @var array
     */
    protected $hidden = [
-      "id",
       'password',
       'remember_token',
       "email_verified_at",
@@ -78,7 +78,6 @@ class User extends Authenticatable implements JWTSubject{
       return 'username';
    }
 
-   /*
    public function role(){
       return $this->belongsTo(Role::class);
    }
@@ -87,20 +86,21 @@ class User extends Authenticatable implements JWTSubject{
       return $this->hasMany(Post::class);
    }
 
-   public function isAdmin(){
-      return $this->role->name === "administrator";
-   }
-
-   public function isSeller(){
-      return $this->role->name === "seller";
-   }
-
    public function likedPosts(){
       return $this->belongsToMany(Post::class, "user_like_post");
    }
 
    public function dislikedPosts(){
       return $this->belongsToMany(Post::class, "user_dislike_post");
+   }
+
+   /*
+   public function isAdmin(){
+      return $this->role->name === "administrator";
+   }
+
+   public function isSeller(){
+      return $this->role->name === "seller";
    }
 
    public function followers(){

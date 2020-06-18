@@ -14,6 +14,7 @@ class Post extends Model{
     * @var array
     */
     protected $fillable = [
+      "id",
       "user_id",
       "post_permission_id",
       "title",
@@ -28,7 +29,6 @@ class Post extends Model{
     * @var array
     */
    protected $hidden = [
-      "id",
       "deleted_at",
       "created_at",
       "updated_at"
@@ -36,10 +36,31 @@ class Post extends Model{
 
    public function scopePostsByUser($query, $username){
       $user = User::select("id")->where("username", $username)->get();
-      return empty($user) ? false : Post::where("user_id", $user[0]->id)->orderBy("created_at", "desc");
+      return empty($user)
+         ? false
+         : Post::where("user_id", $user[0]->id)
+            ->with("user")
+            ->orderBy("created_at", "desc");
    }
 
    public function scopeAllPosts($query){
-      return Post::all()->orderBy("created_at", "desc");
+      return Post::with("user")
+         ->orderBy("created_at", "desc");
+   }
+
+   public function user(){
+      return $this->belongsTo(User::class);
+   }
+
+   public function usersWhoLike(){
+      return $this->belongsToMany(User::class, "user_like_post");
+   }
+
+   public function usersWhoDislike(){
+      return $this->belongsToMany(User::class, "user_dislike_post");
+   }
+
+   public function postPermission(){
+      return $this->belongsTo(PostPermission::class);
    }
 }

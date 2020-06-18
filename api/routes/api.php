@@ -20,4 +20,8 @@ Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
 
 Route::group(["prefix" => "posts"], function(){
    Route::post("index/{username?}", "PostsController@index");
+   Route::post("check_like/{id}/{username}", "PostsController@checkLike");
+   Route::post("check_dislike/{id}/{username}", "PostsController@checkDislike");
+   Route::post("like/{id}/{username}", "PostsController@like");
+   Route::post("dislike/{id}/{username}", "PostsController@dislike");
 });

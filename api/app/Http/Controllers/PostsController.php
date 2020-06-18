@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostsController extends Controller{
 
@@ -57,37 +58,90 @@ class PostsController extends Controller{
       //
    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+   /**
+    * Show the form for editing the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+   public function edit($id){
+      //
+   }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+   /**
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+   public function update(Request $request, $id){
+      //
+   }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   /**
+    * Remove the specified resource from storage.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+   public function destroy($id){
+      //
+   }
+
+   /**
+    * Check if user like the post.
+    *
+    * @param int $post_id
+    * @param int $user_id
+    * @return \Illuminate\Http\Response
+    */
+   public function checkLike($post_id, $user_id){
+      return DB::table("user_like_post")
+         ->where("user_id", $user_id)
+         ->where("post_id", $post_id)
+         ->exists();
+   }
+
+   /**
+    * Check if user doesn't like the post.
+    *
+    * @param int $post_id
+    * @param int $user_id
+    * @return \Illuminate\Http\Response
+    */
+   public function checkDislike($post_id, $user_id){
+      return DB::table("user_dislike_post")
+         ->where("user_id", $user_id)
+         ->where("post_id", $post_id)
+         ->exists();
+   }
+
+   /**
+    * Insert a new record in user_like_post table.
+    *
+    * @param int $post_id
+    * @param int $user_id
+    * @return \Illuminate\Http\Response
+    */
+    public function like($post_id, $user_id){
+      return DB::table("user_like_post")->insert([
+         "user_id" => $user->id,
+         "post_id" => $post->id
+      ]);
+   }
+
+   /**
+    * Check if user doesn't like the post.
+    *
+    * @param int $post_id
+    * @param int $user_id
+    * @return \Illuminate\Http\Response
+    */
+   public function dislike($post_id, $user_id){
+      return DB::table("user_dislike_post")->insert([
+         "user_id" => $user->id,
+         "post_id" => $post->id
+      ]);
+   }
 }
