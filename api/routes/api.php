@@ -16,6 +16,7 @@ Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
    Route::post('logout', 'AuthController@logout');
    Route::post('refresh', 'AuthController@refresh');
    Route::post('me', 'AuthController@me');
+   Route::post("register", "RegisterController@create");
 });
 
 Route::group(["prefix" => "posts"], function(){

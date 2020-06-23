@@ -2,7 +2,6 @@
 <template>
 
    <div>
-
       <v-form ref="registerForm" class="ma-0 pa-0" @submit.prevent="submit">
 
          <v-text-field outlined color="blue lighten-1" v-model="form.name" label="Nombre" class="ma-0 pa-0 mt-1"
@@ -24,23 +23,26 @@
             class="ma-0 pa-0 mt-1" :rules="email" dense required></v-text-field>
 
          <v-text-field outlined color="blue lighten-1" v-model="form.username" label="Nombre de usuario"
-            class="ma-0 pa-0 mt-1" :rules="name" dense required></v-text-field>
+            class="ma-0 pa-0 mt-1" :rules="username" dense required></v-text-field>
 
          <v-text-field outlined color="blue lighten-1" v-model="form.password" label="Contraseña" type="password"
-            class="ma-0 pa-0 mt-1" :rules="name" dense required></v-text-field>
+            class="ma-0 pa-0 mt-1" :rules="password" dense required></v-text-field>
 
-         <v-text-field outlined color="blue lighten-1" v-model="form.re_password" label="Repita su Contraseña" type="password"
-            class="ma-0 pa-0 mt-1" :rules="name" dense required></v-text-field>
+         <v-text-field outlined color="blue lighten-1" v-model="form.password_confirmation" label="Repita su Contraseña"
+            type="password" class="ma-0 pa-0 mt-1" :rules="password_confirmation" dense required></v-text-field>
 
-         <v-btn type="submit" color="blue lighten-1 text-capitalize" dark depressed>Enviar</v-btn>
-         <v-btn type="submit" color="grey lighten-1 text-capitalize ml-2" light depressed>Borrar campos</v-btn>
+         <v-btn class="mt-1" type="submit" color="blue lighten-1 text-capitalize" dark depressed>Enviar</v-btn>
+         <v-btn class="mt-1" type="submit" color="grey lighten-1 text-capitalize ml-2" @click="borrarCampos()" light depressed>
+            Borrar campos</v-btn>
+
       </v-form>
-
    </div>
 
 </template>
 
 <script>
+
+   import { mapActions, mapGetters } from "vuex";
 
    export default {
 
@@ -52,11 +54,11 @@
                lastname: "",
                country: "",
                city: "",
-               phone_number: "",
+               phone_number: null,
                email: "",
                username: "",
                password: "",
-               re_password: ""
+               password_confirmation: ""
             },
 
             name: [
@@ -83,7 +85,7 @@
             ],
 
             username: [
-               this.emailValidation,
+               this.emptyValidation,
                this.alphanumericValidation,
                this.charNum15Validation,
                this.noSpacesValidation
@@ -92,9 +94,22 @@
             password: [
                this.emptyValidation,
                this.charNum35Validation,
-               this.matchPasswordsValidation
+               this.charMinNum8Validation
+            ],
+
+            password_confirmation: [
+               this.emptyValidation,
+               this.charNum35Validation,
+               this.matchPasswordsValidation,
+               this.charMinNum8Validation
             ]
          }
+      },
+
+      computed: {
+         ...mapGetters({
+            user: "auth/user"
+         })
       },
 
       methods: {
@@ -121,12 +136,16 @@
             return v ? v.length <= 35 || "No se permiten mas de 35 caracteres." : true;
          },
 
+         charMinNum8Validation(v){
+            return v ? v.length >= 8 || "No se permiten menos de 8 caracteres." : true;
+         },
+
          alphanumericValidation(v){
-            return v ? /[ a-zA-Z0-9]+$/.test(v) || "Solo se permiten caracteres alfanuméricos en este campo." : true;
+            return v ? /[ a-zA-Z0-9-.,]+$/.test(v) || "Solo se permiten caracteres alfanuméricos en este campo." : true;
          },
 
          alphabeticalValidation(v){
-            return v ? /[ a-zA-Z]+$/.test(v) || "Solo se permiten caracteres alfabéticos en este campo." : true;
+            return v ? /[ a-zA-Z-.,]+$/.test(v) || "Solo se permiten caracteres alfabéticos en este campo." : true;
          },
 
          emailValidation(v){
@@ -139,13 +158,20 @@
          },
 
          matchPasswordsValidation(){
-            return this.form.password == this.form.re_password;
+            return this.form.password == this.form.password_confirmation ? true : "Las contraseñas no coinciden.";
          },
 
          // ************************************************
 
+         ...mapActions({
+            registerAction: "auth/registerAction"
+         }),
+
          submit(){
-            if(this.$refs.loginForm.validate()){
+            if(this.$refs.registerForm.validate()){
+
+               this.registerAction(this.form);
+
                // this.loginAction(this.form)
                //    .then(() => {
                //       this.$router.push({name: "profile", params: {username: this.user.username}});
@@ -154,9 +180,36 @@
                //       console.log(error);
                //    });
             }
+         },
+
+         borrarCampos(){
+            this.form.name = "";
+            this.form.lastname = "";
+            this.form.country = "";
+            this.form.city = "";
+            this.form.phone_number = "";
+            this.form.email = "";
+            this.form.username = "";
+            this.form.password = "";
+            this.form.password_confirmation = "";
+            this.$refs.registerForm.resetValidation()
          }
       }
 
    }
 
 </script>
+
+<style>
+
+   input[type=number]::-webkit-outer-spin-button,
+   input[type=number]::-webkit-inner-spin-button{
+      -webkit-appearance: none;
+      margin: 0;
+   }
+
+   input[type=number]{
+      -moz-appearance: textfield;
+   }
+
+</style>

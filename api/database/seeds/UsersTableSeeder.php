@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Colombia",
          "city" => "Bogota",
          "phone_number" => "3223986014",
-         "e_mail" => "fahico98@gmail.com",
+         "email" => "fahico98@gmail.com",
          "password" => Hash::make("mecatronica1992"),
          "role_id" => 3
       ]);
@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Colombia",
          "city" => "Bogota",
          "phone_number" => "3221210081",
-         "e_mail" => "facarcamoca@unal.edu.co",
+         "email" => "facarcamoca@unal.edu.co",
          "password" => Hash::make("mecatronica1992"),
          "role_id" => 2
       ]);
@@ -44,7 +44,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Colombia",
          "city" => "Liberty city",
          "phone_number" => "3219998880",
-         "e_mail" => "jjcardozo155@hotmail.com",
+         "email" => "jjcardozo155@hotmail.com",
          "password" => Hash::make("legado2019"),
          "role_id" => 1
       ]);
@@ -56,7 +56,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "United states",
          "city" => "vice city",
          "phone_number" => "3120912991",
-         "e_mail" => "dani_medra_123@outlook.com",
+         "email" => "dani_medra_123@outlook.com",
          "password" => Hash::make("legado2019"),
          "role_id" => 1
       ]);
@@ -68,7 +68,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Brazil",
          "city" => "Los santos",
          "phone_number" => "3113434343",
-         "e_mail" => "cagutierrez09@gmail.com",
+         "email" => "cagutierrez09@gmail.com",
          "password" => Hash::make("legado2019"),
          "role_id" => 1
       ]);
@@ -80,7 +80,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Brazil",
          "city" => "Los santos",
          "phone_number" => "3133344551",
-         "e_mail" => "avejita2019@hotmail.com",
+         "email" => "avejita2019@hotmail.com",
          "password" => Hash::make("legado2019"),
          "role_id" => 1
       ]);
@@ -92,7 +92,7 @@ class UsersTableSeeder extends Seeder{
          "country" => "Colombia",
          "city" => "San andreas",
          "phone_number" => "3220011343",
-         "e_mail" => "danicorzo1996@gmail.com",
+         "email" => "danicorzo1996@gmail.com",
          "password" => Hash::make("legado2019"),
          "role_id" => 1
       ]);

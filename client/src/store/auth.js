@@ -41,13 +41,8 @@ export default {
 
       async meAction({ commit, state }, token){
 
-         if(token){
-            commit("SET_TOKEN", token);
-         }
-
-         if(!state.token){
-            return;
-         }
+         if(token){ commit("SET_TOKEN", token); }
+         if(!state.token){ return; }
 
          try{
             // Cuando se deban agregar headers a la solicitud es mejor no usar alias (axios.post).
@@ -57,6 +52,11 @@ export default {
             commit("SET_TOKEN", null);
             commit("SET_USER", null);
          }
+      },
+
+      async registerAction(/*{ dispatch },*/ context, registerData){
+         let response = await axios.post("auth/register", registerData);
+         console.log(response);
       },
 
       logoutAction({ commit }){

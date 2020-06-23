@@ -3,6 +3,7 @@ import store from "@/store";
 import axios from "axios";
 
 store.subscribe((mutation) => {
+
    if(mutation.type == "auth/SET_TOKEN"){
       if(mutation.payload){
          axios.defaults.headers.common["Authorization"] = `Bearer ${mutation.payload}`;
@@ -12,4 +13,5 @@ store.subscribe((mutation) => {
          localStorage.removeItem("token");
       }
    }
+
 });
