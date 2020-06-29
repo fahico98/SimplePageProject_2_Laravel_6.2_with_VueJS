@@ -66,20 +66,42 @@ class RegisterController extends Controller{
     */
    protected function create(){
 
-      request()->validate([
-         "name"            => ["required", "string", "max:25"],
-         "lastname"        => ["required", "string", "max:25"],
-         "contry"          => ["string", "nullable", "max:25"],
-         "city"            => ["string", "nullable", "max:25"],
-         "phone_number"    => ["numeric", "nullable", "max:15"],
-         "email"           => ["required", "string", "email", "max:35", "unique:users"],
-         "username"        => ["required", "string", "max:15", "unique:users"],
-         "password"        => ["required", "string", "min:8", "max:35", "confirmed"]
-      ]);
+      // request()->validate([
+      //    "name"            => ["required", "string", "max:25"],
+      //    "lastname"        => ["required", "string", "max:25"],
+      //    "contry"          => ["string", "nullable", "max:25"],
+      //    "city"            => ["string", "nullable", "max:25"],
+      //    "phone_number"    => ["numeric", "nullable", "max:15"],
+      //    "email"           => ["required", "string", "email", "max:35", "unique:users"],
+      //    "username"        => ["required", "string", "max:15", "unique:users"],
+      //    "password"        => ["required", "string", "min:8", "max:35", "confirmed"]
+      // ]);
 
       $requestData = request()->all();
       $requestData["password"] = Hash::make($requestData["password"]);
 
       return User::create($requestData);
+   }
+
+   /**
+    * Checks if username exist.
+    *
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function usernameExists($username = ""){
+      return $username == ""
+         ? response()->json(false)
+         : response()->json(User::where("username", $username)->exists());
+   }
+
+   /**
+    * Checks if email exist.
+    *
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function emailExists($email = ""){
+      return $email == ""
+         ? response()->json(false)
+         : response()->json(User::where("email", $email)->exists());
    }
 }

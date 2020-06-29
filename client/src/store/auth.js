@@ -54,9 +54,8 @@ export default {
          }
       },
 
-      async registerAction(/*{ dispatch },*/ context, registerData){
-         let response = await axios.post("auth/register", registerData);
-         console.log(response);
+      async registerAction(context, registerData){
+         return await axios.post("auth/register", registerData);
       },
 
       logoutAction({ commit }){

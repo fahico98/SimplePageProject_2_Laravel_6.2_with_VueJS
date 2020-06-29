@@ -17,6 +17,8 @@ Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
    Route::post('refresh', 'AuthController@refresh');
    Route::post('me', 'AuthController@me');
    Route::post("register", "RegisterController@create");
+   Route::get("username_exists/{username?}", "RegisterController@usernameExists");
+   Route::get("email_exists/{email?}", "RegisterController@emailExists");
 });
 
 Route::group(["prefix" => "posts"], function(){
