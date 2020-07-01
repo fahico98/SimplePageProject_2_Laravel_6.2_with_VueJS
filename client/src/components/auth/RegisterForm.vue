@@ -75,6 +75,7 @@
             @input="$v.email.$touch()"
             @blur="$v.email.$touch()"
             :error-messages="emailErrors"
+            :loading="emailFieldLoading"
             outlined
             dense
             required
@@ -88,6 +89,7 @@
             @input="$v.username.$touch()"
             @blur="$v.username.$touch()"
             :error-messages="usernameErrors"
+            :loading="usernameFieldLoading"
             outlined
             dense
             required
@@ -144,6 +146,8 @@
 
 <script>
 
+   // import _ from "lodash";
+   import axios from "axios";
    import { mapActions, mapGetters } from "vuex";
    import { validationMixin } from "vuelidate";
    import {helpers, minLength, maxLength, email, required, numeric} from "vuelidate/lib/validators";
@@ -166,7 +170,9 @@
             email: "",
             username: "",
             password: "",
-            password_confirmation: ""
+            password_confirmation: "",
+            usernameFieldLoading: false,
+            emailFieldLoading: false
          }
       },
 
@@ -176,8 +182,27 @@
          country:                      {alpha, maxLength: maxLength(25)},
          city:                         {alpha, maxLength: maxLength(25)},
          phone_number:                 {numeric, maxLength: maxLength(15)},
-         email:                        {email, required, maxLength: maxLength(35)},
-         username:                     {alphaNum, spanish, required, minLength: minLength(4), maxLength: maxLength(15)},
+         email:                        {email,
+                                          required,
+                                          maxLength: maxLength(35),
+                                          isUnique(value){
+                                             if (value === ''){ return true; }
+                                             this.emailFieldLoading = true;
+                                             return this.unique("auth/email_exists/" + value);
+                                          }
+                                       },
+         username:                     {
+                                          alphaNum,
+                                          spanish,
+                                          required,
+                                          minLength: minLength(4),
+                                          maxLength: maxLength(15),
+                                          isUnique(value){
+                                             if (value === ''){ return true; }
+                                             this.usernameFieldLoading = true;
+                                             return this.unique("auth/username_exists/" + value);
+                                          }
+                                       },
          password:                     {required, minLength: minLength(8), maxLength: maxLength(35)},
          password_confirmation:        {required}
       },
@@ -234,8 +259,9 @@
             const errors = [];
             if(!this.$v.email.$dirty){ return errors; }
             !this.$v.email.maxLength && errors.push('Su correo electrónico no debe tener mas de 35 caracteres.');
-            !this.$v.email.email && errors.push('El texto ingresado no corresponde con un correo electrónico.')
+            !this.$v.email.email && errors.push('El texto ingresado no corresponde con un correo electrónico.');
             !this.$v.email.required && errors.push('Este campo es obligatorio.');
+            this.$v.email.isUnique && errors.push("Esta dirección de correo electrónico ya ha sido registrada.");
             return errors;
          },
 
@@ -246,6 +272,7 @@
             !this.$v.username.minLength && errors.push('Su nombre de usuario debe tener al menos 4 caracteres.');
             !this.$v.username.alphaNum && errors.push("Este campo solo admite caracteres alfanuméricos.");
             !this.$v.username.required && errors.push("Este campo es obligatorio.");
+            this.$v.username.isUnique && errors.push("Este nombre de usuario ya ha sido registrado.");
             if(this.$v.username.spanish){ errors.push('Este campo no debe contener ñ.'); }
             return errors;
          },
@@ -307,6 +334,18 @@
             }else{
                console.log("Form validated successfully...!");
             }
+         },
+
+         unique(url){
+            return axios.get(url)
+               .then((response) => {
+                  this.usernameFieldLoading = false;
+                  this.emailFieldLoading = false;
+                  return response.data;
+               })
+               .catch((error) => {
+                  console.log(error);
+               });
          },
 
          borrarCampos(){
