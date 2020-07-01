@@ -82,7 +82,7 @@
 
          <v-text-field
             color="blue lighten-1"
-            v-model.trim="username"
+            v-model="username"
             label="Nombre de usuario"
             class="ma-0 pa-0 mt-1"
             @input="$v.username.$touch()"
@@ -101,6 +101,7 @@
             @input="$v.password.$touch()"
             @blur="$v.password.$touch()"
             :error-messages="passwordErrors"
+            type="password"
             outlined
             dense
             required
@@ -114,6 +115,7 @@
             @input="$v.password_confirmation.$touch()"
             @blur="$v.password_confirmation.$touch()"
             :error-messages="confPasswordErrors"
+            type="password"
             outlined
             dense
             required
@@ -144,7 +146,11 @@
 
    import { mapActions, mapGetters } from "vuex";
    import { validationMixin } from "vuelidate";
-   import {minLength, maxLength, email, required, alpha, alphaNum, numeric} from "vuelidate/lib/validators";
+   import {helpers, minLength, maxLength, email, required, numeric} from "vuelidate/lib/validators";
+
+   const alpha = helpers.regex("alpha", /^[ ñÑ.a-zA-Z]*$/);
+   const alphaNum = helpers.regex("alphaNum", /^[ñÑa-zA-Z0-9]*$/)
+   const spanish = helpers.regex("spanish", /[ñÑ]/);
 
    export default {
 
@@ -171,7 +177,7 @@
          city:                         {alpha, maxLength: maxLength(25)},
          phone_number:                 {numeric, maxLength: maxLength(15)},
          email:                        {email, required, maxLength: maxLength(35)},
-         username:                     {alphaNum, required, minLength: minLength(4), maxLength: maxLength(15)},
+         username:                     {alphaNum, spanish, required, minLength: minLength(4), maxLength: maxLength(15)},
          password:                     {required, minLength: minLength(8), maxLength: maxLength(35)},
          password_confirmation:        {required}
       },
@@ -183,7 +189,6 @@
          }),
 
          nameErrors(){
-            console.log("model: " + this.$v.name.$model);
             const errors = [];
             if(!this.$v.name.$dirty){ return errors; }
             !this.$v.name.maxLength && errors.push('Su nombre no debe tener mas de 25 caracteres.');
@@ -239,8 +244,9 @@
             if(!this.$v.username.$dirty){ return errors; }
             !this.$v.username.maxLength && errors.push('Su nombre de usuario no debe tener mas de 15 caracteres.');
             !this.$v.username.minLength && errors.push('Su nombre de usuario debe tener al menos 4 caracteres.');
-            !this.$v.username.alphaNum && errors.push("Este campo solo admite caracteres alfanumericos.");
-            !this.$v.username.required && errors.push('Este campo es obligatorio.');
+            !this.$v.username.alphaNum && errors.push("Este campo solo admite caracteres alfanuméricos.");
+            !this.$v.username.required && errors.push("Este campo es obligatorio.");
+            if(this.$v.username.spanish){ errors.push('Este campo no debe contener ñ.'); }
             return errors;
          },
 
@@ -265,7 +271,7 @@
             return {
                name: this.name,
                lastname: this.lastname,
-               country: this.contry,
+               country: this.country,
                city: this.city,
                phone_number: this.phone_number,
                email: this.email,
@@ -283,8 +289,10 @@
          }),
 
          submit(){
-            /*
-            if(this.$refs.registerForm.validate() && this.usernameErrorMessage == [] && this.emailErrorMessage == []){
+            this.$v.$touch();
+            if(this.$v.$invalid){
+               console.log(this.form);
+               /*
                this.registerAction(form)
                   .then((response) => {
                      console.log(response);
@@ -295,11 +303,14 @@
 
                      // }
                   });
+               */
+            }else{
+               console.log("Form validated successfully...!");
             }
-            */
          },
 
          borrarCampos(){
+            this.$v.$reset();
             this.name = "";
             this.lastname = "";
             this.country = "";
@@ -309,7 +320,6 @@
             this.username = "";
             this.password = "";
             this.password_confirmation = "";
-            this.$refs.registerForm.resetValidation()
          }
       }
    }
