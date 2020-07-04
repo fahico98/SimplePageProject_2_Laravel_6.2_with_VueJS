@@ -28,6 +28,7 @@ class AuthController extends Controller{
 
       // attepmt() method: Attempt to authenticate a user via some credentials.
       // This methods are available on the Auth guard instance.
+
       if(!$token = auth()->attempt($credentials)){
          return response()->json(['error' => 'Unauthorized'], 401);
       }

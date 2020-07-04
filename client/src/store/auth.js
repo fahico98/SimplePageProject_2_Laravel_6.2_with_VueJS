@@ -46,7 +46,7 @@ export default {
 
          try{
             // Cuando se deban agregar headers a la solicitud es mejor no usar alias (axios.post).
-            let response = await axios.post("auth/me");
+            let response = await axios.get("auth/me");
             commit("SET_USER", response.data);
          }catch(error){
             commit("SET_TOKEN", null);
@@ -59,7 +59,7 @@ export default {
       },
 
       logoutAction({ commit }){
-         return axios.post("auth/logout")
+         return axios.get("auth/logout")
             .then(() => {
                commit("SET_TOKEN", null);
                commit("SET_USER", null);

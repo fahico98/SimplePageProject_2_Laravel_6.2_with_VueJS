@@ -67,43 +67,9 @@ class RegisterController extends Controller{
     * @return \App\User
     */
    protected function create(){
-
-      // request()->validate([
-      //    "name"            => ["required", "string", "max:25"],
-      //    "lastname"        => ["required", "string", "max:25"],
-      //    "contry"          => ["string", "nullable", "max:25"],
-      //    "city"            => ["string", "nullable", "max:25"],
-      //    "phone_number"    => ["numeric", "nullable", "max:15"],
-      //    "email"           => ["required", "string", "email", "max:35", "unique:users"],
-      //    "username"        => ["required", "string", "max:15", "unique:users"],
-      //    "password"        => ["required", "string", "min:8", "max:35", "confirmed"]
-      // ]);
-
       $requestData = request()->all();
       $requestData["password"] = Hash::make($requestData["password"]);
-      User::create($requestData);
-
-      $credentials = request(['username', 'password']);
-
-      if(!$token = auth()->attempt($credentials)){
-         return response()->json(['error' => 'Unauthorized'], 401);
-      }
-      return $this->respondWithToken($token);
-   }
-
-   /**
-    * Get the token array structure.
-    *
-    * @param  string $token
-    *
-    * @return \Illuminate\Http\JsonResponse
-    */
-   protected function respondWithToken($token){
-      return response()->json([
-         'access_token' => $token,
-         'token_type' => 'bearer',
-         'expires_in' => auth()->factory()->getTTL() * 60
-      ]);
+      return User::create($requestData);
    }
 
    /**

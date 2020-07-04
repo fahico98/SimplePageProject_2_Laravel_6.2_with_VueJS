@@ -204,7 +204,7 @@
          confPasswordErrors(){
             const errors = [];
             if(!this.$v.form.password.$dirty){ return errors; }
-            if(this.password != this.password_confirmation){ errors.push('Las contraseñas no coinciden.'); }
+            if(this.form.password != this.form.password_confirmation){ errors.push('Las contraseñas no coinciden.'); }
             !this.$v.form.password.required && errors.push('La confirmación de contraseña es obligatoria.');
             return errors;
          }
@@ -222,14 +222,15 @@
             if(this.$v.$invalid){
                this.registerAction(this.form)
                   .then((response) => {
-                     if(response.data.access_token){
+                     if(response.status == 201){
                         this.loginAction(this.form)
                            .then(() => {
-                              this.$router.push({name: "profile", params: {username: this.form.username}});
+                              this.$router.push({name: "profile", params: {username: this.user.username}});
                            })
                            .catch((error) => {
                               console.log(error);
                            });
+
                      }
                   })
                   .catch((error) => {
