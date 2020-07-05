@@ -2,19 +2,23 @@
 <template>
 
    <div class="home">
-      <h1>Pagina de inicio...!</h1>
+      <v-container fluid>
+         <index-carousel/>
+      </v-container>
    </div>
 
 </template>
 
 <script>
 
+   import IndexCarousel from "../components/animations/IndexCarousel";
+
    export default {
 
       name: 'Home',
 
       components: {
-
+         IndexCarousel
       }
 
    }
