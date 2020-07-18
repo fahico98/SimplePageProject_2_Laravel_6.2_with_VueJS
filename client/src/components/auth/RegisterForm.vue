@@ -42,8 +42,8 @@
 
          <v-btn class="mt-1" type="submit" color="blue lighten-1 text-capitalize" dark depressed>Enviar</v-btn>
 
-         <v-btn class="mt-1" type="submit" color="grey lighten-1 text-capitalize ml-2" @click="borrarCampos()" light
-            depressed>Borrar campos</v-btn>
+         <v-btn class="mt-1" color="grey lighten-1 text-capitalize ml-2" @click="borrarCampos()" light depressed>
+            Borrar campos</v-btn>
 
       </v-form>
    </div>
@@ -97,7 +97,8 @@
             password:                     {required, minLength: minLength(8), maxLength: maxLength(35)},
             password_confirmation:        {required},
 
-            email:                        {email,
+            email:                        {
+                                             email,
                                              required,
                                              maxLength: maxLength(35),
                                              isUnique(value){
@@ -230,7 +231,6 @@
                            .catch((error) => {
                               console.log(error);
                            });
-
                      }
                   })
                   .catch((error) => {
@@ -252,7 +252,7 @@
          },
 
          borrarCampos(){
-            this.$v.$reset();
+            this.$v.form.$reset();
             this.name = "";
             this.lastname = "";
             this.country = "";
