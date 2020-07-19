@@ -66,7 +66,7 @@
          <v-sheet color="grey lighten-4" height="100%">
             <v-row class="fill-height" align="center" justify="center">
                <v-col class="col-6">
-                  <img src="../../assets/unDraw/google_analytics.png" alt="Google analitics" height="330px">
+                  <img src="../../assets/unDraw/google_analytics.png" alt="Google analitics" height="400px">
                </v-col>
                <v-col class="col-6">
                   <p class="text-h5 blue--text text--lighten-1 pacifico" align="left">

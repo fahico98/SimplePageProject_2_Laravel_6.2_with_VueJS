@@ -11,6 +11,9 @@
 |
 */
 
+Route::get("server_messages", "ServerMessageController@index");
+Route::get("testimonial", "ServerMessageController@testimonial");
+
 Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
    Route::post('login', 'AuthController@login');
    Route::get('logout', 'AuthController@logout');

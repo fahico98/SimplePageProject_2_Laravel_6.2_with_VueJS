@@ -13,7 +13,7 @@ class Post extends Model{
     *
     * @var array
     */
-    protected $fillable = [
+   protected $fillable = [
       "id",
       "user_id",
       "post_permission_id",
