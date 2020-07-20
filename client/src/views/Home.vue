@@ -7,6 +7,7 @@
          <v-divider class="my-16"></v-divider>
          <mesh-cards/>
          <v-divider class="my-16"></v-divider>
+         <testimonials-carousel/>
       </v-container>
    </div>
 
@@ -14,8 +15,9 @@
 
 <script>
 
-   import IndexCarousel from "../components/animations/IndexCarousel";
-   import MeshCards from "../components/MeshCards";
+   import IndexCarousel from "../components/home/IndexCarousel";
+   import MeshCards from "../components/home/MeshCards";
+   import TestimonialsCarousel from "../components/home/TestimonialsCarousel";
 
    export default {
 
@@ -23,9 +25,9 @@
 
       components: {
          IndexCarousel,
-         MeshCards
+         MeshCards,
+         TestimonialsCarousel
       }
-
    }
 
 </script>

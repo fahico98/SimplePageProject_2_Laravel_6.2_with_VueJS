@@ -11,10 +11,7 @@
 |
 */
 
-Route::get("server_messages", "ServerMessageController@index");
-Route::get("testimonial", "ServerMessageController@testimonial");
-
-Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
+Route::group(['prefix' => 'auth', "namespace" => "API\Auth"], function(){
    Route::post('login', 'AuthController@login');
    Route::get('logout', 'AuthController@logout');
    Route::get('me', 'AuthController@me');
@@ -24,10 +21,16 @@ Route::group(['prefix' => 'auth', "namespace" => "Auth"], function(){
    Route::get("email_exists/{email?}", "RegisterController@emailExists");
 });
 
-Route::group(["prefix" => "posts"], function(){
-   Route::post("index/{username?}", "PostsController@index");
-   Route::post("check_like/{id}/{username}", "PostsController@checkLike");
-   Route::post("check_dislike/{id}/{username}", "PostsController@checkDislike");
-   Route::post("like/{id}/{username}", "PostsController@like");
-   Route::post("dislike/{id}/{username}", "PostsController@dislike");
+Route::group(["namespace" => "API"], function(){
+
+   Route::get("server_messages", "ServerMessageController@index");
+   Route::get("testimonials", "ServerMessageController@testimonials");
+
+   Route::group(["prefix" => "posts"], function(){
+      Route::post("index/{username?}", "PostController@index");
+      Route::post("check_like/{post_id}/{user_id}", "PostController@checkLike");
+      Route::post("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
+      Route::post("like/{post_id}/{user_id}", "PostController@like");
+      Route::post("dislike/{post_id}/{user_id}", "PostController@dislike");
+   });
 });

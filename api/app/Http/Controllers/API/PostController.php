@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\User;
-use App\Post;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Post;
 
-class PostsController extends Controller{
+class PostController extends Controller{
 
    /**
     * Display a listing of the resource.
@@ -16,7 +16,9 @@ class PostsController extends Controller{
     */
    public function index($username = null){
 
-      return $username ? Post::postsByUser($username)->get() : Post::allPosts();
+      return $username ?
+         response()->json(Post::postsByUser($username)->get()) :
+         response()->json(Post::allPosts());
 
       // dd($posts);
 
@@ -124,7 +126,7 @@ class PostsController extends Controller{
     * @param int $user_id
     * @return \Illuminate\Http\Response
     */
-    public function like($post_id, $user_id){
+   public function like($post_id, $user_id){
       return DB::table("user_like_post")->insert([
          "user_id" => $user->id,
          "post_id" => $post->id

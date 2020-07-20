@@ -1,7 +1,7 @@
 
 <template>
 
-   <v-carousel cycle height="450px" :show-arrows="false" hide-delimiter-background hide-delimiters>
+   <v-carousel cycle interval="8000" height="450px" :show-arrows="false" hide-delimiter-background hide-delimiters>
 
       <v-carousel-item>
          <v-sheet color="grey lighten-4" height="100%">

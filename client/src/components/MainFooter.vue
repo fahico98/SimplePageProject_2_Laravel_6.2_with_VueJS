@@ -42,7 +42,7 @@
                },
                {
                   iconName: 'mdi-linkedin',
-                  iconTitle: "Linked In"
+                  iconTitle: "LinkedIn"
                },
                {
                   iconName: 'mdi-instagram',
