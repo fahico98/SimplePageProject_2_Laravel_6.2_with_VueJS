@@ -27,10 +27,16 @@ Route::group(["namespace" => "API"], function(){
    Route::get("testimonials", "ServerMessageController@testimonials");
 
    Route::group(["prefix" => "posts"], function(){
-      Route::post("index/{username?}", "PostController@index");
-      Route::post("check_like/{post_id}/{user_id}", "PostController@checkLike");
-      Route::post("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
-      Route::post("like/{post_id}/{user_id}", "PostController@like");
-      Route::post("dislike/{post_id}/{user_id}", "PostController@dislike");
+
+      Route::get("index/{page}/{username?}", "PostController@index");
+
+      Route::get("check_like/{post_id}/{user_id}", "PostController@checkLike");
+      Route::get("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
+
+      Route::post("like/{post_id}/{dislike}", "PostController@like");
+      Route::post("dislike/{post_id}/{like}", "PostController@dislike");
+
+      Route::post("undo_like/{post_id}", "PostController@undoLike");
+      Route::post("undo_dislike/{post_id}", "PostController@undoDislike");
    });
 });

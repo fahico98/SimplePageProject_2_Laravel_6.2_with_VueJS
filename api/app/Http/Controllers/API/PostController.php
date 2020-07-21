@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Post;
@@ -14,11 +15,11 @@ class PostController extends Controller{
     *
     * @return \Illuminate\Http\Response
     */
-   public function index($username = null){
+   public function index($page, $username = null){
 
       return $username ?
-         response()->json(Post::postsByUser($username)->get()) :
-         response()->json(Post::allPosts());
+         response()->json(Post::postsByUser($page, $username)->get()) :
+         response()->json(Post::allPosts($page));
 
       // dd($posts);
 
@@ -99,10 +100,12 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function checkLike($post_id, $user_id){
-      return DB::table("user_like_post")
-         ->where("user_id", $user_id)
-         ->where("post_id", $post_id)
-         ->exists();
+      return response()->json(
+         DB::table("user_like_post")
+            ->where("user_id", $user_id)
+            ->where("post_id", $post_id)
+            ->exists()
+      );
    }
 
    /**
@@ -113,37 +116,89 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function checkDislike($post_id, $user_id){
-      return DB::table("user_dislike_post")
-         ->where("user_id", $user_id)
-         ->where("post_id", $post_id)
-         ->exists();
+      return response()->json(
+         DB::table("user_dislike_post")
+            ->where("user_id", $user_id)
+            ->where("post_id", $post_id)
+            ->exists()
+      );
    }
 
    /**
     * Insert a new record in user_like_post table.
     *
     * @param int $post_id
-    * @param int $user_id
+    * @param boolean $dislike
     * @return \Illuminate\Http\Response
     */
-   public function like($post_id, $user_id){
-      return DB::table("user_like_post")->insert([
-         "user_id" => $user->id,
-         "post_id" => $post->id
+   public function like($post_id, $dislike){
+      if($dislike){
+         DB::table("user_dislike_post")->where([
+               "user_id" => Auth::user()->id,
+               "post_id" => $post_id
+            ])
+            ->delete();
+      }
+      return response()->json([
+         "data" => DB::table("user_like_post")->insert([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
       ]);
    }
 
    /**
-    * Check if user doesn't like the post.
+    * Insert a new record in user_dislike_post table.
     *
     * @param int $post_id
-    * @param int $user_id
+    * @param boolean $like
     * @return \Illuminate\Http\Response
     */
-   public function dislike($post_id, $user_id){
-      return DB::table("user_dislike_post")->insert([
-         "user_id" => $user->id,
-         "post_id" => $post->id
+   public function dislike($post_id, $like){
+      if($like){
+         DB::table("user_like_post")->where([
+               "user_id" => Auth::user()->id,
+               "post_id" => $post_id
+            ])
+            ->delete();
+      }
+      return response()->json([
+         "data" => DB::table("user_dislike_post")->insert([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
+      ]);
+   }
+
+   /**
+    * Remove a record from user_like_post table.
+    *
+    * @param int $post_id
+    * @return \Illuminate\Http\Response
+    */
+   public function undoLike($post_id){
+      return response()->json([
+         "data" => DB::table("user_like_post")->where([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
+         ->delete()
+      ]);
+   }
+
+   /**
+    * Remove a record from user_dislike_post table.
+    *
+    * @param int $post_id
+    * @return \Illuminate\Http\Response
+    */
+   public function undoDislike($post_id){
+      return response()->json([
+         "data" => DB::table("user_dislike_post")->where([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
+         ->delete()
       ]);
    }
 }

@@ -34,18 +34,24 @@ class Post extends Model{
       "updated_at"
    ];
 
-   public function scopePostsByUser($query, $username){
+   public function scopePostsByUser($query, $page, $username){
+      $offset = 5 * ($page - 1);
       $user = User::select("id")->where("username", $username)->get();
       return empty($user)
          ? false
          : Post::where("user_id", $user[0]->id)
             ->with("user")
-            ->orderBy("created_at", "desc");
+            ->orderBy("created_at", "desc")
+            ->offset($offset)
+            ->limit(5);
    }
 
-   public function scopeAllPosts($query){
+   public function scopeAllPosts($query, $page){
+      $offset = 5 * ($page - 1);
       return Post::with("user")
-         ->orderBy("created_at", "desc");
+         ->orderBy("created_at", "desc")
+         ->offset($offset)
+         ->limit(5);
    }
 
    public function user(){

@@ -20,10 +20,10 @@
 
             <v-card-actions>
 
-               <v-btn icon :color=" like ? 'red darken-4' : ''" @click.prevent="like()">
+               <v-btn icon :color="I_like ? 'green darken-1' : 'grey'" @click.prevent="like()">
                   <v-icon>mdi-thumb-up</v-icon>
                </v-btn>
-               <v-btn icon :color=" dislike ? 'green darken-1' : ''" @click.prevent="dislike()">
+               <v-btn icon :color="I_dislike ? 'red darken-4' : 'grey'" @click.prevent="dislike()">
                   <v-icon>mdi-thumb-down</v-icon>
                </v-btn>
 
@@ -73,10 +73,9 @@
          },
 
          checkLike(){
-            axios.post("posts/check_like/" + this.post.id + "/" + this.user.id)
+            axios.get("posts/check_like/" + this.post.id + "/" + this.user.id)
                .then((response) => {
-                  console.log(response);
-                  // this.I_like = response.data;
+                  this.I_like = response.data;
                })
                .catch((error) => {
                   console.log(error);
@@ -84,10 +83,9 @@
          },
 
          checkDislike(){
-            axios.post("posts/check_dislike/" + this.post.id + "/" + this.user.id)
+            axios.get("posts/check_dislike/" + this.post.id + "/" + this.user.id)
                .then((response) => {
-                  console.log(response);
-                  // this.I_dislike = response.data;
+                  this.I_dislike = response.data;
                })
                .catch((error) => {
                   console.log(error);
@@ -95,29 +93,37 @@
          },
 
          like(){
-            axios.post("post/like/" + this.post.id + "/" + this.user.id)
-               .then(() => {
-                  if(!this.I_like){
-                     this.I_like = true;
-                     if(this.I_dislike){ this.I_dislike = false; }
-                  }
-               })
-               .catch((error) => {
-                  console.log(error);
-               });
+            if(!this.I_like){
+               this.I_like = true;
+               if(this.I_dislike){ this.I_dislike = false; }
+               axios.post("posts/like/" + this.post.id + "/" + this.I_like)
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }else{
+               this.I_like = false;
+               axios.post("posts/undo_like/" + this.post.id)
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }
          },
 
          dislike(){
-            axios.post("post/dislike/" + this.post.id + "/" + this.user.id)
-               .then(() => {
-                  if(!this.I_dislike){
-                     this.I_dislike = true;
-                     if(this.I_like){ this.I_like = false; }
-                  }
-               })
-               .catch((error) => {
-                  console.log(error);
-               });
+            if(!this.I_dislike){
+               this.I_dislike = true;
+               if(this.I_like){ this.I_like = false; }
+               axios.post("posts/dislike/" + this.post.id + "/" + this.I_dislike)
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }else{
+               this.I_dislike = false;
+               axios.post("posts/undo_dislike/" + this.post.id)
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }
          },
 
          goToProfile(username){
@@ -127,7 +133,7 @@
 
       mounted(){
          this.checkLike();
-         this.checkDislike();
+         if(!this.I_like){ this.checkDislike(); }
       }
    }
 
