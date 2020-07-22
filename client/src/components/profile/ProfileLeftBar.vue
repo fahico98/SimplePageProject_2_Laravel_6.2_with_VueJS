@@ -1,12 +1,10 @@
 
 <template>
 
+   <!-- <v-navigation-drawer :floating="!inProfile()" width="25%" right permanent clipped app light> -->
    <v-navigation-drawer width="25%" permanent clipped app light>
-      Hello world...!
+      Profile left bar !
    </v-navigation-drawer>
-
-
-
 
    <!--
    <nav class="v-navigation-drawer v-navigation-drawer--clipped v-navigation-drawer--fixed v-navigation-drawer--open theme--light"
@@ -21,3 +19,15 @@
    -->
 
 </template>
+
+<script>
+
+   export default {
+
+      components: {
+
+      }
+   }
+
+
+</script>

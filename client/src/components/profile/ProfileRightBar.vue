@@ -1,0 +1,28 @@
+
+<template>
+
+   <v-navigation-drawer width="25%" right permanent clipped app light>
+   <!-- <v-navigation-drawer width="25%" permanent clipped app light> -->
+      <div>
+         <v-container fluid>
+            <v-row justify="center" align="center">
+               <new-post-modal-form/>
+            </v-row>
+         </v-container>
+      </div>
+   </v-navigation-drawer>
+
+</template>
+
+<script>
+
+   import NewPostModalForm from "./modals/NewPostModalForm";
+
+   export default {
+
+      components: {
+         NewPostModalForm
+      }
+   }
+
+</script>

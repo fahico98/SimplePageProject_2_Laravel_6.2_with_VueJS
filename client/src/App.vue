@@ -3,8 +3,8 @@
 
    <v-app>
 
-      <profile-side-bar class="grey lighten-4" v-if="inProfile()"></profile-side-bar>
-      <auxiliar-side-bar class="grey lighten-4" v-if="inProfile()"></auxiliar-side-bar>
+      <profile-left-bar class="grey lighten-4" v-if="inProfile()"></profile-left-bar>
+      <profile-right-bar class="grey lighten-4" v-if="inProfile()"></profile-right-bar>
 
       <main-app-bar/>
 
@@ -26,8 +26,8 @@
 
    import MainAppBar from "./components/MainAppBar";
    import MainFooter from "./components/MainFooter";
-   import ProfileSideBar from "./components/profile/ProfileSideBar";
-   import AuxiliarSideBar from "./components/profile/AuxiliarSideBar";
+   import ProfileLeftBar from "./components/profile/ProfileLeftBar";
+   import ProfileRightBar from "./components/profile/ProfileRightBar";
    import { mapGetters } from "vuex";
 
    export default {
@@ -37,8 +37,8 @@
       components: {
          MainAppBar,
          MainFooter,
-         ProfileSideBar,
-         AuxiliarSideBar
+         ProfileLeftBar,
+         ProfileRightBar
       },
 
       computed: {

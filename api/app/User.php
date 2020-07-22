@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

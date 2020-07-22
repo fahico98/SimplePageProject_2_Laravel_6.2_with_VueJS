@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\User;
 
 class AuthController extends Controller{
 
@@ -14,7 +15,7 @@ class AuthController extends Controller{
     * @return void
     */
    public function __construct(){
-      $this->middleware('auth:api', ['except' => ['login']]);
+      $this->middleware('auth:api', ['except' => ['login', 'publicUserData']]);
    }
 
    /**
@@ -41,7 +42,24 @@ class AuthController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function me(){
-      return response()->json(auth()->user());
+      return response()->json(Auth::user());
+   }
+
+   /**
+    * Get an User instance by username.
+    *
+    * @param App\User $user
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function publicUserData(User $user){
+      return response()->json([
+         "username" => $user->username,
+         "name" => $user->name,
+         "lastname" => $user->lastname,
+         "occupation" => $user->occupation,
+         "biography" => $user->biography,
+         "profile_photo" => $user->profile_photo
+      ]);
    }
 
    /**
@@ -67,7 +85,6 @@ class AuthController extends Controller{
     * Get the token array structure.
     *
     * @param  string $token
-    *
     * @return \Illuminate\Http\JsonResponse
     */
    protected function respondWithToken($token){

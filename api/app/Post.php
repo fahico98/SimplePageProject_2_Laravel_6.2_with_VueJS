@@ -36,10 +36,10 @@ class Post extends Model{
 
    public function scopePostsByUser($query, $page, $username){
       $offset = 5 * ($page - 1);
-      $user = User::select("id")->where("username", $username)->get();
+      $user = User::select("id")->where("username", $username)->first();
       return empty($user)
          ? false
-         : Post::where("user_id", $user[0]->id)
+         : Post::where("user_id", $user->id)
             ->with("user")
             ->orderBy("created_at", "desc")
             ->offset($offset)
