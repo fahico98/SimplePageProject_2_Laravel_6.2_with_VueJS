@@ -218,6 +218,7 @@
             loginAction: "auth/loginAction"
          }),
 
+         // Esta función no está bien optimizada...
          submit(){
             this.$v.$touch();
             if(this.$v.$invalid){

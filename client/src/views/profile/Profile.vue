@@ -9,7 +9,9 @@
          </v-btn>
       </div> -->
 
-      <profile-post-card v-for="post in posts" :key="post.id" :post="post"/>
+      <div v-if="!emptyPostsArray">
+         <profile-post-card v-for="post in posts" :key="post.id" :post="post"></profile-post-card>
+      </div>
 
    </v-container>
 
@@ -18,7 +20,7 @@
 <script>
 
    import ProfilePostCard from "../../components/profile/ProfilePostCard";
-   import { mapGetters, mapActions } from "vuex";
+   import { mapGetters } from "vuex";
    import axios from "axios";
 
    export default {
@@ -27,8 +29,9 @@
          return {
             posts: [],
             currentPage: 0,
-            publicUserData: false,
-            bottom: false
+            bottom: false,
+            publicUserData: null,
+            emptyMessage: ""
          }
       },
 
@@ -40,7 +43,11 @@
          ...mapGetters({
             authenticated: "auth/authenticated",
             user: "auth/user"
-         })
+         }),
+
+         emptyPostsArray(){
+            return this.posts.length == 0;
+         }
       },
 
       components: {
@@ -53,14 +60,15 @@
          }
       },
 
-      created(){
-
+      async created(){
          if(this.authenticated){
-            this.publicUserData = (this.username === this.user.username) ?
-               this.user :
-               this.publicUserDataAction(this.username);
+            if(this.username === this.user.username){
+               this.publicUserData = this.user;
+            }else{
+               await this.getPublicUserData();
+            }
          }else{
-            this.publicUserData = this.publicUserDataAction(this.username);
+            await this.getPublicUserData();
          }
 
          window.addEventListener('scroll', () => {
@@ -81,19 +89,27 @@
          },
 
          addPosts(){
-            this.currentPage++;
-            axios.get("posts/index/" + this.currentPage + "/" + this.username)
+            if(this.publicUserData){
+               this.currentPage++;
+               axios.get("posts/index/" + this.currentPage + "/" + this.publicUserData.username)
+                  .then((response) => {
+                     this.posts = this.posts.concat(response.data);
+                  })
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }
+         },
+
+         getPublicUserData(){
+            axios.get("auth/public_user_data/" + this.username)
                .then((response) => {
-                  this.posts = this.posts.concat(response.data);
+                  this.publicUserData = response.data;
                })
                .catch((error) => {
                   console.log(error);
                });
-         },
-
-         ...mapActions({
-            publicUserDataAction: "auth/publicUserDataAction"
-         }),
+         }
       }
    }
 

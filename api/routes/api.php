@@ -17,7 +17,7 @@ Route::group(['prefix' => 'auth', "namespace" => "API\Auth"], function(){
 
    Route::get('logout', 'AuthController@logout');
    Route::get('me', 'AuthController@me');
-   Route::get("public_user_data/{user}", "AuthController@publicUserData");
+   Route::get("public_user_data/{username}", "AuthController@publicUserData");
 
    Route::post('refresh', 'AuthController@refresh');
 

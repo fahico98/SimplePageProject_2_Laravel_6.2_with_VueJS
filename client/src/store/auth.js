@@ -58,17 +58,6 @@ export default {
          return await axios.post("auth/register", registerData);
       },
 
-      async publicUserDataAction(context, username){
-         return await axios.get("auth/get_user/" + username)
-            .then((response) => {
-               console.log(response);
-            })
-            .catch((error) => {
-               console.log(error);
-            });
-         //return await axios.get("user/" + username);
-      },
-
       logoutAction({ commit }){
          return axios.get("auth/logout")
             .then(() => {
