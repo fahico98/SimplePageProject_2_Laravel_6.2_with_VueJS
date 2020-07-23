@@ -3,7 +3,7 @@
 
    <!-- <v-navigation-drawer :floating="!inProfile()" width="25%" right permanent clipped app light> -->
    <v-navigation-drawer width="25%" permanent clipped app light>
-      Profile left bar !
+      {{ publicUserData }}
    </v-navigation-drawer>
 
    <!--
@@ -26,7 +26,11 @@
 
       components: {
 
-      }
+      },
+
+      props: [
+         "publicUserData"
+      ]
    }
 
 </script>

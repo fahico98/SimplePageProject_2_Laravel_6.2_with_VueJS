@@ -3,16 +3,14 @@
 
    <v-app>
 
-      <profile-left-bar class="grey lighten-4" v-if="inProfile()"></profile-left-bar>
-      <profile-right-bar class="grey lighten-4" v-if="inProfile()"></profile-right-bar>
+      <profile-left-bar class="grey lighten-4" v-if="inProfile()" v-bind:publicUserData="publicUserData"/>
+      <profile-right-bar class="grey lighten-4" v-if="inProfile()"/>
 
       <main-app-bar/>
 
       <v-main class="grey lighten-4">
          <v-container>
-            <div>
-               <router-view></router-view>
-            </div>
+            <div><router-view v-on:publicUserData="setPublicUserData($event)"/></div>
          </v-container>
       </v-main>
 
@@ -49,13 +47,18 @@
 
       data(){
          return {
-
+            publicUserData: null
          }
       },
 
       methods: {
+
          inProfile(){
             return this.$route.name == "profile";
+         },
+
+         setPublicUserData(data){
+            this.publicUserData = data;
          }
       }
    };

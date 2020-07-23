@@ -61,15 +61,26 @@
       },
 
       async created(){
-         if(this.authenticated){
-            if(this.username === this.user.username){
-               this.publicUserData = this.user;
+
+         let response;
+
+         try{
+            if(this.authenticated){
+               if(this.username === this.user.username){
+                  this.publicUserData = this.user;
+               }else{
+                  response = await axios.get("auth/public_user_data/" + this.username);
+                  this.publicUserData = response.data;
+               }
             }else{
-               await this.getPublicUserData();
+               response = await axios.get("auth/public_user_data/" + this.username);
+               this.publicUserData = response.data;
             }
-         }else{
-            await this.getPublicUserData();
+         }catch(error){
+            console.log(error);
          }
+
+         this.$emit("publicUserData", this.publicUserData);
 
          window.addEventListener('scroll', () => {
             this.bottom = this.bottomVisible()
@@ -99,16 +110,6 @@
                      console.log(error);
                   });
             }
-         },
-
-         getPublicUserData(){
-            axios.get("auth/public_user_data/" + this.username)
-               .then((response) => {
-                  this.publicUserData = response.data;
-               })
-               .catch((error) => {
-                  console.log(error);
-               });
          }
       }
    }
