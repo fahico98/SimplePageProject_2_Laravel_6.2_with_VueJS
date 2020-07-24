@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration{
          $table->string("city")->nullable();
          $table->string("phone_number")->nullable();
          $table->string("email")->unique();
-         $table->string('occupation')->nullable();
          $table->string('biography')->nullable();
          $table->string("password");
          $table->string("profile_picture")->default("storage/avatars/defaultUserPhoto.jpg");

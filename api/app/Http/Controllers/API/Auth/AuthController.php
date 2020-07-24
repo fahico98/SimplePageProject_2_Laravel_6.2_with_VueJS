@@ -55,9 +55,9 @@ class AuthController extends Controller{
       $user = User::where("username", $username)->first();
       return $user ? response()->json([
             "username" => $user->username,
+            "email" => $user->email,
             "name" => $user->name,
             "lastname" => $user->lastname,
-            "occupation" => $user->occupation,
             "biography" => $user->biography,
             "profile_picture" => $user->profile_picture
          ]) : response()->json(false);

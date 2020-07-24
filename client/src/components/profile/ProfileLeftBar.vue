@@ -3,7 +3,7 @@
 
    <!-- <v-navigation-drawer :floating="!inProfile()" width="25%" right permanent clipped app light> -->
    <v-navigation-drawer width="25%" permanent clipped app light>
-      {{ publicUserData }}
+      <profile-user-card :publicUserData="publicUserData"/>
    </v-navigation-drawer>
 
    <!--
@@ -22,10 +22,12 @@
 
 <script>
 
+   import ProfileUserCard from "./ProfileUserCard";
+
    export default {
 
       components: {
-
+         ProfileUserCard
       },
 
       props: [

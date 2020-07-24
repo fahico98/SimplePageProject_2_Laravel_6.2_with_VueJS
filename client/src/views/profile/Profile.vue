@@ -86,7 +86,7 @@
             this.bottom = this.bottomVisible()
          });
 
-         this.addPosts();
+         // this.addPosts();
       },
 
       methods: {
