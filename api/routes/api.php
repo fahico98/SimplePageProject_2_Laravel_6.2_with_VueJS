@@ -17,7 +17,6 @@ Route::group(['prefix' => 'auth', "namespace" => "API\Auth"], function(){
 
    Route::get('logout', 'AuthController@logout');
    Route::get('me', 'AuthController@me');
-   Route::get("public_user_data/{username}", "AuthController@publicUserData");
 
    Route::post('refresh', 'AuthController@refresh');
 
@@ -30,6 +29,9 @@ Route::group(["namespace" => "API"], function(){
 
    Route::get("server_messages", "ServerMessageController@index");
    Route::get("testimonials", "ServerMessageController@testimonials");
+
+   Route::get("public_user_data/{username}", "UserController@publicUserData");
+   Route::post("store_bio", "UserController@storeBio");
 
    Route::group(["prefix" => "posts"], function(){
 

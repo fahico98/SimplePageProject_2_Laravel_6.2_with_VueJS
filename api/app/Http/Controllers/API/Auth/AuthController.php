@@ -42,25 +42,7 @@ class AuthController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function me(){
-      return response()->json(Auth::user());
-   }
-
-   /**
-    * Get an User instance by username.
-    *
-    * @param string $username
-    * @return \Illuminate\Http\JsonResponse
-    */
-   public function publicUserData($username){
-      $user = User::where("username", $username)->first();
-      return $user ? response()->json([
-            "username" => $user->username,
-            "email" => $user->email,
-            "name" => $user->name,
-            "lastname" => $user->lastname,
-            "biography" => $user->biography,
-            "profile_picture" => $user->profile_picture
-         ]) : response()->json(false);
+      return response()->json(Auth::user()->load("role"));
    }
 
    /**
