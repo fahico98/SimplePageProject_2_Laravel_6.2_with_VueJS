@@ -5,6 +5,7 @@
       <v-col>
 
          <v-card class="mx-auto" width="100%">
+
             <v-img :src="postImageUrl(post.post_picture)" width="100%"></v-img>
 
             <v-card-title>
@@ -69,7 +70,7 @@
       methods: {
 
          postImageUrl(post_picture){
-            return axios.defaults.baseURL.replace("/api", "") + post_picture;
+            return axios.defaults.baseURL.replace("/api", "") + post_picture.replace("public/", "storage/");
          },
 
          checkLike(){

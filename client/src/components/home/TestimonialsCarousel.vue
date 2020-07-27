@@ -56,7 +56,7 @@
 
       methods: {
          userImageUrl(profile_picture){
-            return axios.defaults.baseURL.replace("/api", "") + profile_picture;
+            return axios.defaults.baseURL.replace("/api", "") + profile_picture.replace("public/", "storage/");
          },
       }
    }

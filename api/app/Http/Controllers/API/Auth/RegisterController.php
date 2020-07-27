@@ -67,30 +67,15 @@ class RegisterController extends Controller{
     * @return \App\User
     */
    protected function create(){
+
       $requestData = request()->all();
+      $validated = $this->validator($requestData);
+
+      if($validated->fails()) {
+         return response()->json(['errors' => $validated->errors()], 422);
+      }
+
       $requestData["password"] = Hash::make($requestData["password"]);
       return User::create($requestData);
-   }
-
-   /**
-    * Checks if username exist.
-    *
-    * @return \Illuminate\Http\JsonResponse
-    */
-   public function usernameExists($username = ""){
-      return $username == ""
-         ? response()->json(false)
-         : response()->json(User::where("username", $username)->exists());
-   }
-
-   /**
-    * Checks if email exist.
-    *
-    * @return \Illuminate\Http\JsonResponse
-    */
-   public function emailExists($email = ""){
-      return $email == ""
-         ? response()->json(false)
-         : response()->json(User::where("email", $email)->exists());
    }
 }

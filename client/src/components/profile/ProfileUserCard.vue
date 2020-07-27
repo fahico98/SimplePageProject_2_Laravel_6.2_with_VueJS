@@ -1,7 +1,7 @@
 
 <template>
 
-   <v-container class="mt-8 px-12">
+   <v-container class="my-8 px-12">
 
       <div class="ma-0 pa-0" v-if="publicUserData.username == ''">
          <v-skeleton-loader class="mx-auto mb-5" type="avatar"></v-skeleton-loader>
@@ -10,8 +10,11 @@
       </div>
 
       <div class="ma-0 pa-0" v-else>
+
          <v-row justify="center" align="center">
-            <v-avatar size="250">
+            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="imageUrl" :completeName="completeName"
+               @imageChangedSuccessfully="changeProfilePicture($event)"/>
+            <v-avatar size="250" v-else>
                <img :src="imageUrl" :alt="completeName">
             </v-avatar>
          </v-row>
@@ -28,7 +31,7 @@
             </p>
          </v-row>
 
-         <v-row class="mt-6">
+         <v-row class="mt-5">
             <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
                <v-icon medium dense color="blue linghten-1">mdi-email-outline</v-icon>&nbsp;{{ publicUserData.email }}
             </p>
@@ -46,14 +49,33 @@
             </p>
          </v-row>
 
-         <v-row class="mt-6" v-if="profileOwner">
-            <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text">{{ publicUserData.biography }}</p>
-            <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" v-else justify="left" class="ma-0 pa-0"/>
-         </v-row>
+         <div v-if="profileOwner" class="ma-0 pa-0">
 
-         <v-row class="mt-6" v-else>
-            <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text">{{ publicUserData.biography }}</p>
-         </v-row>
+            <v-row v-if="isBio" class="mt-5">
+               <v-col cols="11" class="ma-0 pa-0">
+                  <p class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+                     {{ publicUserData.biography }}
+                  </p>
+               </v-col>
+               <v-col cols="1" class="ma-0 pa-0">
+                  <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
+                     :action="'edit'" :bioProp="publicUserData.biography"/>
+               </v-col>
+            </v-row>
+
+            <v-row v-else class="mt-5">
+               <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
+            </v-row>
+         </div>
+
+         <div v-else>
+            <v-row class="mt-5">
+               <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+                  {{ publicUserData.biography }}
+               </p>
+            </v-row>
+         </div>
+
       </div>
 
    </v-container>
@@ -63,6 +85,7 @@
 <script>
 
    import AddBioModalForm from "./modals/AddBioModalForm";
+   import ProfilePictureModalForm from "./modals/ProfilePictureModalForm";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
@@ -89,7 +112,8 @@
       },
 
       components: {
-         AddBioModalForm
+         AddBioModalForm,
+         ProfilePictureModalForm
       },
 
       computed: {
@@ -105,7 +129,8 @@
 
          imageUrl(){
             return this.publicUserData.profile_picture ?
-               axios.defaults.baseURL.replace("/api", "") + this.publicUserData.profile_picture : "";
+               axios.defaults.baseURL.replace("/api", "") +
+               this.publicUserData.profile_picture.replace("public/", "storage/") : "";
          },
 
          completeName(){
@@ -146,7 +171,21 @@
       methods: {
          changeBio(bio){
             this.publicUserData.biography = bio;
+         },
+
+         changeProfilePicture(profilePicture){
+            this.publicUserData.profile_picture = profilePicture;
          }
       }
    }
 </script>
+
+<style scoped>
+
+   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+   .montserrat{
+      font-family: 'Montserrat', sans-serif !important;
+   }
+
+</style>

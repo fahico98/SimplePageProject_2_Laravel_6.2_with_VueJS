@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration{
          $table->string("email")->unique();
          $table->string('biography')->nullable();
          $table->string("password");
-         $table->string("profile_picture")->default("storage/avatars/defaultUserPhoto.jpg");
+         $table->string("profile_picture")->default("public/avatars/defaultUserPhoto.jpg");
          $table->bigInteger("role_id")->unsigned()->default(1);
          $table->timestamp("email_verified_at")->nullable();
          $table->rememberToken();

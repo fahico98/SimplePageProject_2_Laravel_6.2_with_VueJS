@@ -14,15 +14,14 @@
 Route::group(['prefix' => 'auth', "namespace" => "API\Auth"], function(){
 
    Route::post('login', 'AuthController@login');
-
+   Route::post('refresh', 'AuthController@refresh');
    Route::get('logout', 'AuthController@logout');
    Route::get('me', 'AuthController@me');
 
-   Route::post('refresh', 'AuthController@refresh');
-
    Route::post("register", "RegisterController@create");
-   Route::get("username_exists/{username?}", "RegisterController@usernameExists");
-   Route::get("email_exists/{email?}", "RegisterController@emailExists");
+
+   Route::get("username_exists/{username?}", "UserController@usernameExists");
+   Route::get("email_exists/{email?}", "UserController@emailExists");
 });
 
 Route::group(["namespace" => "API"], function(){
@@ -32,17 +31,14 @@ Route::group(["namespace" => "API"], function(){
 
    Route::get("public_user_data/{username}", "UserController@publicUserData");
    Route::post("store_bio", "UserController@storeBio");
+   Route::post("store_profile_picture", "UserController@storeProfilePicture");
 
    Route::group(["prefix" => "posts"], function(){
-
       Route::get("index/{page}/{username?}", "PostController@index");
-
       Route::get("check_like/{post_id}/{user_id}", "PostController@checkLike");
       Route::get("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
-
       Route::post("like/{post_id}/{dislike}", "PostController@like");
       Route::post("dislike/{post_id}/{like}", "PostController@dislike");
-
       Route::post("undo_like/{post_id}", "PostController@undoLike");
       Route::post("undo_dislike/{post_id}", "PostController@undoDislike");
    });
