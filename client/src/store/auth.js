@@ -29,10 +29,26 @@ export default {
 
       SET_USER(state, user){
          state.user = user;
+      },
+
+      SET_PROFILE_PICTURE(state, profile_picture){
+         if(state.user){ state.user.profile_picture = profile_picture; }
+      },
+
+      SET_BIO(state, bio){
+         if(state.user){ state.user.biography = bio; }
       }
    },
 
    actions: {
+
+      setProfilePicture({ commit }, profile_picture){
+         commit("SET_PROFILE_PICTURE", profile_picture);
+      },
+
+      setBio({ commit }, bio){
+         commit("SET_BIO", bio);
+      },
 
       async loginAction({ dispatch }, credentials){
          let response = await axios.post("auth/login", credentials);

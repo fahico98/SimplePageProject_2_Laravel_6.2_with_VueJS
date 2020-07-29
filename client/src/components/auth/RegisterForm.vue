@@ -89,11 +89,11 @@
 
       validations: {
          form: {
-            name:                         {alpha, required, maxLength: maxLength(25)},
-            lastname:                     {alpha, required, maxLength: maxLength(25)},
-            country:                      {alpha, maxLength: maxLength(25)},
-            city:                         {alpha, maxLength: maxLength(25)},
-            phone_number:                 {numeric, maxLength: maxLength(15)},
+            name:                         {alpha, required, maxLength: maxLength(35)},
+            lastname:                     {alpha, required, maxLength: maxLength(35)},
+            country:                      {alpha, maxLength: maxLength(35)},
+            city:                         {alpha, maxLength: maxLength(35)},
+            phone_number:                 {numeric, maxLength: maxLength(35)},
             password:                     {required, minLength: minLength(8), maxLength: maxLength(35)},
             password_confirmation:        {required},
 
@@ -112,7 +112,7 @@
                                              alphaNum,
                                              spanish,
                                              required,
-                                             minLength: minLength(4),
+                                             minLength: minLength(6),
                                              maxLength: maxLength(15),
                                              isUnique(value){
                                                 if (value === ''){ return true; }
@@ -132,7 +132,7 @@
          nameErrors(){
             const errors = [];
             if(!this.$v.form.name.$dirty){ return errors; }
-            !this.$v.form.name.maxLength && errors.push('Su nombre no debe tener mas de 25 caracteres.');
+            !this.$v.form.name.maxLength && errors.push('Su nombre no debe tener mas de 35 caracteres.');
             !this.$v.form.name.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
             !this.$v.form.name.required && errors.push('Este campo es obligatorio.');
             return errors;
@@ -141,7 +141,7 @@
          lastnameErrors(){
             const errors = [];
             if(!this.$v.form.lastname.$dirty){ return errors; }
-            !this.$v.form.lastname.maxLength && errors.push('Su apellido no debe tener mas de 25 caracteres.');
+            !this.$v.form.lastname.maxLength && errors.push('Su apellido no debe tener mas de 35 caracteres.');
             !this.$v.form.lastname.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
             !this.$v.form.lastname.required && errors.push('Este campo es obligatorio.');
             return errors;
@@ -150,7 +150,7 @@
          countryErrors(){
             const errors = [];
             if(!this.$v.form.country.$dirty){ return errors; }
-            !this.$v.form.country.maxLength && errors.push('El país no debe tener mas de 25 caracteres.');
+            !this.$v.form.country.maxLength && errors.push('El país no debe tener mas de 35 caracteres.');
             !this.$v.form.country.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
             return errors;
          },
@@ -158,7 +158,7 @@
          cityErrors(){
             const errors = [];
             if(!this.$v.form.city.$dirty){ return errors; }
-            !this.$v.form.city.maxLength && errors.push('La ciudad no debe tener mas de 25 caracteres.');
+            !this.$v.form.city.maxLength && errors.push('La ciudad no debe tener mas de 35 caracteres.');
             !this.$v.form.city.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
             return errors;
          },
@@ -166,7 +166,7 @@
          phoneNumberErrors(){
             const errors = [];
             if(!this.$v.form.phone_number.$dirty){ return errors; }
-            !this.$v.form.phone_number.maxLength && errors.push('Su número de teléfono no debe tener mas de 25 caracteres.');
+            !this.$v.form.phone_number.maxLength && errors.push('Su número de teléfono no debe tener mas de 35 caracteres.');
             !this.$v.form.phone_number.numeric && errors.push('Este campo solo admite caracteres numéricos.');
             return errors;
          },
@@ -185,7 +185,7 @@
             const errors = [];
             if(!this.$v.form.username.$dirty){ return errors; }
             !this.$v.form.username.maxLength && errors.push('Su nombre de usuario no debe tener mas de 15 caracteres.');
-            !this.$v.form.username.minLength && errors.push('Su nombre de usuario debe tener al menos 4 caracteres.');
+            !this.$v.form.username.minLength && errors.push('Su nombre de usuario debe tener al menos 6 caracteres.');
             !this.$v.form.username.alphaNum && errors.push("Este campo solo admite caracteres alfanuméricos.");
             !this.$v.form.username.required && errors.push("Este campo es obligatorio.");
             this.$v.form.username.isUnique && errors.push("Este nombre de usuario ya ha sido registrado.");

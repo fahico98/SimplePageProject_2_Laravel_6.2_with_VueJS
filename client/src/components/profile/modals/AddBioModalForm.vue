@@ -17,7 +17,7 @@
       <v-card :loading="loading">
          <v-form class="ma-0 pa-0" @submit.prevent="">
 
-            <v-textarea no-resize outlined v-model="bio" counter="120" color="blue lighten-1" rows="5" class="pt-5 px-5"
+            <v-textarea no-resize outlined v-model="bio" counter="120" color="blue lighten-1" rows="5" class="pt-7 px-5"
                label="Biografía" @input="$v.bio.$touch()" :error-messages="bioErrors"/>
 
             <v-card-actions>

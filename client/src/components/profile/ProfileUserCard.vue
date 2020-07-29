@@ -86,7 +86,7 @@
 
    import AddBioModalForm from "./modals/AddBioModalForm";
    import ProfilePictureModalForm from "./modals/ProfilePictureModalForm";
-   import { mapGetters } from "vuex";
+   import { mapActions, mapGetters } from "vuex";
    import axios from "axios";
 
    export default {
@@ -169,12 +169,20 @@
       },
 
       methods: {
+
+         ...mapActions({
+            setProfilePicture: "auth/setProfilePicture",
+            setBio: "auth/setBio"
+         }),
+
          changeBio(bio){
             this.publicUserData.biography = bio;
+            this.setBio(bio);
          },
 
          changeProfilePicture(profilePicture){
             this.publicUserData.profile_picture = profilePicture;
+            this.setProfilePicture(profilePicture);
          }
       }
    }

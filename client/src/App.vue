@@ -10,7 +10,7 @@
 
       <v-main class="grey lighten-4">
          <v-container>
-            <div><router-view v-on:publicUserData="setPublicUserData($event)"/></div>
+            <div><router-view/></div>
          </v-container>
       </v-main>
 
@@ -55,10 +55,6 @@
 
          inProfile(){
             return this.$route.name == "profile";
-         },
-
-         setPublicUserData(data){
-            this.publicUserData = data;
          }
       }
    };

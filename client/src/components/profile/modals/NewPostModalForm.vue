@@ -2,55 +2,41 @@
 <template>
 
    <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-model="dialog" max-width="600px">
          <template v-slot:activator="{ on, attrs }">
             <v-btn color="blue-lighten-1" class="text-capitalize" dark v-bind="attrs" v-on="on">open dialog</v-btn>
          </template>
+
          <v-card>
-            <v-card-title>
-               <span class="headline">User Profile</span>
-            </v-card-title>
-            <v-card-text>
-               <v-container>
-                  <v-row>
 
-                     <v-col cols="12" sm="6" md="4">
-                        <v-text-field label="Legal first name*" required></v-text-field>
-                     </v-col>
-                     <v-col cols="12" sm="6" md="4">
-                        <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-                     </v-col>
-                     <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                           label="Legal last name*"
-                           hint="example of persistent helper text"
-                           persistent-hint
-                           required
-                        ></v-text-field>
-                     </v-col>
-                     <v-col cols="12">
-                        <v-text-field label="Email*" required></v-text-field>
-                     </v-col>
-                     <v-col cols="12">
-                        <v-text-field label="Password*" type="password" required></v-text-field>
-                     </v-col>
-                     <v-col cols="12" sm="6">
-                        <v-select
-                           :items="['0-17', '18-29', '30-54', '54+']"
-                           label="Age*"
-                           required
-                        ></v-select>
-                     </v-col>
+            <v-card-title class="headline">Nuevo post</v-card-title>
 
-                  </v-row>
-               </v-container>
-               <small>*indicates required field</small>
-            </v-card-text>
-            <v-card-actions>
-               <v-spacer></v-spacer>
-               <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-               <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-            </v-card-actions>
+            <v-form class="mt-5 pa-0" @submit.prevent="">
+
+               <v-text-field dense outlined color="blue lighten-1" label="Título" class="px-5" v-model="title"/>
+
+               <v-textarea no-resize outlined v-model="content" counter="255" color="blue lighten-1" rows="4" class="px-5"
+                  label="Contenido"/>
+
+               <v-file-input small-chips multiple outlined dense color="blue lighten-1" prepend-icon="mdi-image-multiple"
+                  class="px-5" label="Fotos del post"></v-file-input>
+
+               <v-select outlined dense :items="items" color="blue lighten-1" label="Quien puede ver este post ?"
+                  class="px-5" prepend-icon="mdi-lock"></v-select>
+
+               <v-card-actions>
+
+                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" color="blue lighten-1">
+                     <span class="px-2">Publicar</span>
+                  </v-btn>
+
+                  <v-btn depressed light @click="limpiarCampos()" class="mb-2 ml-3 text-capitalize" color="grey lighten-1">
+                     <span class="px-2">Limpiar campos</span>
+                  </v-btn>
+
+               </v-card-actions>
+
+            </v-form>
          </v-card>
       </v-dialog>
    </v-row>
@@ -60,9 +46,28 @@
 <script>
 
    export default {
+
       data(){
          return {
-            dialog: false
+            dialog: false,
+            title: "",
+            content: "",
+            items: [
+               { text: "Público" },
+               { text: "Seguidores" },
+               { text: "Solo yo" }
+            ]
+         }
+      },
+
+      methods: {
+
+         submit(){
+
+         },
+
+         limpiarCampos(){
+
          }
       }
    }
