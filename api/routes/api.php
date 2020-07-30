@@ -34,6 +34,9 @@ Route::group(["namespace" => "API"], function(){
    Route::post("store_profile_picture", "UserController@storeProfilePicture");
 
    Route::group(["prefix" => "posts"], function(){
+
+      Route::post("create", "PostController@create");
+
       Route::get("index/{page}/{username?}", "PostController@index");
       Route::get("check_like/{post_id}/{user_id}", "PostController@checkLike");
       Route::get("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");

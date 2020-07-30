@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use App\Post;
+use App\PostImage;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model{
@@ -66,5 +67,9 @@ class Post extends Model{
 
    public function postPermission(){
       return $this->belongsTo(PostPermission::class);
+   }
+
+   public function images(){
+      return $this->hasMany(PostImage::class);
    }
 }

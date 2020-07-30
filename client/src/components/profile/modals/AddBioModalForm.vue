@@ -39,7 +39,7 @@
    import { validationMixin } from "vuelidate";
    import { helpers, maxLength, required } from "vuelidate/lib/validators";
 
-   const alphaNum = helpers.regex("alphaNum", /^[ \nñÑ.,()áéíóúa-zA-Z0-9]*$/)
+   const alphaNum = helpers.regex("alphaNum", /^[ -_\nñÑ.,;:()áéíóúa-zA-Z0-9]*$/);
 
    export default {
 
@@ -99,7 +99,7 @@
          submit(){
             this.$v.$touch();
             if(!this.$v.$invalid){
-               this.loading = true;
+               this.loading = "blue lighten-1";
                axios.post("store_bio", {bio: this.bio})
                   .then((response) => {
                      if(response.data){

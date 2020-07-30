@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder{
       $this->call(PostsTableSeeder::class);
       $this->call(PostPermissionsTableSeeder::class);
       $this->call(ServerMessagesTableSeeder::class);
+      $this->call(PostImagesTableSeeder::class);
+      $this->call(UserProfileImagesTableSeeder::class);
    }
 }

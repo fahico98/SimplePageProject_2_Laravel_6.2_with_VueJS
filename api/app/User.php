@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use App\ProfileUserImage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -79,6 +80,10 @@ class User extends Authenticatable implements JWTSubject{
 
    public function role(){
       return $this->belongsTo(Role::class);
+   }
+
+   public function profileImage(){
+      return $this->hasOne(ProfileUserImage::class);
    }
 
    public function posts(){

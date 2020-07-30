@@ -33,22 +33,18 @@ class PostController extends Controller{
    }
 
    /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-   public function create(){
-      //
-   }
-
-   /**
     * Store a newly created resource in storage.
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
    public function store(Request $request){
-      //
+      $post = new Post;
+      $post->title = $request->title;
+      $post->content = $request->content;
+      $post->post_permission_id = $request->privacy;
+      $post->user_id = Auth::user()->id;
+
    }
 
    /**
@@ -58,16 +54,6 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function show($id){
-      //
-   }
-
-   /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function edit($id){
       //
    }
 

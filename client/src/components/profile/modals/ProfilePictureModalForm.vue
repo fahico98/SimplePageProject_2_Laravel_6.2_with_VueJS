@@ -58,7 +58,7 @@
             const errors = [];
             if(!this.$v.image.$dirty){ return errors; }
             !this.$v.image.required && errors.push('Aún no ha cargado ningúna imagen.');
-            !this.$v.image.size && errors.push('El archivo no puede tener un tamaño superior a 500KB.');
+            !this.$v.image.size && errors.push('La imagen no debe tener un tamaño superior a 2MB.');
             return errors;
          },
       },
@@ -87,7 +87,7 @@
          submit(){
             this.$v.$touch();
             if(!this.$v.$invalid){
-               this.loading = true;
+               this.loading = "blue lighten-1";
                var formData = new FormData();
                formData.append("image", this.image);
                axios.post("store_profile_picture", formData, {headers: {'Content-Type': 'multipart/form-data'}})

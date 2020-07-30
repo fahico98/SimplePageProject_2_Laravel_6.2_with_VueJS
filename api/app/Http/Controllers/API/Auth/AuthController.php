@@ -42,7 +42,7 @@ class AuthController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function me(){
-      return response()->json(Auth::user()->load("role"));
+      return response()->json(Auth::user()->load("role" /*, "profileImage"*/));
    }
 
    /**

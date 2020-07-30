@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\UserProfileImage;
 use App\User;
 
 class UserController extends Controller{
@@ -18,7 +19,8 @@ class UserController extends Controller{
     */
    public function publicUserData($username){
       $user = User::where("username", $username)->first();
-      return $user ? response()->json($user) : response()->json(false);
+      return response()->json($user->profilePicture);
+      // return $user ? response()->json($user) : response()->json(false);
    }
 
    /**
@@ -51,17 +53,23 @@ class UserController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function storeProfilePicture(Request $request){
-      $user = Auth::user();
+
+      $user = Auth::user()->id;
 
       if($request->hasFile("image")){
-         if($user->profile_picture !== "public/avatars/defaultUserPhoto.jpg"){
-            Storage::delete($user->profile_picture);
+         if($user->profileImage->url !== "public/avatars/defaultUserPhoto.jpg"){
+            Storage::delete($user->profileImage->url);
          }
-         $path = Storage::putFile("public/avatars", $request->file('image'));
-         $user->update(["profile_picture" => $path]);
+         $profileImage = new UserProfileImage;
+         $profileImage->user_id = $user->id;
+         $profileImage->url = Storage::putFile("public/avatars", $request->file('image'));
+         $profileImage->save();
+         // $profileImage->size =
+         // $path = Storage::putFile("public/avatars", $request->file('image'));
+         // $user->update(["profile_picture" => $path]);
       }
 
-      return response()->json($user->profile_picture);
+      return response()->json($profileImage->url);
    }
 
    /**

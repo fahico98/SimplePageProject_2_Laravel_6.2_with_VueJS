@@ -3,26 +3,31 @@
 
    <v-row justify="center">
       <v-dialog v-model="dialog" max-width="600px">
+
          <template v-slot:activator="{ on, attrs }">
             <v-btn color="blue-lighten-1" class="text-capitalize" dark v-bind="attrs" v-on="on">open dialog</v-btn>
          </template>
 
-         <v-card>
+         <v-card :loading="loading">
 
-            <v-card-title class="headline">Nuevo post</v-card-title>
+            <v-card-title class="headline">Nueva publicación</v-card-title>
+
+            {{ images.length }}
 
             <v-form class="mt-5 pa-0" @submit.prevent="">
 
-               <v-text-field dense outlined color="blue lighten-1" label="Título" class="px-5" v-model="title"/>
+               <v-text-field dense outlined counter="120" color="blue lighten-1" label="Título" class="px-5" v-model="title"
+                  @input="$v.title.$touch()" :error-messages="titleErrors"/>
 
                <v-textarea no-resize outlined v-model="content" counter="255" color="blue lighten-1" rows="4" class="px-5"
-                  label="Contenido"/>
+                  label="Contenido" @input="$v.content.$touch()" :error-messages="contentErrors"/>
 
                <v-file-input small-chips multiple outlined dense color="blue lighten-1" prepend-icon="mdi-image-multiple"
-                  class="px-5" label="Fotos del post"></v-file-input>
+                  class="px-5" label="Fotos de la publicación" v-model="images" @change="$v.images.$touch()"
+                  :error-messages="imagesErrors"></v-file-input>
 
-               <v-select outlined dense :items="items" color="blue lighten-1" label="Quien puede ver este post ?"
-                  class="px-5" prepend-icon="mdi-lock"></v-select>
+               <v-select outlined dense :items="items" v-model="privacy" color="blue lighten-1" class="px-5"
+                  label="Quien puede ver este post ?" prepend-icon="mdi-lock"></v-select>
 
                <v-card-actions>
 
@@ -38,6 +43,7 @@
 
             </v-form>
          </v-card>
+
       </v-dialog>
    </v-row>
 
@@ -45,25 +51,103 @@
 
 <script>
 
+   // import axios from "axios";
+   import { validationMixin } from "vuelidate";
+   import { helpers, maxLength, minLength, required } from "vuelidate/lib/validators";
+
+   const alphaNum = helpers.regex("alphaNum", /^[ _\-\nñÑ.,;:()áéíóúa-zA-Z0-9]*$/);
+   const imagesLen = (images) => images ? images.length <= 5 : false;
+   const size = (images) => images ? images.every(image => image.size <= 2e6) : false;
+
    export default {
+
+      mixins: [validationMixin],
 
       data(){
          return {
+            loading: false,
             dialog: false,
             title: "",
             content: "",
+            images: [],
+            privacy: { value: 1, text: "Público" },
             items: [
-               { text: "Público" },
-               { text: "Seguidores" },
-               { text: "Solo yo" }
+               { value: 1, text: "Público" },
+               { value: 2, text: "Seguidores" },
+               { value: 3, text: "Solo yo" }
             ]
+         }
+      },
+
+      validations: {
+         title: { required, alphaNum, maxLength: maxLength(120) },
+         content: { required, alphaNum, maxLength: maxLength(120), minLength: minLength(10) },
+         images: { size, imagesLen }
+      },
+
+      watch: {
+         dialog(dialog){
+            if(!dialog){
+               this.images = [];
+               this.title = "";
+               this.content = "";
+               this.privacy = { value: 1, text: "Público" };
+               this.$v.$reset();
+            }
+         }
+      },
+
+      computed: {
+
+         titleErrors(){
+            const errors = [];
+            if(!this.$v.title.$dirty){ return errors; }
+            !this.$v.title.maxLength && errors.push('Máximo 120 caracteres.');
+            !this.$v.title.alphaNum && errors.push('No se admite caracteres especiales.');
+            !this.$v.title.required && errors.push('El titulo de la publicación no puede estar vacío.');
+            return errors;
+         },
+
+         contentErrors(){
+            const errors = [];
+            if(!this.$v.content.$dirty){ return errors; }
+            !this.$v.content.maxLength && errors.push('Máximo 120 caracteres.');
+            !this.$v.content.minLength && errors.push('Mínimo 10 caracteres.');
+            !this.$v.content.alphaNum && errors.push('No se admite caracteres especiales.');
+            !this.$v.content.required && errors.push('El contenido de la publicación es obligatorio.');
+            return errors;
+         },
+
+         imagesErrors(){
+            const errors = [];
+            if(!this.$v.images.$dirty){ return errors; }
+            !this.$v.images.size && errors.push("Ninguna de las imagenes cargadas debe tener un tamaño superior a 2MB.");
+            !this.$v.images.imagesLen && errors.push("Las publicaciones no pueden tener mas de 5 fotos.");
+            return errors;
          }
       },
 
       methods: {
 
          submit(){
-
+            this.$v.$touch();
+            if(!this.$v.$invalid){
+               this.loading = "blue lighten-1";
+               var formData = new FormData();
+               formData.append("images", this.images);
+               axios.post("store_profile_picture", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                  .then((response) => {
+                     if(response.data){
+                        // this.$emit("postAddedSuccessfully", response.data);
+                        this.image = null;
+                        this.loading = false;
+                        this.dialog = false;
+                     }
+                  })
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            }
          },
 
          limpiarCampos(){
