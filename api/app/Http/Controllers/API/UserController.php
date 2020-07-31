@@ -20,14 +20,15 @@ class UserController extends Controller{
    public function publicUserData($username){
 
       $user = User::where("username", $username)->with("profile_picture")->first();
+      return $user ? response()->json($user) : response()->json(false);
 
-      if($user){
-         if(!$user->profile_picture){
-            $user->setRelation("profile_picture", UserProfilePicture::find(1));
-         }
-         return response()->json($user);
-      }
-      return response()->json(false);
+      // if($user){
+      //    if(!$user->profile_picture){
+      //       $user->setRelation("profile_picture", UserProfilePicture::find(1));
+      //    }
+      //    return response()->json($user);
+      // }
+      // return response()->json(false);
    }
 
    /**
@@ -61,22 +62,23 @@ class UserController extends Controller{
     */
    public function storeProfilePicture(Request $request){
 
-      $user = Auth::user()->id;
+      $user = Auth::user();
 
       if($request->hasFile("image")){
-         if($user->profileImage->url !== "public/avatars/defaultUserPhoto.jpg"){
-            Storage::delete($user->profileImage->url);
+
+         if($user->profile_picture->url !== "public/avatars/defaultUserPhoto.jpg"){
+            UserProfilePicture::where("user_id", $user->id)->delete();
+            Storage::delete($user->profile_picture->url);
          }
-         $profileImage = new UserProfileImage;
-         $profileImage->user_id = $user->id;
-         $profileImage->url = Storage::putFile("public/avatars", $request->file('image'));
-         $profileImage->save();
-         // $profileImage->size =
-         // $path = Storage::putFile("public/avatars", $request->file('image'));
-         // $user->update(["profile_picture" => $path]);
+
+         $profilePicture = new UserProfilePicture;
+         $profilePicture->user_id = $user->id;
+         $profilePicture->url = Storage::putFile("public/avatars", $request->file('image'));
+         $profilePicture->size = Storage::size($profilePicture->url);
+         $profilePicture->save();
       }
 
-      return response()->json($profileImage->url);
+      return response()->json($profilePicture);
    }
 
    /**

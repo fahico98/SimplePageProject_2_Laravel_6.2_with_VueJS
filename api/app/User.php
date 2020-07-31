@@ -92,7 +92,10 @@ class User extends Authenticatable implements JWTSubject{
    }
 
    public function profile_picture(){
-      return $this->hasOne(UserProfilePicture::class);
+      return $this->hasOne(UserProfilePicture::class)->withDefault([
+         "url" => "public/avatars/defaultUserPhoto.jpg",
+         "size" => 5229
+      ]);
    }
 
    public function posts(){

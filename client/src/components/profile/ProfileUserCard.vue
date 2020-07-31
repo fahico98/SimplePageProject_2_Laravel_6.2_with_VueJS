@@ -130,7 +130,7 @@
          imageUrl(){
             return this.publicUserData.profile_picture ?
                axios.defaults.baseURL.replace("/api", "") +
-               this.publicUserData.profile_picture.replace("public/", "storage/") : "";
+               this.publicUserData.profile_picture.url.replace("public/", "storage/") : "";
          },
 
          completeName(){
@@ -148,8 +148,8 @@
 
       async beforeCreate(){
 
-         this.username = this.$route.name == "profile" ? this.$route.params.username : "";
          let response;
+         this.username = this.$route.name == "profile" ? this.$route.params.username : "";
 
          try{
             if(this.authenticated){
