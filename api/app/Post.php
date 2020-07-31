@@ -40,7 +40,7 @@ class Post extends Model{
       return empty($user)
          ? false
          : Post::where("user_id", $user->id)
-            ->with("user")
+            ->with("user", "images")
             ->orderBy("created_at", "desc")
             ->offset(5 * ($page - 1))
             ->limit(5);

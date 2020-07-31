@@ -69,7 +69,8 @@
          },
 
          userImageUrl(){
-            return axios.defaults.baseURL.replace("/api", "") + this.user.profile_picture.replace("public/", "storage/");
+            return axios.defaults.baseURL.replace("/api", "") +
+               this.user.profile_picture.url.replace("public/", "storage/");
          },
 
          goTo(routeName){

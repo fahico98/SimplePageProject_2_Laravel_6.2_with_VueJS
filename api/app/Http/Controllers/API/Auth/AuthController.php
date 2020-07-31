@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\UserProfilePicture;
 use App\User;
 
 class AuthController extends Controller{
@@ -42,7 +43,14 @@ class AuthController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function me(){
-      return response()->json(Auth::user()->load("role" /*, "profileImage"*/));
+
+      $user = Auth::user()->load("role", "profile_picture");
+
+      if(!$user->profile_picture){
+         $user->setRelation("profile_picture", UserProfilePicture::find(1));
+      }
+
+      return response()->json($user);
    }
 
    /**

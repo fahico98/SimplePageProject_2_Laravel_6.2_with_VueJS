@@ -51,7 +51,7 @@
 
 <script>
 
-   // import axios from "axios";
+   import axios from "axios";
    import { validationMixin } from "vuelidate";
    import { helpers, maxLength, minLength, required } from "vuelidate/lib/validators";
 
@@ -135,11 +135,11 @@
                this.loading = "blue lighten-1";
                var formData = new FormData();
                formData.append("images", this.images);
-               axios.post("store_profile_picture", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+               axios.post("create", formData, {headers: {'Content-Type': 'multipart/form-data'}})
                   .then((response) => {
                      if(response.data){
+
                         // this.$emit("postAddedSuccessfully", response.data);
-                        this.image = null;
                         this.loading = false;
                         this.dialog = false;
                      }

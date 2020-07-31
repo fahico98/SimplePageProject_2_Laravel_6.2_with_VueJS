@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
-class UserProfileImage extends Model{
+class UserProfilePicture extends Model{
 
    /**
     * The attributes that are mass assignable.
@@ -23,7 +23,13 @@ class UserProfileImage extends Model{
     *
     * @var array
     */
-   protected $hidden = ["id"];
+   protected $hidden = [
+      "id",
+      "user_id",
+      "deleted_at",
+      "created_at",
+      "updated_at"
+   ];
 
    public function user(){
       return $this->belongsTo(User::class);

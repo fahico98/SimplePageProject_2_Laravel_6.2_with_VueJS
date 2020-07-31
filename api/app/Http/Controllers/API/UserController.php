@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\UserProfileImage;
+use App\UserProfilePicture;
 use App\User;
 
 class UserController extends Controller{
@@ -18,9 +18,16 @@ class UserController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function publicUserData($username){
-      $user = User::where("username", $username)->first();
-      return response()->json($user->profilePicture);
-      // return $user ? response()->json($user) : response()->json(false);
+
+      $user = User::where("username", $username)->with("profile_picture")->first();
+
+      if($user){
+         if(!$user->profile_picture){
+            $user->setRelation("profile_picture", UserProfilePicture::find(1));
+         }
+         return response()->json($user);
+      }
+      return response()->json(false);
    }
 
    /**

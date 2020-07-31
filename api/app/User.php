@@ -3,7 +3,7 @@
 namespace App;
 
 use App\User;
-use App\ProfileUserImage;
+use App\UserProfilePicture;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,6 +12,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements JWTSubject{
 
    use Notifiable;
+
+   /**
+    * Set the user's profile picture.
+    *
+    * @param  array  $value
+    * @return void
+    */
+   // public function setProfilePictureAttribute($value){
+   //    $this->attributes['profile_picture'] = $value;
+   // }
 
    /**
     * The attributes that are mass assignable.
@@ -27,7 +37,6 @@ class User extends Authenticatable implements JWTSubject{
       "phone_number",
       'email',
       'password',
-      "profile_picture",
       "biography"
    ];
 
@@ -82,19 +91,19 @@ class User extends Authenticatable implements JWTSubject{
       return $this->belongsTo(Role::class);
    }
 
-   public function profileImage(){
-      return $this->hasOne(ProfileUserImage::class);
+   public function profile_picture(){
+      return $this->hasOne(UserProfilePicture::class);
    }
 
    public function posts(){
       return $this->hasMany(Post::class);
    }
 
-   public function likedPosts(){
+   public function liked_posts(){
       return $this->belongsToMany(Post::class, "user_like_post");
    }
 
-   public function dislikedPosts(){
+   public function disliked_posts(){
       return $this->belongsToMany(Post::class, "user_dislike_post");
    }
 

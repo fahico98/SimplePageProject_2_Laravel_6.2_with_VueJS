@@ -23,7 +23,13 @@ class PostImage extends Model{
     *
     * @var array
     */
-   protected $hidden = ["id"];
+   protected $hidden = [
+      "id",
+      "user_id",
+      "deleted_at",
+      "created_at",
+      "updated_at"
+   ];
 
    public function post(){
       return $this->belongsTo(Post::class);
