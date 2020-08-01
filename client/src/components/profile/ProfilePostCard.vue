@@ -6,7 +6,14 @@
 
          <v-card class="mx-auto" width="100%">
 
-            <v-img :src="postImageUrl(post.post_picture)" width="100%"></v-img>
+            <v-carousel hide-delimiter-background :continuous="false" :show-arrows="false" height="100%"
+               delimiter-icon="mdi-minus">
+
+               <v-carousel-item v-for="image in post.images" :key="image">
+                  <v-img :src="image.url"></v-img>
+               </v-carousel-item>
+
+            </v-carousel>
 
             <v-card-title>
                <div @click.prevent="goToProfile(post.user.username)">
@@ -67,10 +74,40 @@
          })
       },
 
+      mounted(){
+
+         this.checkLike();
+         if(!this.I_like){ this.checkDislike(); }
+
+         this.post.images.forEach((image) => {
+            image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
+         });
+
+         this.correctImagesUrls();
+      },
+
       methods: {
 
-         postImageUrl(post_picture){
-            return axios.defaults.baseURL.replace("/api", "") + post_picture.replace("public/", "storage/");
+         // postImageUrl(post_picture){
+         //    return axios.defaults.baseURL.replace("/api", "") + post_picture.replace("public/", "storage/");
+         // },
+
+         correctImagesUrls(){
+            // if(this.post.images.length == 0){
+            //    this.post.images = [{
+            //       url: axios.defaults.baseURL.replace("/api", "") + "storage/posts/defaultPostImage.png",
+            //       size: 14480
+            //    }];
+            // }else{
+            //    this.post.images.forEach((image) => {
+            //       image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
+            //    });
+            // }
+            if(this.post.images.length != 0){
+               this.post.images.forEach((image) => {
+                  image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
+               });
+            }
          },
 
          checkLike(){
@@ -130,11 +167,6 @@
          goToProfile(username){
             this.$router.push({name: "profile", params: {username: username}});
          },
-      },
-
-      mounted(){
-         this.checkLike();
-         if(!this.I_like){ this.checkDislike(); }
       }
    }
 

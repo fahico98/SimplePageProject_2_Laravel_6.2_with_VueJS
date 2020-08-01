@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Post;
 
 class PostImage extends Model{
 
@@ -13,7 +12,7 @@ class PostImage extends Model{
     * @var array
     */
    protected $fillable = [
-      "post_id",
+      "user_id",
       "url",
       "size"
    ];

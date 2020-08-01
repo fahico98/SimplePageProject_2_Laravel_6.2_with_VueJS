@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\User;
-use App\UserProfilePicture;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -92,10 +90,11 @@ class User extends Authenticatable implements JWTSubject{
    }
 
    public function profile_picture(){
-      return $this->hasOne(UserProfilePicture::class)->withDefault([
-         "url" => "public/avatars/defaultUserPhoto.jpg",
-         "size" => 5229
-      ]);
+      return $this->hasOne(UserProfilePicture::class);
+      // return $this->hasOne(UserProfilePicture::class)->withDefault([
+      //    "url" => "public/avatars/defaultUserPhoto.jpg",
+      //    "size" => 5229
+      // ]);
    }
 
    public function posts(){

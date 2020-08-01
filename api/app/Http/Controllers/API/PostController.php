@@ -17,9 +17,9 @@ class PostController extends Controller{
     */
    public function index($page, $username = null){
 
-      return $username ?
-         response()->json(Post::postsByUser($page, $username)->get()) :
-         response()->json(Post::allPosts($page));
+      return $username
+         ? response()->json(Post::postsByUser($page, $username)->get())
+         : response()->json(Post::allPosts($page)->get());
 
       // dd($posts);
 
@@ -44,7 +44,6 @@ class PostController extends Controller{
       $post->content = $request->content;
       $post->post_permission_id = $request->privacy;
       $post->user_id = Auth::user()->id;
-
    }
 
    /**

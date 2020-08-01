@@ -1,7 +1,7 @@
 
 <template>
 
-   <v-container class="my-8 px-12">
+   <v-container class="my-5 px-12">
 
       <div class="ma-0 pa-0" v-if="publicUserData.username == ''">
          <v-skeleton-loader class="mx-auto mb-5" type="avatar"></v-skeleton-loader>
@@ -12,10 +12,10 @@
       <div class="ma-0 pa-0" v-else>
 
          <v-row justify="center" align="center">
-            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="imageUrl" :completeName="completeName"
-               @imageChangedSuccessfully="changeProfilePicture($event)"/>
+            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="publicUserData.profile_picture.url"
+               :completeName="completeName" @imageChangedSuccessfully="changeProfilePicture($event)"/>
             <v-avatar size="250" v-else>
-               <img :src="imageUrl" :alt="completeName">
+               <img :src="publicUserData.profile_picture.url" :alt="completeName">
             </v-avatar>
          </v-row>
 
@@ -127,12 +127,6 @@
             return this.authenticated ? this.user.username === this.publicUserData.username : false;
          },
 
-         imageUrl(){
-            return this.publicUserData.profile_picture ?
-               axios.defaults.baseURL.replace("/api", "") +
-               this.publicUserData.profile_picture.url.replace("public/", "storage/") : "";
-         },
-
          completeName(){
             return this.publicUserData.name + ' ' + this.publicUserData.lastname;
          },
@@ -158,10 +152,12 @@
                }else{
                   response = await axios.get("public_user_data/" + this.username);
                   this.publicUserData = response.data;
+                  this.correctImageUrl();
                }
             }else{
                response = await axios.get("public_user_data/" + this.username);
                this.publicUserData = response.data;
+               this.correctImageUrl();
             }
          }catch(error){
             console.log(error);
@@ -174,6 +170,18 @@
             setProfilePicture: "auth/setProfilePicture",
             setBio: "auth/setBio"
          }),
+
+         correctImageUrl(){
+            if(this.publicUserData.profile_picture){
+               this.publicUserData.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
+                  this.publicUserData.profile_picture.url.replace("public/", "storage/");
+            }else{
+               this.publicUserData.profile_picture = {
+                  url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
+                  size: 5229
+               };
+            }
+         },
 
          changeBio(bio){
             this.publicUserData.biography = bio;

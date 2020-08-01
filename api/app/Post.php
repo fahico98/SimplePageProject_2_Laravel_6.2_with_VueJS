@@ -2,10 +2,8 @@
 
 namespace App;
 
-use App\User;
-use App\Post;
-use App\PostImage;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Post extends Model{
 
@@ -37,17 +35,17 @@ class Post extends Model{
 
    public function scopePostsByUser($query, $page, $username){
       $user = User::select("id")->where("username", $username)->first();
-      return empty($user)
+      return !$user
          ? false
-         : Post::where("user_id", $user->id)
-            ->with("user", "images")
+         : Post::with(["user.profile_picture", "images"])
+            ->where("user_id", $user->id)
             ->orderBy("created_at", "desc")
             ->offset(5 * ($page - 1))
             ->limit(5);
    }
 
    public function scopeAllPosts($query, $page){
-      return Post::with("user")
+      return Post::with(["user", "images"])
          ->orderBy("created_at", "desc")
          ->offset(5 * ($page - 1))
          ->limit(5);

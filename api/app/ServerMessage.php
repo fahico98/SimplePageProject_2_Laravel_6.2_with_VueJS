@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\User;
-use App\ServerMessage;
 use Illuminate\Database\Eloquent\Model;
 
 class ServerMessage extends Model{
