@@ -11,7 +11,7 @@
             <v-carousel-item v-for="testimonial in testimonials" :key="testimonial.id" class="mx-16">
 
                <v-avatar size="60">
-                  <img :src="userImageUrl(testimonial.user.profile_picture)"
+                  <img :src="testimonial.user.profile_picture.url"
                      :alt="testimonial.user.name + ' ' + testimonial.user.lastname">
                </v-avatar>
 
@@ -48,6 +48,7 @@
          axios.get("testimonials")
             .then((response) => {
                this.testimonials = response.data;
+               this.correctImagesUrl();
             })
             .catch((error) => {
                console.log("Error: " + error);
@@ -55,9 +56,20 @@
       },
 
       methods: {
-         userImageUrl(profile_picture){
-            return axios.defaults.baseURL.replace("/api", "") + profile_picture.replace("public/", "storage/");
-         },
+
+         correctImagesUrl(){
+            this.testimonials.forEach((testimonial) => {
+               if(testimonial.user.profile_picture){
+                  testimonial.user.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
+                     testimonial.user.profile_picture.url.replace("public/", "storage/");
+               }else{
+                  testimonial.user.profile_picture = {
+                     url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
+                     size: 5229
+                  };
+               }
+            });
+         }
       }
    }
 

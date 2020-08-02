@@ -190,7 +190,8 @@
 
          changeProfilePicture(profilePicture){
             this.publicUserData.profile_picture = profilePicture;
-            this.setProfilePicture(profilePicture);
+            this.correctImageUrl();
+            this.setProfilePicture(this.publicUserData.profile_picture);
          }
       }
    }

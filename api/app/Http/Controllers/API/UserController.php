@@ -66,7 +66,7 @@ class UserController extends Controller{
 
       if($request->hasFile("image")){
 
-         if($user->profile_picture->url !== "public/avatars/defaultUserPhoto.jpg"){
+         if($user->profile_picture){
             UserProfilePicture::where("user_id", $user->id)->delete();
             Storage::delete($user->profile_picture->url);
          }
