@@ -6,7 +6,7 @@
       <div>
          <v-container fluid>
             <v-row justify="center" align="center">
-               <new-post-modal-form/>
+               <profile-user-options-card/>
             </v-row>
          </v-container>
       </div>
@@ -16,12 +16,12 @@
 
 <script>
 
-   import NewPostModalForm from "./modals/NewPostModalForm";
+   import ProfileUserOptionsCard from "./ProfileUserOptionsCard";
 
    export default {
 
       components: {
-         NewPostModalForm
+         ProfileUserOptionsCard
       }
    }
 

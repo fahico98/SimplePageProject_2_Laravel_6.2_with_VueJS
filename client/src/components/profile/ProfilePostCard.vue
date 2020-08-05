@@ -6,10 +6,10 @@
 
          <v-card class="mx-auto" width="100%">
 
-            <v-carousel hide-delimiter-background :continuous="false" :show-arrows="false" height="100%"
-               delimiter-icon="mdi-minus">
+            <v-carousel :hide-delimiter-background="hideDelimiters" :hide-delimiters="hideDelimiters" :continuous="false"
+               :show-arrows="false" height="100%" delimiter-icon="mdi-circle">
 
-               <v-carousel-item v-for="image in post.images" :key="image">
+               <v-carousel-item v-for="image in post.images" :key="image.url">
                   <v-img :src="image.url"></v-img>
                </v-carousel-item>
 
@@ -23,7 +23,7 @@
             </v-card-title>
 
             <v-card-subtitle class="pt-2 black--text">
-               <span class="body-1 font-weight-bold">{{ post.title }}: </span>{{ post.content }}
+               <span class="body-1 font-weight-bold">{{ post.title }}</span>&nbsp;{{ post.content }}
             </v-card-subtitle>
 
             <v-card-actions>
@@ -68,10 +68,15 @@
       ],
 
       computed: {
+
          ...mapGetters({
             // authenticated: "auth/authenticated",
             user: "auth/user"
-         })
+         }),
+
+         hideDelimiters(){
+            return this.post.images.length <= 1;
+         }
       },
 
       mounted(){
@@ -83,7 +88,7 @@
             image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
          });
 
-         this.correctImagesUrls();
+         //this.correctImagesUrls();
       },
 
       methods: {
@@ -92,23 +97,13 @@
          //    return axios.defaults.baseURL.replace("/api", "") + post_picture.replace("public/", "storage/");
          // },
 
-         correctImagesUrls(){
-            // if(this.post.images.length == 0){
-            //    this.post.images = [{
-            //       url: axios.defaults.baseURL.replace("/api", "") + "storage/posts/defaultPostImage.png",
-            //       size: 14480
-            //    }];
-            // }else{
-            //    this.post.images.forEach((image) => {
-            //       image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
-            //    });
-            // }
-            if(this.post.images.length != 0){
-               this.post.images.forEach((image) => {
-                  image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
-               });
-            }
-         },
+         // correctImagesUrls(){
+         //    if(this.post.images.length != 0){
+         //       this.post.images.forEach((image) => {
+         //          image.url = axios.defaults.baseURL.replace("/api", "") + image.url;
+         //       });
+         //    }
+         // },
 
          checkLike(){
             axios.get("posts/check_like/" + this.post.id + "/" + this.user.id)

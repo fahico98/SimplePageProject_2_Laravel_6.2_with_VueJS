@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\PostImage;
 use App\Post;
 
 class PostController extends Controller{
@@ -39,11 +41,26 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function store(Request $request){
+
       $post = new Post;
       $post->title = $request->title;
       $post->content = $request->content;
       $post->post_permission_id = $request->privacy;
       $post->user_id = Auth::user()->id;
+      $post->save();
+      $post->refresh();
+
+      if($request->hasFile("images")){
+         foreach($request->file('images') as $image){
+            $postImage = new PostImage;
+            $postImage->post_id = $post->id;
+            $postImage->url = Storage::putFile("public/posts", $image);
+            $postImage->size = Storage::size($postImage->url);
+            $postImage->save();
+         }
+      }
+
+      return response()->json($post->with(["user.profile_picture", "images", "postPermission"]));
    }
 
    /**

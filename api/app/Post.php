@@ -13,7 +13,6 @@ class Post extends Model{
     * @var array
     */
    protected $fillable = [
-      "id",
       "user_id",
       "post_permission_id",
       "title",
@@ -28,6 +27,8 @@ class Post extends Model{
     * @var array
     */
    protected $hidden = [
+      "user_id",
+      "post_permission_id",
       "deleted_at",
       "created_at",
       "updated_at"
@@ -37,7 +38,7 @@ class Post extends Model{
       $user = User::select("id")->where("username", $username)->first();
       return !$user
          ? false
-         : Post::with(["user.profile_picture", "images"])
+         : Post::with(["user.profile_picture", "images", "postPermission"])
             ->where("user_id", $user->id)
             ->orderBy("created_at", "desc")
             ->offset(5 * ($page - 1))
@@ -45,7 +46,7 @@ class Post extends Model{
    }
 
    public function scopeAllPosts($query, $page){
-      return Post::with(["user", "images"])
+      return Post::with(["user.profile_picture", "images", "postPermission"])
          ->orderBy("created_at", "desc")
          ->offset(5 * ($page - 1))
          ->limit(5);

@@ -13,7 +13,7 @@
          </template>
 
          <v-list dense>
-            <v-list-item justify="center" :ripple="false" v-on:click="goToProfile(user.username)">
+            <v-list-item justify="center" :ripple="false" v-on:click="goToProfile()">
                <v-list-item-title class="body-2 font-weight-bold">{{ user.username }}</v-list-item-title>
             </v-list-item>
             <v-list-item :ripple="false" v-on:click="goTo('settings')">
@@ -63,8 +63,9 @@
                });
          },
 
-         goToProfile(username){
-            this.$router.push({name: "profile", params: {username: username}});
+         goToProfile(){
+            console.log(this.user.username);
+            this.$router.go({path: "/" + this.user.username});
          },
 
          goTo(routeName){

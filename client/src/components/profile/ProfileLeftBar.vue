@@ -3,7 +3,7 @@
 
    <!-- <v-navigation-drawer :floating="!inProfile()" width="25%" right permanent clipped app light> -->
    <v-navigation-drawer width="25%" permanent clipped app light>
-      <profile-user-card :publicUserData="publicUserData"/>
+      <profile-user-card/>
    </v-navigation-drawer>
 
    <!--

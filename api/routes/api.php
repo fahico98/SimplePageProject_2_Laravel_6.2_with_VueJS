@@ -20,23 +20,23 @@ Route::group(['prefix' => 'auth', "namespace" => "API\Auth"], function(){
 
    Route::post("register", "RegisterController@create");
 
-   Route::get("username_exists/{username?}", "UserController@usernameExists");
-   Route::get("email_exists/{email?}", "UserController@emailExists");
 });
 
 Route::group(["namespace" => "API"], function(){
 
-   Route::get("server_messages", "ServerMessageController@index");
-   Route::get("testimonials", "ServerMessageController@testimonials");
-
    Route::get("public_user_data/{username}", "UserController@publicUserData");
    Route::post("store_bio", "UserController@storeBio");
    Route::post("store_profile_picture", "UserController@storeProfilePicture");
+   Route::get("username_exists/{username?}", "UserController@usernameExists");
+   Route::get("email_exists/{email?}", "UserController@emailExists");
+
+   Route::get("server_messages", "ServerMessageController@index");
+   Route::get("testimonials", "ServerMessageController@testimonials");
+
 
    Route::group(["prefix" => "posts"], function(){
 
-      Route::post("create", "PostController@create");
-
+      Route::post("store", "PostController@store");
       Route::get("index/{page}/{username?}", "PostController@index");
       Route::get("check_like/{post_id}/{user_id}", "PostController@checkLike");
       Route::get("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
