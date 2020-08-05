@@ -64,8 +64,8 @@
          },
 
          goToProfile(){
-            console.log(this.user.username);
-            this.$router.go({path: "/" + this.user.username});
+            this.$router.push({name: "profile", params: {username: this.user.username}});
+            // this.$router.push({path: "/" + this.user.username});
          },
 
          goTo(routeName){

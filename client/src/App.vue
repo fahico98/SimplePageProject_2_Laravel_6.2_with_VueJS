@@ -3,7 +3,7 @@
 
    <v-app>
 
-      <profile-left-bar class="grey lighten-4" v-if="inProfile()" v-bind:publicUserData="publicUserData"/>
+      <profile-left-bar class="grey lighten-4" v-if="inProfile()"/>
       <profile-right-bar class="grey lighten-4" v-if="inProfile()"/>
 
       <main-app-bar/>
@@ -47,7 +47,7 @@
 
       data(){
          return {
-            publicUserData: null
+
          }
       },
 
