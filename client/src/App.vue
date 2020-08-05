@@ -2,20 +2,13 @@
 <template>
 
    <v-app>
-
-      <profile-left-bar class="grey lighten-4" v-if="inProfile()"/>
-      <profile-right-bar class="grey lighten-4" v-if="inProfile()"/>
-
       <main-app-bar/>
 
       <v-main class="grey lighten-4">
-         <v-container>
-            <div><router-view/></div>
-         </v-container>
+         <div><router-view/></div>
       </v-main>
 
-      <main-footer v-if="!inProfile()"/>
-
+      <main-footer v-if="$route.name != 'profile'"/>
    </v-app>
 
 </template>
@@ -24,9 +17,6 @@
 
    import MainAppBar from "./components/MainAppBar";
    import MainFooter from "./components/MainFooter";
-   import ProfileLeftBar from "./components/profile/ProfileLeftBar";
-   import ProfileRightBar from "./components/profile/ProfileRightBar";
-   import { mapGetters } from "vuex";
 
    export default {
 
@@ -34,28 +24,7 @@
 
       components: {
          MainAppBar,
-         MainFooter,
-         ProfileLeftBar,
-         ProfileRightBar
-      },
-
-      computed: {
-         ...mapGetters({
-            authenticated: "auth/authenticated"
-         })
-      },
-
-      data(){
-         return {
-
-         }
-      },
-
-      methods: {
-
-         inProfile(){
-            return this.$route.name == "profile";
-         }
+         MainFooter
       }
    };
 

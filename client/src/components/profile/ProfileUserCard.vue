@@ -1,84 +1,86 @@
 
 <template>
 
-   <v-container class="my-5 px-12">
+   <v-navigation-drawer width="25%" permanent clipped app light>
+      <v-container class="my-5 px-12">
 
-      <div class="ma-0 pa-0" v-if="publicUserData.username == ''">
-         <v-skeleton-loader class="mx-auto mb-5" type="avatar"></v-skeleton-loader>
-         <v-skeleton-loader class="mx-auto mb-3" type="paragraph"></v-skeleton-loader>
-         <v-skeleton-loader class="mx-auto" type="sentences"></v-skeleton-loader>
-      </div>
-
-      <div class="ma-0 pa-0" v-else>
-
-         <v-row justify="center" align="center">
-            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="publicUserData.profile_picture.url"
-               :completeName="completeName" @imageChangedSuccessfully="changeProfilePicture($event)"/>
-            <v-avatar size="250" v-else>
-               <img :src="publicUserData.profile_picture.url" :alt="completeName">
-            </v-avatar>
-         </v-row>
-
-         <v-row class="mt-6">
-            <p class="my-0 py-0">
-               <span class="text-h5 font-weight-bold black--text">{{ completeName }}</span>
-            </p>
-         </v-row>
-
-         <v-row class="mt-0">
-            <p class="my-0 py-0">
-               <span class="text-h6 font-weight-light grey--text">{{ publicUserData.username }}</span>
-            </p>
-         </v-row>
-
-         <v-row class="mt-5">
-            <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
-               <v-icon medium dense color="blue linghten-1">mdi-email-outline</v-icon>&nbsp;{{ publicUserData.email }}
-            </p>
-         </v-row>
-
-         <v-row class="mt-2">
-            <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
-               <v-icon medium dense color="blue linghten-1">mdi-crosshairs-gps</v-icon>&nbsp;{{ location }}
-            </p>
-         </v-row>
-
-         <v-row class="mt-2">
-            <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
-               <v-icon medium dense color="blue linghten-1">mdi-cellphone-android</v-icon>&nbsp;{{ publicUserData.phone_number }}
-            </p>
-         </v-row>
-
-         <div v-if="profileOwner" class="ma-0 pa-0">
-
-            <v-row v-if="isBio" class="mt-5">
-               <v-col cols="11" class="ma-0 pa-0">
-                  <p class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
-                     {{ publicUserData.biography }}
-                  </p>
-               </v-col>
-               <v-col cols="1" class="ma-0 pa-0">
-                  <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
-                     :action="'edit'" :bioProp="publicUserData.biography"/>
-               </v-col>
-            </v-row>
-
-            <v-row v-else class="mt-5">
-               <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
-            </v-row>
+         <div class="ma-0 pa-0" v-if="cardUserData.username == ''">
+            <v-skeleton-loader class="mx-auto mb-5" type="avatar"></v-skeleton-loader>
+            <v-skeleton-loader class="mx-auto mb-3" type="paragraph"></v-skeleton-loader>
+            <v-skeleton-loader class="mx-auto" type="sentences"></v-skeleton-loader>
          </div>
 
-         <div v-else>
-            <v-row class="mt-5">
-               <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
-                  {{ publicUserData.biography }}
+         <div class="ma-0 pa-0" v-else>
+
+            <v-row justify="center" align="center">
+               <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="cardUserData.profile_picture.url"
+                  :completeName="completeName" @imageChangedSuccessfully="changeProfilePicture($event)"/>
+               <v-avatar size="250" v-else>
+                  <img :src="cardUserData.profile_picture.url" :alt="completeName">
+               </v-avatar>
+            </v-row>
+
+            <v-row class="mt-6">
+               <p class="my-0 py-0">
+                  <span class="text-h5 font-weight-bold black--text">{{ completeName }}</span>
                </p>
             </v-row>
+
+            <v-row class="mt-0">
+               <p class="my-0 py-0">
+                  <span class="text-h6 font-weight-light grey--text">{{ cardUserData.username }}</span>
+               </p>
+            </v-row>
+
+            <v-row class="mt-5">
+               <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
+                  <v-icon medium dense color="blue linghten-1">mdi-email-outline</v-icon>&nbsp;{{ cardUserData.email }}
+               </p>
+            </v-row>
+
+            <v-row class="mt-2">
+               <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
+                  <v-icon medium dense color="blue linghten-1">mdi-crosshairs-gps</v-icon>&nbsp;{{ location }}
+               </p>
+            </v-row>
+
+            <v-row class="mt-2">
+               <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
+                  <v-icon medium dense color="blue linghten-1">mdi-cellphone-android</v-icon>&nbsp;{{ cardUserData.phone_number }}
+               </p>
+            </v-row>
+
+            <div v-if="profileOwner" class="ma-0 pa-0">
+
+               <v-row v-if="isBio" class="mt-5">
+                  <v-col cols="11" class="ma-0 pa-0">
+                     <p class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+                        {{ cardUserData.biography }}
+                     </p>
+                  </v-col>
+                  <v-col cols="1" class="ma-0 pa-0">
+                     <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
+                        :action="'edit'" :bioProp="cardUserData.biography"/>
+                  </v-col>
+               </v-row>
+
+               <v-row v-else class="mt-5">
+                  <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
+               </v-row>
+            </div>
+
+            <div v-else>
+               <v-row class="mt-5">
+                  <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+                     {{ cardUserData.biography }}
+                  </p>
+               </v-row>
+            </div>
+
          </div>
 
-      </div>
-
-   </v-container>
+      </v-container>
+   </v-navigation-drawer>
 
 </template>
 
@@ -87,33 +89,24 @@
    import AddBioModalForm from "./modals/AddBioModalForm";
    import ProfilePictureModalForm from "./modals/ProfilePictureModalForm";
    import { mapActions, mapGetters } from "vuex";
-   import axios from "axios";
 
    export default {
-
-      data(){
-
-         return {
-            username: "",
-            publicUserData: {
-               username: "",
-               name: "",
-               lastname: "",
-               country: "",
-               city: "",
-               phone_number: "",
-               email: "",
-               password: "",
-               role_id: "",
-               profile_picture: "",
-               biography: ""
-            }
-         }
-      },
 
       components: {
          AddBioModalForm,
          ProfilePictureModalForm
+      },
+
+      data(){
+         return {
+            //
+         }
+      },
+
+      props: {
+         cardUserData: {
+            type: Object
+         }
       },
 
       computed: {
@@ -124,43 +117,19 @@
          }),
 
          profileOwner(){
-            return this.authenticated ? this.user.username === this.publicUserData.username : false;
+            return this.authenticated ? this.user.username === this.cardUserData.username : false;
          },
 
          completeName(){
-            return this.publicUserData.name + ' ' + this.publicUserData.lastname;
+            return this.cardUserData.name + ' ' + this.cardUserData.lastname;
          },
 
          location(){
-            return this.publicUserData.city + " - " + this.publicUserData.country;
+            return this.cardUserData.city + " - " + this.cardUserData.country;
          },
 
          isBio(){
-            return !!this.publicUserData.biography;
-         }
-      },
-
-      async beforeCreate(){
-
-         let response;
-         this.username = this.$route.name == "profile" ? this.$route.params.username : "";
-
-         try{
-            if(this.authenticated){
-               if(this.username === this.user.username){
-                  this.publicUserData = this.user;
-               }else{
-                  response = await axios.get("public_user_data/" + this.username);
-                  this.publicUserData = response.data;
-                  this.correctImageUrl();
-               }
-            }else{
-               response = await axios.get("public_user_data/" + this.username);
-               this.publicUserData = response.data;
-               this.correctImageUrl();
-            }
-         }catch(error){
-            console.log(error);
+            return !!this.cardUserData.biography;
          }
       },
 
@@ -171,27 +140,15 @@
             setBio: "auth/setBio"
          }),
 
-         correctImageUrl(){
-            if(this.publicUserData.profile_picture){
-               this.publicUserData.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
-                  this.publicUserData.profile_picture.url.replace("public/", "storage/");
-            }else{
-               this.publicUserData.profile_picture = {
-                  url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
-                  size: 5229
-               };
-            }
-         },
-
          changeBio(bio){
-            this.publicUserData.biography = bio;
+            this.cardUserData.biography = bio;
             this.setBio(bio);
          },
 
          changeProfilePicture(profilePicture){
-            this.publicUserData.profile_picture = profilePicture;
+            this.cardUserData.profile_picture = profilePicture;
             this.correctImageUrl();
-            this.setProfilePicture(this.publicUserData.profile_picture);
+            this.setProfilePicture(this.cardUserData.profile_picture);
          }
       }
    }

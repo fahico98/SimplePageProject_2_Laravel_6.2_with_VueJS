@@ -3,7 +3,10 @@
 
    <v-container class="ma-0 pa-0">
 
-      <div v-if="!emptyPostsArray">
+      <profile-user-card class="grey lighten-4" :cardUserData="cardUserData"/>
+      <profile-right-bar class="grey lighten-4"/>
+
+      <div class="mx-2" v-if="!emptyPostsArray">
          <profile-post-card v-for="post in posts" :key="post.id" :post="post"></profile-post-card>
       </div>
 
@@ -14,6 +17,8 @@
 <script>
 
    import ProfilePostCard from "../../components/profile/ProfilePostCard";
+   import ProfileUserCard from "../../components/profile/ProfileUserCard";
+   import ProfileRightBar from "../../components/profile/ProfileRightBar";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
@@ -24,13 +29,19 @@
             posts: [],
             currentPage: 0,
             bottom: false,
-            // loading: true
+            username: "",
+            cardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
+               password: "", role_id: "", profile_picture: "", biography: ""},
+            emptyCardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
+               password: "", role_id: "", profile_picture: "", biography: ""}
          }
       },
 
-      props: [
-         "username"
-      ],
+      components: {
+         ProfilePostCard,
+         ProfileUserCard,
+         ProfileRightBar
+      },
 
       computed: {
          ...mapGetters({
@@ -43,27 +54,67 @@
          }
       },
 
-      components: {
-         ProfilePostCard
-      },
-
       watch: {
          bottom(bottom){
             if(bottom){ this.addPosts(); }
          }
       },
 
-      async created(){
+      mounted(){
+         this.init(this.$route.params.username);
+      },
 
-         window.addEventListener('scroll', () => {
-            this.bottom = this.bottomVisible()
-         });
-
-         this.addPosts();
-         // loading = false;
+      beforeRouteUpdate(to, from, next){
+         this.posts = [];
+         this.currentPage = 0;
+         this.cardUserData = this.emptyCardUserData;
+         this.init(to.params.username);
+         next();
       },
 
       methods: {
+
+         async init(username){
+
+            this.username = username;
+            let response;
+
+            try{
+               if(this.authenticated){
+                  if(this.username === this.user.username){
+                     this.cardUserData = this.user;
+                  }else{
+                     response = await axios.get("public_user_data/" + this.username);
+                     this.cardUserData = response.data;
+                     this.correctImageUrl();
+                  }
+               }else{
+                  response = await axios.get("public_user_data/" + this.username);
+                  this.cardUserData = response.data;
+                  this.correctImageUrl();
+               }
+            }catch(error){
+               console.log(error);
+            }
+
+            window.addEventListener('scroll', () => {
+               this.bottom = this.bottomVisible()
+            });
+
+            this.addPosts();
+         },
+
+         correctImageUrl(){
+            if(this.cardUserData.profile_picture){
+               this.cardUserData.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
+                  this.cardUserData.profile_picture.url.replace("public/", "storage/");
+            }else{
+               this.cardUserData.profile_picture = {
+                  url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
+                  size: 5229
+               };
+            }
+         },
 
          bottomVisible() {
             const scrollY = window.scrollY;

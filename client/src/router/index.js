@@ -28,8 +28,7 @@ const routes = [
    {
       path: "/:username",
       name: "profile",
-      component: Profile,
-      props: true
+      component: Profile
    },
    {
       path: '*',

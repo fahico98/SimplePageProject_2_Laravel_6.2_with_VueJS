@@ -16,9 +16,12 @@
             </v-carousel>
 
             <v-card-title>
-               <div @click.prevent="goToProfile(post.user.username)">
+               <div>
                   <span class="black--text">{{ post.user.name }} {{ post.user.lastname }}&nbsp;</span>
-                  <span class="font-weight-light grey--text">{{ post.user.username }}</span>
+                  <span class="font-weight-light grey--text" @click.prevent="goToProfile(post.user.username)"
+                     style="cursor: pointer">
+                     {{ post.user.username }}
+                  </span>
                </div>
             </v-card-title>
 
@@ -87,23 +90,9 @@
          this.post.images.forEach((image) => {
             image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
          });
-
-         //this.correctImagesUrls();
       },
 
       methods: {
-
-         // postImageUrl(post_picture){
-         //    return axios.defaults.baseURL.replace("/api", "") + post_picture.replace("public/", "storage/");
-         // },
-
-         // correctImagesUrls(){
-         //    if(this.post.images.length != 0){
-         //       this.post.images.forEach((image) => {
-         //          image.url = axios.defaults.baseURL.replace("/api", "") + image.url;
-         //       });
-         //    }
-         // },
 
          checkLike(){
             axios.get("posts/check_like/" + this.post.id + "/" + this.user.id)

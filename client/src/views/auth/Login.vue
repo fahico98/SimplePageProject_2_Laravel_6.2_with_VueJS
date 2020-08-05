@@ -1,7 +1,8 @@
 
 <template>
 
-   <v-container fluid class="ma-0 pa-0 my-12">
+
+   <v-container class="my-5">
       <v-row class="ma-0 pa-0 my-10">
 
          <v-col cols="4" class="ma-0 pa-0">
