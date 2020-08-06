@@ -95,12 +95,6 @@
          ProfilePictureModalForm
       },
 
-      data(){
-         return {
-            //
-         }
-      },
-
       props: {
          cardUserData: {
             type: Object

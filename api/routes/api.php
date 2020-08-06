@@ -38,8 +38,6 @@ Route::group(["namespace" => "API"], function(){
 
       Route::post("store", "PostController@store");
       Route::get("index/{page}/{username?}", "PostController@index");
-      Route::get("check_like/{post_id}/{user_id}", "PostController@checkLike");
-      Route::get("check_dislike/{post_id}/{user_id}", "PostController@checkDislike");
       Route::post("like/{post_id}/{dislike}", "PostController@like");
       Route::post("dislike/{post_id}/{like}", "PostController@dislike");
       Route::post("undo_like/{post_id}", "PostController@undoLike");

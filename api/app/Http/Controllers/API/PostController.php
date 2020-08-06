@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use App\PostImage;
 use App\Post;
 
+use App\Dislike;
+use App\Like;
+
 class PostController extends Controller{
 
    /**
@@ -95,38 +98,6 @@ class PostController extends Controller{
    }
 
    /**
-    * Check if user like the post.
-    *
-    * @param int $post_id
-    * @param int $user_id
-    * @return \Illuminate\Http\Response
-    */
-   public function checkLike($post_id, $user_id){
-      return response()->json(
-         DB::table("user_like_post")
-            ->where("user_id", $user_id)
-            ->where("post_id", $post_id)
-            ->exists()
-      );
-   }
-
-   /**
-    * Check if user doesn't like the post.
-    *
-    * @param int $post_id
-    * @param int $user_id
-    * @return \Illuminate\Http\Response
-    */
-   public function checkDislike($post_id, $user_id){
-      return response()->json(
-         DB::table("user_dislike_post")
-            ->where("user_id", $user_id)
-            ->where("post_id", $post_id)
-            ->exists()
-      );
-   }
-
-   /**
     * Insert a new record in user_like_post table.
     *
     * @param int $post_id
@@ -134,15 +105,17 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function like($post_id, $dislike){
-      if($dislike){
-         DB::table("user_dislike_post")->where([
-               "user_id" => Auth::user()->id,
-               "post_id" => $post_id
-            ])
-            ->delete();
+      if($dislike == "true"){
+         Post::find($post_id)->decrement("dislikes");
+         Dislike::where([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
+         ->delete();
       }
+      Post::find($post_id)->increment("likes");
       return response()->json([
-         "data" => DB::table("user_like_post")->insert([
+         "data" => Like::insert([
             "user_id" => Auth::user()->id,
             "post_id" => $post_id
          ])
@@ -157,15 +130,17 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function dislike($post_id, $like){
-      if($like){
-         DB::table("user_like_post")->where([
-               "user_id" => Auth::user()->id,
-               "post_id" => $post_id
-            ])
-            ->delete();
+      if($like == "true"){
+         Post::find($post_id)->decrement("likes");
+         Like::where([
+            "user_id" => Auth::user()->id,
+            "post_id" => $post_id
+         ])
+         ->delete();
       }
+      Post::find($post_id)->increment("dislikes");
       return response()->json([
-         "data" => DB::table("user_dislike_post")->insert([
+         "data" => Dislike::insert([
             "user_id" => Auth::user()->id,
             "post_id" => $post_id
          ])
@@ -179,8 +154,9 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function undoLike($post_id){
+      Post::find($post_id)->decrement("likes");
       return response()->json([
-         "data" => DB::table("user_like_post")->where([
+         "data" => Like::where([
             "user_id" => Auth::user()->id,
             "post_id" => $post_id
          ])
@@ -195,8 +171,9 @@ class PostController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function undoDislike($post_id){
+      Post::find($post_id)->decrement("dislikes");
       return response()->json([
-         "data" => DB::table("user_dislike_post")->where([
+         "data" => Dislike::where([
             "user_id" => Auth::user()->id,
             "post_id" => $post_id
          ])
