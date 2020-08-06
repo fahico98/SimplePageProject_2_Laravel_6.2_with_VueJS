@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 
 class Post extends Model{
@@ -33,6 +34,38 @@ class Post extends Model{
       "created_at",
       "updated_at"
    ];
+
+   /**
+    * The accessors to append to the model's array form.
+    *
+    * @var array
+    */
+   protected $appends = [
+      "i_like",
+      "i_dislike"
+   ];
+
+   /**
+    * Return true if the authenticated user likes the post.
+    *
+    * @return bool
+    */
+   public function getILikeAttribute(){
+      return Like::where("post_id", $this->attributes["id"])
+         ->where("user_id", Auth::user()->id)
+         ->exists();
+   }
+
+   /**
+    * Return true if the authenticated user dislikes the post.
+    *
+    * @return bool
+    */
+   public function getIDislikeAttribute(){
+      return Dislike::where("post_id", $this->attributes["id"])
+         ->where("user_id", Auth::user()->id)
+         ->exists();
+   }
 
    public function scopePostsByUser($query, $page, $username){
       $user = User::select("id")->where("username", $username)->first();

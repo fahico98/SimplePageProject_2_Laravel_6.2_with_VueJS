@@ -13,15 +13,23 @@
          </template>
 
          <v-list dense>
+
             <v-list-item justify="center" :ripple="false" v-on:click="goToProfile()">
                <v-list-item-title class="body-2 font-weight-bold">{{ user.username }}</v-list-item-title>
             </v-list-item>
-            <v-list-item :ripple="false" v-on:click="goTo('settings')">
-               <v-list-item-title class="text-capitalize body-2 font-weight-light">configuración</v-list-item-title>
+
+            <v-list-item :ripple="false" v-on:click="goTo('auth_home')">
+               <v-list-item-title class="text-capitalize body-2 font-weight-light">inicio</v-list-item-title>
             </v-list-item>
+
+            <!-- <v-list-item :ripple="false" v-on:click="goTo('settings')">
+               <v-list-item-title class="text-capitalize body-2 font-weight-light">configuración</v-list-item-title>
+            </v-list-item> -->
+
             <v-list-item :ripple="false" v-on:click="logout()">
                <v-list-item-title class="text-capitalize body-2 font-weight-light">cerrar sesión</v-list-item-title>
             </v-list-item>
+
          </v-list>
 
       </v-menu>
@@ -68,8 +76,7 @@
          },
 
          goTo(routeName){
-            console.log("--> " + routeName);
-            //this.$router.push({name: routeName});
+            this.$router.push({name: routeName});
          }
       }
    }

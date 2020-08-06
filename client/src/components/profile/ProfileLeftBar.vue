@@ -3,7 +3,8 @@
 
    <!-- <v-navigation-drawer :floating="!inProfile()" width="25%" right permanent clipped app light> -->
    <v-navigation-drawer width="25%" permanent clipped app light>
-      <profile-user-card/>
+      <profile-user-card v-if="$route.name == 'profile'" :cardUserData="cardUserData"/>
+      <!-- <outstanding-posts v-else-if="$route.name == 'auth_home'"/> -->
    </v-navigation-drawer>
 
    <!--
@@ -23,6 +24,7 @@
 <script>
 
    import ProfileUserCard from "./ProfileUserCard";
+   import { mapGetters } from "vuex";
 
    export default {
 
@@ -30,9 +32,19 @@
          ProfileUserCard
       },
 
-      props: [
-         "publicUserData"
-      ]
+      props: {
+         cardUserData: {
+            type: Object
+         }
+      },
+
+      computed: {
+
+         ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user"
+         }),
+      }
    }
 
 </script>

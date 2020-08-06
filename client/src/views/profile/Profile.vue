@@ -3,7 +3,7 @@
 
    <v-container class="ma-0 pa-0">
 
-      <profile-user-card class="grey lighten-4" :cardUserData="cardUserData"/>
+      <profile-left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
       <profile-right-bar class="grey lighten-4"/>
 
       <div class="mx-2" v-if="!emptyPostsArray">
@@ -17,7 +17,7 @@
 <script>
 
    import ProfilePostCard from "../../components/profile/ProfilePostCard";
-   import ProfileUserCard from "../../components/profile/ProfileUserCard";
+   import ProfileLeftBar from "../../components/profile/ProfileLeftBar";
    import ProfileRightBar from "../../components/profile/ProfileRightBar";
    import { mapGetters } from "vuex";
    import axios from "axios";
@@ -39,7 +39,7 @@
 
       components: {
          ProfilePostCard,
-         ProfileUserCard,
+         ProfileLeftBar,
          ProfileRightBar
       },
 
@@ -76,25 +76,28 @@
 
          async init(username){
 
-            this.username = username;
-            let response;
+            if(this.$route.name == "profile"){
 
-            try{
-               if(this.authenticated){
-                  if(this.username === this.user.username){
-                     this.cardUserData = this.user;
+               this.username = username;
+               let response;
+
+               try{
+                  if(this.authenticated){
+                     if(this.username === this.user.username){
+                        this.cardUserData = this.user;
+                     }else{
+                        response = await axios.get("public_user_data/" + this.username);
+                        this.cardUserData = response.data;
+                        this.correctImageUrl();
+                     }
                   }else{
                      response = await axios.get("public_user_data/" + this.username);
                      this.cardUserData = response.data;
                      this.correctImageUrl();
                   }
-               }else{
-                  response = await axios.get("public_user_data/" + this.username);
-                  this.cardUserData = response.data;
-                  this.correctImageUrl();
+               }catch(error){
+                  console.log(error);
                }
-            }catch(error){
-               console.log(error);
             }
 
             window.addEventListener('scroll', () => {
@@ -116,7 +119,7 @@
             }
          },
 
-         bottomVisible() {
+         bottomVisible(){
             const scrollY = window.scrollY;
             const visible = document.documentElement.clientHeight;
             const pageHeight = document.documentElement.scrollHeight;
@@ -128,7 +131,11 @@
 
             this.currentPage++;
 
-            await axios.get("posts/index/" + this.currentPage + "/" + this.username)
+            let url = this.$route.name == "profile"
+               ? "posts/index/" + this.currentPage + "/" + this.username
+               : "posts/index/" + this.currentPage;
+
+            await axios.get(url)
                .then((response) => {
                   this.posts = this.posts.concat(response.data);
                })

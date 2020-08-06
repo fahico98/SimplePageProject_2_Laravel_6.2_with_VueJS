@@ -26,6 +26,11 @@ const routes = [
       component: Register
    },
    {
+      path: "/inicio",
+      name: "auth_home",
+      component: Profile
+   },
+   {
       path: "/:username",
       name: "profile",
       component: Profile

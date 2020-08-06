@@ -5,10 +5,10 @@
       <main-app-bar/>
 
       <v-main class="grey lighten-4">
-         <div><router-view/></div>
+         <div><router-view :key="$route.path"/></div>
       </v-main>
 
-      <main-footer v-if="$route.name != 'profile'"/>
+      <main-footer v-if="$route.name != 'profile' && $route.name != 'auth_home'"/>
    </v-app>
 
 </template>

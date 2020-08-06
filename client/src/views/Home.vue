@@ -3,11 +3,13 @@
 
    <div class="home">
       <v-container fluid>
+
          <index-carousel/>
          <v-divider class="my-16"></v-divider>
          <mesh-cards/>
          <v-divider class="my-16"></v-divider>
          <testimonials-carousel/>
+
       </v-container>
    </div>
 

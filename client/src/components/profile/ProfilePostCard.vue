@@ -16,12 +16,9 @@
             </v-carousel>
 
             <v-card-title>
-               <div>
-                  <span class="black--text">{{ post.user.name }} {{ post.user.lastname }}&nbsp;</span>
-                  <span class="font-weight-light grey--text" @click.prevent="goToProfile(post.user.username)"
-                     style="cursor: pointer">
-                     {{ post.user.username }}
-                  </span>
+               <div @click.prevent="goToProfile(post.user.username)" style="cursor: pointer">
+                  <span class="black--text">{{ post.user.name }}&nbsp;{{ post.user.lastname }}&nbsp;</span>
+                  <span class="font-weight-light grey--text">{{ post.user.username }}</span>
                </div>
             </v-card-title>
 
@@ -31,10 +28,10 @@
 
             <v-card-actions>
 
-               <v-btn icon :color="I_like ? 'green darken-1' : 'grey'" @click.prevent="like()">
+               <v-btn icon :color="post.i_like ? 'green darken-1' : 'grey'" @click.prevent="like()">
                   <v-icon>mdi-thumb-up</v-icon>
                </v-btn>
-               <v-btn icon :color="I_dislike ? 'red darken-4' : 'grey'" @click.prevent="dislike()">
+               <v-btn icon :color="post.i_dislike ? 'red darken-4' : 'grey'" @click.prevent="dislike()">
                   <v-icon>mdi-thumb-down</v-icon>
                </v-btn>
 
@@ -59,16 +56,9 @@
 
    export default {
 
-      data(){
-         return {
-            I_like: false,
-            I_dislike: false
-         }
+      props: {
+         post: {type: Object}
       },
-
-      props: [
-         "post"
-      ],
 
       computed: {
 
@@ -83,10 +73,6 @@
       },
 
       mounted(){
-
-         this.checkLike();
-         if(!this.I_like){ this.checkDislike(); }
-
          this.post.images.forEach((image) => {
             image.url = axios.defaults.baseURL.replace("/api", "") + image.url.replace("public/", "storage/");
          });
@@ -94,36 +80,16 @@
 
       methods: {
 
-         checkLike(){
-            axios.get("posts/check_like/" + this.post.id + "/" + this.user.id)
-               .then((response) => {
-                  this.I_like = response.data;
-               })
-               .catch((error) => {
-                  console.log(error);
-               });
-         },
-
-         checkDislike(){
-            axios.get("posts/check_dislike/" + this.post.id + "/" + this.user.id)
-               .then((response) => {
-                  this.I_dislike = response.data;
-               })
-               .catch((error) => {
-                  console.log(error);
-               });
-         },
-
          like(){
-            if(!this.I_like){
-               this.I_like = true;
-               if(this.I_dislike){ this.I_dislike = false; }
-               axios.post("posts/like/" + this.post.id + "/" + this.I_like)
+            if(!this.post.i_like){
+               this.post.i_like = true;
+               if(this.post.i_dislike){ this.post.i_dislike = false; }
+               axios.post("posts/like/" + this.post.id + "/" + this.post.i_like)
                   .catch((error) => {
                      console.log(error);
                   });
             }else{
-               this.I_like = false;
+               this.post.i_like = false;
                axios.post("posts/undo_like/" + this.post.id)
                   .catch((error) => {
                      console.log(error);
@@ -132,15 +98,15 @@
          },
 
          dislike(){
-            if(!this.I_dislike){
-               this.I_dislike = true;
-               if(this.I_like){ this.I_like = false; }
-               axios.post("posts/dislike/" + this.post.id + "/" + this.I_dislike)
+            if(!this.post.i_dislike){
+               this.post.i_dislike = true;
+               if(this.post.i_like){ this.post.i_like = false; }
+               axios.post("posts/dislike/" + this.post.id + "/" + this.post.i_dislike)
                   .catch((error) => {
                      console.log(error);
                   });
             }else{
-               this.I_dislike = false;
+               this.post.i_dislike = false;
                axios.post("posts/undo_dislike/" + this.post.id)
                   .catch((error) => {
                      console.log(error);
