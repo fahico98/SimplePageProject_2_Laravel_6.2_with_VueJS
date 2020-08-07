@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\PostPermission;
 use App\PostImage;
 use App\Post;
 
@@ -38,17 +39,21 @@ class PostController extends Controller{
    }
 
    /**
-    * Store a newly created resource in storage.
+    * Store a newly created Post instance in database.
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
    public function store(Request $request){
 
+      return response()->json($request);
+
+      $postPermission = PostPermission::where("name", $request->postPermission)->get();
+
       $post = new Post;
       $post->title = $request->title;
       $post->content = $request->content;
-      $post->post_permission_id = $request->privacy;
+      $post->post_permission_id = $postPermission->id;
       $post->user_id = Auth::user()->id;
       $post->save();
       $post->refresh();
@@ -77,14 +82,20 @@ class PostController extends Controller{
    }
 
    /**
-    * Update the specified resource in storage.
+    * Update the specified Post instance in database.
     *
     * @param  \Illuminate\Http\Request  $request
-    * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function update(Request $request, $id){
-      //
+   public function update(Request $request){
+      return response()->json(
+         Post::where("id", $request->id)
+            ->update([
+               "title" => $request->title,
+               "content" => $request->content,
+               "post_permission_id" => $request->postPermissionId
+            ])
+      );
    }
 
    /**
@@ -93,8 +104,8 @@ class PostController extends Controller{
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function destroy($id){
-      //
+   public function destroy(Post $post){
+      return response()->json($post->delete());
    }
 
    /**

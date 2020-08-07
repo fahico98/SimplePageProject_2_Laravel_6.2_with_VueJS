@@ -8,7 +8,7 @@
          <v-btn small dark depressed v-if="action == 'store'" v-ripple="false" color="blue lighten-1" width="100%"
             class="text-capitalize" v-bind="attrs" v-on="on">agregar biografia</v-btn>
 
-         <v-btn icon v-else-if="action == 'edit'" v-ripple="false" v-bind="attrs" v-on="on">
+         <v-btn small icon class="ml-2" v-else-if="action == 'edit'" v-ripple="false" v-bind="attrs" v-on="on">
             <v-icon small dense color="blue lighten-1">mdi-pencil-outline</v-icon>
          </v-btn>
 

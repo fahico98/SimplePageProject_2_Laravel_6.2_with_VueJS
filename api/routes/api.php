@@ -37,6 +37,8 @@ Route::group(["namespace" => "API"], function(){
    Route::group(["prefix" => "posts"], function(){
 
       Route::post("store", "PostController@store");
+      Route::post("update", "PostController@update");
+      Route::delete("delete/{post}", "PostController@destroy");
       Route::get("index/{page}/{username?}", "PostController@index");
       Route::post("like/{post_id}/{dislike}", "PostController@like");
       Route::post("dislike/{post_id}/{like}", "PostController@dislike");

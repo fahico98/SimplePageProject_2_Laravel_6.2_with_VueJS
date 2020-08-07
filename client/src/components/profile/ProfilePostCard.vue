@@ -28,29 +28,32 @@
 
             <v-card-actions>
 
-               <v-btn icon :color="post.i_like ? 'green darken-1' : 'grey'" @click.prevent="like()">
-                  <v-icon>mdi-thumb-up</v-icon>
+               <v-btn icon :color="post.i_like ? 'blue lighten-1' : 'grey'" @click.prevent="like()">
+                  <v-icon>{{ post.i_like ? 'mdi-thumb-up' : 'mdi-thumb-up-outline' }}</v-icon>
                </v-btn>
-               &nbsp;{{ post.likes }}
+               <span class="text--grey">{{ post.likes }}</span>
 
-               <v-btn icon :color="post.i_dislike ? 'red darken-4' : 'grey'" @click.prevent="dislike()">
-                  <v-icon>mdi-thumb-down</v-icon>
+               <v-btn icon :color="post.i_dislike ? 'blue lighten-1' : 'grey'" @click.prevent="dislike()" class="ml-3">
+                  <v-icon>{{ post.i_dislike ? 'mdi-thumb-down' : 'mdi-thumb-down-outline' }}</v-icon>
                </v-btn>
-               &nbsp;{{ post.dislikes }}
-
-               <v-btn icon v-if="profileOwner" color="grey" @click.prevent="">
-                  <v-icon>mdi-delete</v-icon>
-               </v-btn>
-
-               <v-btn icon v-if="profileOwner" color="grey" @click.prevent="">
-                  <v-icon>mdi-pencil</v-icon>
-               </v-btn>
+               <span color="grey">{{ post.dislikes }}</span>
 
                <v-spacer></v-spacer>
 
-               <v-btn v-if="profileOwner" icon>
-                  <v-icon>{{ 'mdi-chevron-down' /*show ? 'mdi-chevron-up' : 'mdi-chevron-down'*/ }}</v-icon>
-               </v-btn>
+               <div v-if="profileOwner">
+
+                  <edit-create-post-modal-form :post="post" action="edit"/>
+
+                  <delete-post-modal-form :postId="post.id"/>
+
+                  <!-- <v-btn icon class="mx-0" color="blue lighten-1" @click.prevent="">
+                     <v-icon>mdi-trash-can-outline</v-icon>
+                  </v-btn> -->
+
+                  <v-chip small dark v-if="inProfile()" class="mx-2" color="blue lighten-1">
+                     {{ permissionName }}
+                  </v-chip>
+               </div>
 
             </v-card-actions>
          </v-card>
@@ -62,10 +65,17 @@
 
 <script>
 
+   import EditCreatePostModalForm from "./modals/EditCreatePostModalForm";
+   import DeletePostModalForm from "./modals/DeletePostModalForm";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
    export default {
+
+      components: {
+         EditCreatePostModalForm,
+         DeletePostModalForm
+      },
 
       props: {
          post: {type: Object}
@@ -84,6 +94,16 @@
 
          hideDelimiters(){
             return this.post.images.length <= 1;
+         },
+
+         permissionName(){
+            if(this.post.post_permission.id == 1){
+               return "Público";
+            }else if(this.post.post_permission.id == 2){
+               return "Seguidores";
+            }else{
+               return "Solo yo";
+            }
          }
       },
 
@@ -150,6 +170,10 @@
          goToProfile(username){
             this.$router.push({name: "profile", params: {username: username}});
          },
+
+         inProfile(){
+            return this.$route.name == "profile";
+         }
       }
    }
 

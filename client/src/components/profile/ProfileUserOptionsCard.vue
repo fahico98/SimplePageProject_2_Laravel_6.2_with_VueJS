@@ -1,15 +1,15 @@
 
 <template>
 
-   <v-container class="my-0 px-12">
-      <new-post-modal-form v-if="authenticated"/>
+   <v-container class="my-0 px-8">
+      <edit-create-post-modal-form v-if="authenticated" action="create"/>
    </v-container>
 
 </template>
 
 <script>
 
-   import NewPostModalForm from "./modals/NewPostModalForm";
+   import EditCreatePostModalForm from "./modals/EditCreatePostModalForm";
    import { mapGetters } from "vuex";
 
    export default {
@@ -22,7 +22,7 @@
       },
 
       components: {
-         NewPostModalForm
+         EditCreatePostModalForm
       }
    }
 
