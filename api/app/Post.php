@@ -48,7 +48,7 @@ class Post extends Model{
    /**
     * Return true if the authenticated user likes the post.
     *
-    * @return bool
+    * @return Boolean
     */
    public function getILikeAttribute(){
       return Like::where("post_id", $this->attributes["id"])
@@ -59,7 +59,7 @@ class Post extends Model{
    /**
     * Return true if the authenticated user dislikes the post.
     *
-    * @return bool
+    * @return Boolean
     */
    public function getIDislikeAttribute(){
       return Dislike::where("post_id", $this->attributes["id"])

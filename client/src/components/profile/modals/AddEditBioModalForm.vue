@@ -21,7 +21,8 @@
                label="Biografía" @input="$v.bio.$touch()" :error-messages="bioErrors"/>
 
             <v-card-actions>
-               <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" color="blue lighten-1">
+               <v-btn depressed dark v-ripple="false" @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize"
+                  color="blue lighten-1">
                   <span class="px-2">Guardar</span>
                </v-btn>
             </v-card-actions>
@@ -97,21 +98,23 @@
 
       methods: {
          submit(){
-            this.$v.$touch();
-            if(!this.$v.$invalid){
-               this.loading = "blue lighten-1";
-               axios.post("store_bio", {bio: this.bio})
-                  .then((response) => {
-                     if(response.data){
-                        this.$emit("bioChangedSuccessfully", this.bio);
-                        this.bio = "";
-                        this.loading = false;
-                        this.dialog = false;
-                     }
-                  })
-                  .catch((error) => {
-                     console.log(error);
-                  });
+            if(!this.loading){
+               this.$v.$touch();
+               if(!this.$v.$invalid){
+                  this.loading = "blue lighten-1";
+                  axios.post("store_bio", {bio: this.bio})
+                     .then((response) => {
+                        if(response.data){
+                           this.$emit("bioChangedSuccessfully", this.bio);
+                           this.bio = "";
+                           this.loading = false;
+                           this.dialog = false;
+                        }
+                     })
+                     .catch((error) => {
+                        console.log(error);
+                     });
+               }
             }
          }
       }

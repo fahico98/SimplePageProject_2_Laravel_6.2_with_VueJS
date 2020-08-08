@@ -7,7 +7,7 @@
          <template v-slot:activator="{ on, attrs }">
             <v-btn color="white" class="mr-5" v-bind="attrs" v-on="on" :ripple="false" icon x-small>
                <v-avatar size="40">
-                  <img :src="user.profile_picture.url" :alt="user.username">
+                  <img :src="correctedImageUrl" :alt="user.username">
                </v-avatar>
             </v-btn>
          </template>
@@ -40,6 +40,7 @@
 <script>
 
    import { mapActions, mapGetters } from "vuex";
+   import axios from "axios";
 
    export default {
 
@@ -50,9 +51,17 @@
       },
 
       computed: {
+
          ...mapGetters({
             user: "auth/user"
-         })
+         }),
+
+         correctedImageUrl(){
+            return this.user.profile_picture
+               ? axios.defaults.baseURL.replace("/api", "") +
+                  this.user.profile_picture.url.replace("public/", "storage/")
+               : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
+         },
       },
 
       methods: {
@@ -72,7 +81,15 @@
          },
 
          goToProfile(){
-            this.$router.push({name: "profile", params: {username: this.user.username}});
+            this.$router.push(
+               {
+                  name: "profile",
+                  params: {
+                     username: this.user.username,
+                     tab: "publicaciones"
+                  }
+               }
+            );
          },
 
          goTo(routeName){

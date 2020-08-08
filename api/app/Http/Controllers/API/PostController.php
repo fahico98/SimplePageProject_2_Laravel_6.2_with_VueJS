@@ -46,14 +46,10 @@ class PostController extends Controller{
     */
    public function store(Request $request){
 
-      return response()->json($request);
-
-      $postPermission = PostPermission::where("name", $request->postPermission)->get();
-
       $post = new Post;
       $post->title = $request->title;
       $post->content = $request->content;
-      $post->post_permission_id = $postPermission->id;
+      $post->post_permission_id = $request->postPermissionId;
       $post->user_id = Auth::user()->id;
       $post->save();
       $post->refresh();

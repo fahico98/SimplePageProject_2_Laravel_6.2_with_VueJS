@@ -9,7 +9,7 @@
 
 <script>
 
-   import EditCreatePostModalForm from "./modals/EditCreatePostModalForm";
+   import EditCreatePostModalForm from "../modals/EditCreatePostModalForm";
    import { mapGetters } from "vuex";
 
    export default {

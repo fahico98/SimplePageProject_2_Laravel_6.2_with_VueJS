@@ -64,15 +64,15 @@ export default {
             // Cuando se deban agregar headers a la solicitud es mejor no usar alias (axios.post).
             let response = await axios.get("auth/me");
 
-            if(response.data.profile_picture){
-               response.data.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
-                  response.data.profile_picture.url.replace("public/", "storage/");
-            }else{
-               response.data.profile_picture = {
-                  url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
-                  size: 5229
-               };
-            }
+            // if(response.data.profile_picture){
+            //    response.data.profile_picture.url = axios.defaults.baseURL.replace("/api", "") +
+            //       response.data.profile_picture.url.replace("public/", "storage/");
+            // }else{
+            //    response.data.profile_picture = {
+            //       url: axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg",
+            //       size: 5229
+            //    };
+            // }
 
             commit("SET_USER", response.data);
          }catch(error){

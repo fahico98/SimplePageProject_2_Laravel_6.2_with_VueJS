@@ -28,12 +28,13 @@
 
             <v-card-actions>
 
-               <v-btn icon :color="post.i_like ? 'blue lighten-1' : 'grey'" @click.prevent="like()">
+               <v-btn icon v-ripple="false" :color="post.i_like ? 'blue lighten-1' : 'grey'" @click.prevent="like()">
                   <v-icon>{{ post.i_like ? 'mdi-thumb-up' : 'mdi-thumb-up-outline' }}</v-icon>
                </v-btn>
                <span class="text--grey">{{ post.likes }}</span>
 
-               <v-btn icon :color="post.i_dislike ? 'blue lighten-1' : 'grey'" @click.prevent="dislike()" class="ml-3">
+               <v-btn icon v-ripple="false" :color="post.i_dislike ? 'blue lighten-1' : 'grey'" @click.prevent="dislike()"
+                  class="ml-3">
                   <v-icon>{{ post.i_dislike ? 'mdi-thumb-down' : 'mdi-thumb-down-outline' }}</v-icon>
                </v-btn>
                <span color="grey">{{ post.dislikes }}</span>

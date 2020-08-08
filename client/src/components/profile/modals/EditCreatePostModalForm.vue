@@ -10,14 +10,12 @@
                <v-icon>mdi-pencil-outline</v-icon>
             </v-btn>
 
-            <v-btn small dark depressed v-if="action == 'create'" v-ripple="false" color="blue lighten-1" width="100%"
+            <v-btn small dark depressed v-else-if="action == 'create'" v-ripple="false" color="blue lighten-1" width="100%"
                class="text-capitalize" v-bind="attrs" v-on="on">Publicar</v-btn>
 
          </template>
 
          <v-card :loading="loading">
-
-            <!-- {{ post_permission_id }} -->
 
             <v-card-title class="headline pt-5">{{ action == "edit" ? "Editar publicación" : "Nueva publicación" }}</v-card-title>
 
@@ -40,21 +38,36 @@
 
                <v-card-actions>
 
-                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" color="blue lighten-1">
+                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" v-ripple="false"
+                     color="blue lighten-1">
                      <span class="px-2">{{ action == "edit" ? "Guardar cambios" : "Publicar" }}</span>
                   </v-btn>
 
-                  <v-btn depressed light class="mb-2 ml-3 text-capitalize" color="grey lighten-1"
-                     @click="action == 'edit' ? dialog = false : limpiarCampos()">
-                     <span class="px-2">{{ action == "edit" ? "Cancelar" : "Limpiar campos" }}</span>
+                  <v-btn depressed light v-ripple="false" class="mb-2 ml-3 text-capitalize" color="grey lighten-1"
+                     v-if="action == 'create'" @click="limpiarCampos()">
+                     <span class="px-2">Limpiar campos</span>
+                  </v-btn>
+
+                  <v-btn depressed light v-ripple="false" class="mb-2 ml-3 text-capitalize" color="grey lighten-1"
+                     @click="loading ? dialog = dialog : dialog = false">
+                     <span class="px-2">Cancelar</span>
                   </v-btn>
 
                </v-card-actions>
 
             </v-form>
          </v-card>
-
       </v-dialog>
+
+      <v-snackbar v-if="action == 'edit'" v-model="snackbar" :timeout="5000" color="blue lighten-1">
+         {{ snackbarText }}
+         <template v-slot:action="{ attrs }">
+            <v-btn text v-ripple="false" class="white--text text-capitalize" v-bind="attrs" @click="snackbar = false">
+               Ok
+            </v-btn>
+         </template>
+      </v-snackbar>
+
    </div>
 
 </template>
@@ -82,6 +95,8 @@
             post_permission_id: 1,
             loading: false,
             dialog: false,
+            snackbar: false,
+            snackbarText: "",
             items: [
                { value: 1, text: "Público" },
                { value: 2, text: "Seguidores" },
@@ -130,6 +145,9 @@
             this.title = this.post.title;
             this.content = this.post.content;
             this.post_permission_id = this.post.post_permission.id;
+            this.snackbarText = "Los cambios han sido guardados exitosamente.";
+         }else{
+            this.snackbarText = "La publicación ha sido creada exitosamente.";
          }
       },
 
@@ -170,61 +188,72 @@
       methods: {
 
          submit(){
-            this.$v.$touch();
-            if(!this.$v.$invalid){
-               this.loading = "blue lighten-1";
-               var formData = new FormData();
-               formData.append("title", this.title);
-               formData.append("content", this.content);
-               formData.append("postPermissionId", this.post_permission_id);
-               if(this.action == "create"){
-                  for(var i = 0; i < this.images.length; i++){
-                     let image = this.images[i];
-                     formData.append('images[' + i + ']', image);
+
+            if(!this.loading){
+
+               this.$v.$touch();
+
+               if(!this.$v.$invalid){
+
+                  this.loading = "blue lighten-1";
+                  var formData = new FormData();
+                  formData.append("title", this.title);
+                  formData.append("content", this.content);
+                  formData.append("postPermissionId", this.post_permission_id);
+
+                  if(this.action == "create"){
+
+                     for(var i = 0; i < this.images.length; i++){
+                        let image = this.images[i];
+                        formData.append('images[' + i + ']', image);
+                     }
+
+                     axios.post("posts/store", formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                        .then((response) => {
+                           if(response.data){
+                              this.loading = false;
+                              this.dialog = false;
+                              // if(this.$route.name == "profile" && this.$route.params.username == this.user.username){
+                              //    /* Investigar si se puede hacer de forma mas elegante la redirección. */
+                              //    this.$router.go(this.$router.currentRoute);
+                              // }
+                           }
+                        })
+                        .catch((error) => {
+                           console.log(error);
+                        });
+
+                  }else{
+
+                     formData.append("id", this.post.id);
+                     axios.post("posts/update", formData)
+                        .then((response) => {
+                           if(response.data){
+                              this.loading = false;
+                              this.dialog = false;
+                              this.post.title = this.title;
+                              this.post.content = this.content;
+                              this.post.post_permission.id = this.post_permission_id;
+                              this.snackbar = true;
+                           }
+                        })
+                        .catch((error) => {
+                           console.log(error);
+                        });
+
                   }
-                  axios.post("posts/store", formData, {headers: {'Content-Type': 'multipart/form-data'}})
-                     .then((response) => {
-                        if(response.data){
-                           this.loading = false;
-                           this.dialog = false;
-                           this.title = "";
-                           this.content = "";
-                           this.images = [];
-                           this.post_permission_id = 1;
-                           // if(this.$route.name == "profile" && this.$route.params.username == this.user.username){
-                           //    /* Investigar si se puede hacer de forma mas elegante la redirección. */
-                           //    this.$router.go(this.$router.currentRoute);
-                           // }
-                        }
-                     })
-                     .catch((error) => {
-                        console.log(error);
-                     });
-               }else{
-                  formData.append("id", this.post.id);
-                  axios.post("posts/update", formData)
-                     .then((response) => {
-                        if(response.data){
-                           this.loading = false;
-                           this.dialog = false;
-                           this.post.title = this.title;
-                           this.post.content = this.content;
-                           this.post.post_permission.id = this.post_permission_id;
-                        }
-                     })
-                     .catch((error) => {
-                        console.log(error);
-                     });
                }
             }
          },
 
          limpiarCampos(){
-            this.title = "";
-            this.content = "";
-            this.images = [];
-            this.post_permission_id = 1;
-            this.$v.$reset();
+            if(!this.loading){
+               this.title = "";
+               this.content = "";
+               this.images = [];
+               this.post_permission_id = 1;
+               this.$v.$reset();
+            }
          }
       }
    }

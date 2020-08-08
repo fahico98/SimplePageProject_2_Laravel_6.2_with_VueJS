@@ -8,7 +8,7 @@
          <div><router-view :key="$route.path"/></div>
       </v-main>
 
-      <main-footer v-if="$route.name != 'profile' && $route.name != 'auth_home'"/>
+      <main-footer v-if="$route.matched.every(route => route.name != 'profile') && $route.name != 'auth_home'"/>
    </v-app>
 
 </template>

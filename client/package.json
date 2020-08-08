@@ -13,6 +13,7 @@
     "lodash": "^4.17.15",
     "velocity-animate": "^1.5.2",
     "vue": "^2.6.11",
+    "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.2.0",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.3.0",

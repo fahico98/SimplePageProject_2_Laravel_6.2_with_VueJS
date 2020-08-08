@@ -12,16 +12,6 @@ class User extends Authenticatable implements JWTSubject{
    use Notifiable;
 
    /**
-    * Set the user's profile picture.
-    *
-    * @param  array  $value
-    * @return void
-    */
-   // public function setProfilePictureAttribute($value){
-   //    $this->attributes['profile_picture'] = $value;
-   // }
-
-   /**
     * The attributes that are mass assignable.
     *
     * @var array

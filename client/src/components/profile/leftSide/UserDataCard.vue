@@ -12,10 +12,10 @@
       <div class="ma-0 pa-0" v-else>
 
          <v-row justify="center" align="center">
-            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="cardUserData.profile_picture.url"
+            <profile-picture-modal-form v-if="profileOwner && authenticated" :imageUrl="correctedImageUrl"
                :completeName="completeName" @imageChangedSuccessfully="changeProfilePicture($event)"/>
             <v-avatar size="250" v-else>
-               <img :src="cardUserData.profile_picture.url" :alt="completeName">
+               <img :src="correctedImageUrl" :alt="completeName">
             </v-avatar>
          </v-row>
 
@@ -58,13 +58,13 @@
                   </p>
                </v-col>
                <v-col cols="1" class="ma-0 pa-0">
-                  <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
+                  <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
                      :action="'edit'" :bioProp="cardUserData.biography"/>
                </v-col>
             </v-row>
 
             <v-row v-else class="mt-5">
-               <add-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
+               <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
             </v-row>
          </div>
 
@@ -84,14 +84,15 @@
 
 <script>
 
-   import AddBioModalForm from "./modals/AddBioModalForm";
-   import ProfilePictureModalForm from "./modals/ProfilePictureModalForm";
+   import AddEditBioModalForm from "../modals/AddEditBioModalForm";
+   import ProfilePictureModalForm from "../modals/ProfilePictureModalForm";
    import { mapActions, mapGetters } from "vuex";
+   import axios from "axios";
 
    export default {
 
       components: {
-         AddBioModalForm,
+         AddEditBioModalForm,
          ProfilePictureModalForm
       },
 
@@ -107,6 +108,13 @@
             authenticated: "auth/authenticated",
             user: "auth/user"
          }),
+
+         correctedImageUrl(){
+            return this.cardUserData.profile_picture
+               ? axios.defaults.baseURL.replace("/api", "") +
+                  this.cardUserData.profile_picture.url.replace("public/", "storage/")
+               : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
+         },
 
          profileOwner(){
             return this.authenticated ? this.user.username === this.cardUserData.username : false;
