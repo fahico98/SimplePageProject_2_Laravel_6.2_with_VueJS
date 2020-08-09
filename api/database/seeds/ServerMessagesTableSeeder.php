@@ -11,7 +11,7 @@ class ServerMessagesTableSeeder extends Seeder{
     */
    public function run(){
 
-      DB::table('server_messages')->truncate();
+      // DB::table('server_messages')->truncate();
 
       DB::table('server_messages')->insert([
          "user_id" => 3,

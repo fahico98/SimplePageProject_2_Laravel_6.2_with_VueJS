@@ -13,7 +13,7 @@ class PostsTableSeeder extends Seeder{
    public function run(){
 
       // Make empty the "posts" table before seed it...
-      DB::table("posts")->truncate();
+      // DB::table("posts")->truncate();
 
       // $users = User::select("id")->all()->get();
 

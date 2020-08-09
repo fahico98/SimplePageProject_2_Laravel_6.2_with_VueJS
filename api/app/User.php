@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,6 +19,7 @@ class User extends Authenticatable implements JWTSubject{
     * @var array
     */
    protected $fillable = [
+      "role_id",
       "username",
       "name",
       "lastname",
@@ -53,6 +56,27 @@ class User extends Authenticatable implements JWTSubject{
    ];
 
    /**
+    * The accessors to append to the model's array form.
+    *
+    * @var array
+    */
+   protected $appends = [
+      "following"
+   ];
+
+   /**
+    * Return true if the authenticated user follow the current user.
+    *
+    * @return Boolean
+    */
+   public function getFollowingAttribute(){
+      return DB::table("follower_followed")
+         ->where("follower_id", Auth::user()->id)
+         ->where("followed_id", $this->attributes["id"])
+         ->exists();
+   }
+
+   /**
     * Get the identifier that will be stored in the subject claim of the JWT.
     *
     * @return mixed
@@ -80,10 +104,6 @@ class User extends Authenticatable implements JWTSubject{
 
    public function profile_picture(){
       return $this->hasOne(UserProfilePicture::class);
-      // return $this->hasOne(UserProfilePicture::class)->withDefault([
-      //    "url" => "public/avatars/defaultUserPhoto.jpg",
-      //    "size" => 5229
-      // ]);
    }
 
    public function posts(){
@@ -98,15 +118,6 @@ class User extends Authenticatable implements JWTSubject{
       return $this->belongsToMany(Post::class, "user_dislike_post");
    }
 
-   /*
-   public function isAdmin(){
-      return $this->role->name === "administrator";
-   }
-
-   public function isSeller(){
-      return $this->role->name === "seller";
-   }
-
    public function followers(){
       return $this->belongsToMany(User::class, 'follower_followed', 'followed_id', 'follower_id');
    }
@@ -114,5 +125,12 @@ class User extends Authenticatable implements JWTSubject{
    public function following(){
       return $this->belongsToMany(User::class, 'follower_followed', 'follower_id', 'followed_id');
    }
-   */
+
+   // public function isAdmin(){
+   //    return $this->role->name === "administrator";
+   // }
+
+   // public function isSeller(){
+   //    return $this->role->name === "seller";
+   // }
 }

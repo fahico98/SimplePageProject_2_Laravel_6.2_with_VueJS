@@ -3,60 +3,26 @@
 
    <v-container class="ma-0 pa-0">
 
-      <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
-      <right-bar class="grey lighten-4"/>
+         <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
+         <right-bar class="grey lighten-4"/>
 
-      <div class="mx-2">
+         <div class="mx-2">
 
-         <v-tabs grow v-model="tab" background-color="transparent" color="blue lighten-1">
+            <v-tabs grow v-if="inProfile" v-model="tab" background-color="transparent" color="blue lighten-1">
 
-            <!-- <v-tab class="text-capitalize" v-ripple="false" :to="'/publicaciones'" exact>Publicaciones</v-tab>
-            <v-tab class="text-capitalize" v-ripple="false" :to="'/seguidores'" exact>Seguidores</v-tab>
-            <v-tab class="text-capitalize" v-ripple="false" :to="'/seguidos'" exact>Seguidos</v-tab>
-            <v-tab class="text-capitalize" v-ripple="false" :to="'/me_gusta'" exact>Me gusta</v-tab> -->
+               <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
+                  {{ tab.name }}
+               </v-tab>
 
-            <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
-               {{ tab.name }}
-            </v-tab>
+               <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
+                  <router-view></router-view>
+               </v-tab-item>
 
-            <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
-               <router-view></router-view>
-            </v-tab-item>
+            </v-tabs>
 
-         </v-tabs>
+            <div v-else-if="inHome" class="mx-2"><posts/></div>
 
-
-         <!-- <v-tabs-items v-model="tab">
-
-            <v-tab-item>
-               <div class="grey lighten-4">
-                  <profile-post-card v-for="post in posts" :key="post.id" :post="post"/>
-               </div>
-            </v-tab-item>
-
-            <v-tab-item>
-               <p class="text-h4 blue--text text--lighten-1">Publicaciones</p>
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt ratione consectetur voluptates omnis placeat officiis similique. Culpa, obcaecati laboriosam vitae corrupti, porro in dolorum excepturi maxime voluptates rem voluptate id!</p>
-            </v-tab-item>
-
-            <v-tab-item>
-               <p class="text-h4 blue--text text--lighten-1">Seguidores</p>
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt ratione consectetur voluptates omnis placeat officiis similique. Culpa, obcaecati laboriosam vitae corrupti, porro in dolorum excepturi maxime voluptates rem voluptate id!</p>
-            </v-tab-item>
-
-            <v-tab-item>
-               <p class="text-h4 blue--text text--lighten-1">Seguidos</p>
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt ratione consectetur voluptates omnis placeat officiis similique. Culpa, obcaecati laboriosam vitae corrupti, porro in dolorum excepturi maxime voluptates rem voluptate id!</p>
-            </v-tab-item>
-
-            <v-tab-item>
-               <p class="text-h4 blue--text text--lighten-1">Me gusta</p>
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt ratione consectetur voluptates omnis placeat officiis similique. Culpa, obcaecati laboriosam vitae corrupti, porro in dolorum excepturi maxime voluptates rem voluptate id!</p>
-            </v-tab-item>
-
-         </v-tabs-items> -->
-
-      </div>
+         </div>
 
    </v-container>
 
@@ -64,6 +30,7 @@
 
 <script>
 
+   import Posts from "../../components/profile/posts/Posts";
    import LeftBar from "../../components/profile/leftSide/LeftBar";
    import RightBar from "../../components/profile/rightSide/RightBar";
    import { mapGetters } from "vuex";
@@ -90,7 +57,8 @@
 
       components: {
          RightBar,
-         LeftBar
+         LeftBar,
+         Posts
       },
 
       computed: {
@@ -98,6 +66,14 @@
             authenticated: "auth/authenticated",
             user: "auth/user"
          }),
+
+         inProfile(){
+            return this.$route.matched.some(route => route.name == 'profile');
+         },
+
+         inHome(){
+            return this.$route.matched.some(route => route.name == 'auth_home');
+         }
       },
 
       mounted(){
@@ -136,7 +112,7 @@
                   console.log(error);
                }
             }
-         }
+         },
 
          // bottomVisible(){
          //    const scrollY = window.scrollY;
@@ -145,23 +121,6 @@
          //    const bottomOfPage = visible + scrollY >= pageHeight;
          //    return bottomOfPage || (pageHeight < visible);
          // },
-
-         // async addPosts(){
-
-         //    this.currentPage++;
-
-         //    let url = this.$route.name == "profile"
-         //       ? "posts/index/" + this.currentPage + "/" + this.username
-         //       : "posts/index/" + this.currentPage;
-
-         //    await axios.get(url)
-         //       .then((response) => {
-         //          this.posts = this.posts.concat(response.data);
-         //       })
-         //       .catch((error) => {
-         //          console.log(error);
-         //       });
-         // }
       }
    }
 

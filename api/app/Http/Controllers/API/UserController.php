@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+
 use App\UserProfilePicture;
 use App\User;
 
@@ -101,5 +103,81 @@ class UserController extends Controller{
       return $email == ""
          ? response()->json(false)
          : response()->json(User::where("email", $email)->exists());
+   }
+
+   /**
+    * Get the followers to an User instance.
+    *
+    * @param User $user
+    * @param int $page
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function followers(User $user, $page){
+      return response()->json(
+         $user->load([
+            "followers" => function($query){
+               global $page;
+               return $query->offset(20 * ($page - 1))->limit(20);
+            }
+         ])
+      );
+   }
+
+   /**
+    * Get the users followed by an User instance.
+    *
+    * @param User $user
+    * @param int $page
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function following(User $user, $page){
+      return response()->json(
+         $user->load([
+            "following" => function($query){
+               global $page;
+               return $query->offset(20 * ($page - 1))->limit(20);
+            }
+         ])
+      );
+   }
+
+   /**
+    * Set an User instance to follow other.
+    *
+    * @param String $username
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function follow($username){
+
+      $user = User::select("id")
+         ->where("username", $username)
+         ->first();
+
+      return response()->json(
+         DB::table("follower_followed")->insert([
+            "follower_id" => Auth::user()->id,
+            "followed_id" => $user->id
+         ])
+      );
+   }
+
+   /**
+    * Unset an User instance following other.
+    *
+    * @param String $username
+    * @return \Illuminate\Http\JsonResponse
+    */
+    public function unfollow($username){
+
+      $user = User::select("id")
+         ->where("username", $username)
+         ->first();
+
+      return response()->json(
+         DB::table("follower_followed")
+            ->where("follower_id", Auth::user()->id)
+            ->where("followed_id", $user->id)
+            ->delete()
+      );
    }
 }

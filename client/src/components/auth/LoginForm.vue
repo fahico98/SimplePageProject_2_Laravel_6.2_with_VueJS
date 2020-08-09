@@ -59,7 +59,7 @@
             if(this.$refs.loginForm.validate()){
                this.loginAction(this.form)
                   .then(() => {
-                     this.$router.push({name: "profile", params: {username: this.user.username}});
+                     this.$router.push({name: "posts", params: {username: this.user.username}});
                   })
                   .catch((error) => {
                      console.log(error);

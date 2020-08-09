@@ -12,7 +12,7 @@ class PostPermissionsTableSeeder extends Seeder{
    public function run(){
 
       // Make empty the "post_permissions" table before seed it...
-      DB::table("post_permissions")->truncate();
+      // DB::table("post_permissions")->truncate();
 
       DB::table("post_permissions")->insert([
          "name" => "public"

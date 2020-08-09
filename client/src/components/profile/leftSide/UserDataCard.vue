@@ -31,6 +31,11 @@
             </p>
          </v-row>
 
+         <v-row class="mt-5" v-if="!profileOwner">
+            <follow-user-form :username="cardUserData.username" :following="cardUserData.following"
+               @changeFollowingState="changeFollowing()"/>
+         </v-row>
+
          <v-row class="mt-5">
             <p class="my-0 py-0 subtitle-2 font-weight-regular blue--text text--lighten-1">
                <v-icon medium dense color="blue linghten-1">mdi-email-outline</v-icon>&nbsp;{{ cardUserData.email }}
@@ -53,7 +58,7 @@
 
             <v-row v-if="isBio" class="mt-5">
                <v-col cols="11" class="ma-0 pa-0">
-                  <p class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+                  <p class="subtitle-2 font-weight-regular my-0 py-0 black--text">
                      {{ cardUserData.biography }}
                   </p>
                </v-col>
@@ -64,13 +69,14 @@
             </v-row>
 
             <v-row v-else class="mt-5">
-               <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left" class="ma-0 pa-0"/>
+               <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" :action="'store'" justify="left"
+                  class="ma-0 pa-0"/>
             </v-row>
          </div>
 
          <div v-else>
             <v-row class="mt-5">
-               <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text montserrat">
+               <p v-if="isBio" class="subtitle-2 font-weight-regular my-0 py-0 black--text">
                   {{ cardUserData.biography }}
                </p>
             </v-row>
@@ -86,6 +92,7 @@
 
    import AddEditBioModalForm from "../modals/AddEditBioModalForm";
    import ProfilePictureModalForm from "../modals/ProfilePictureModalForm";
+   import FollowUserForm from "../leftSide/FollowUserForm";
    import { mapActions, mapGetters } from "vuex";
    import axios from "axios";
 
@@ -93,7 +100,8 @@
 
       components: {
          AddEditBioModalForm,
-         ProfilePictureModalForm
+         ProfilePictureModalForm,
+         FollowUserForm
       },
 
       props: {
@@ -149,6 +157,10 @@
             this.cardUserData.profile_picture = profilePicture;
             this.correctImageUrl();
             this.setProfilePicture(this.cardUserData.profile_picture);
+         },
+
+         changeFollowing(){
+            this.cardUserData.following = !this.cardUserData.following;
          }
       }
    }

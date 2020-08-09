@@ -61,6 +61,10 @@ const routes = [
             path: 'me_gusta',
             name: "i_like",
             component: ILike
+         },
+         {
+            path: "",
+            redirect: {name: "posts"}
          }
       ]
    },

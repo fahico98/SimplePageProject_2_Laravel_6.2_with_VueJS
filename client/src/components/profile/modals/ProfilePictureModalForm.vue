@@ -16,7 +16,8 @@
                   label="Foto de perfil" accept="image/*" @input="$v.image.$touch()" :error-messages="imageErrors"/>
 
                <v-card-actions>
-                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" color="blue lighten-1">
+                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" color="blue lighten-1"
+                     v-ripple="false">
                      <span class="px-2">Cargar</span>
                   </v-btn>
                </v-card-actions>

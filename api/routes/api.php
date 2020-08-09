@@ -27,8 +27,15 @@ Route::group(["namespace" => "API"], function(){
    Route::get("public_user_data/{username}", "UserController@publicUserData");
    Route::post("store_bio", "UserController@storeBio");
    Route::post("store_profile_picture", "UserController@storeProfilePicture");
+
    Route::get("username_exists/{username?}", "UserController@usernameExists");
    Route::get("email_exists/{email?}", "UserController@emailExists");
+
+   Route::get("followers/{user}/{page}", "UserController@followers");
+   Route::get("following/{user}/{page}", "UserController@following");
+
+   Route::post("follow/{username}", "UserController@follow");
+   Route::delete("unfollow/{username}", "UserController@unfollow");
 
    Route::get("server_messages", "ServerMessageController@index");
    Route::get("testimonials", "ServerMessageController@testimonials");

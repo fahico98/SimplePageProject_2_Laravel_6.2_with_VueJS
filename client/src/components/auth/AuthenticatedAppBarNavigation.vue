@@ -83,11 +83,8 @@
          goToProfile(){
             this.$router.push(
                {
-                  name: "profile",
-                  params: {
-                     username: this.user.username,
-                     tab: "publicaciones"
-                  }
+                  name: "posts",
+                  params: {username: this.user.username}
                }
             );
          },

@@ -1,8 +1,8 @@
 
 <template>
 
-   <v-row>
-      <v-col>
+   <v-row class="pa-0 ma-0 mt-5">
+      <v-col class="pa-0 ma-0">
 
          <v-card class="mx-auto" width="100%">
 
@@ -66,8 +66,8 @@
 
 <script>
 
-   import EditCreatePostModalForm from "./modals/EditCreatePostModalForm";
-   import DeletePostModalForm from "./modals/DeletePostModalForm";
+   import EditCreatePostModalForm from "../modals/EditCreatePostModalForm";
+   import DeletePostModalForm from "../modals/DeletePostModalForm";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
