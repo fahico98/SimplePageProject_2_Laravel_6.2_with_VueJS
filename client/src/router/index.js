@@ -9,9 +9,10 @@ import Profile from "../views/profile/Profile";
 import View404 from "../views/View404";
 
 import Posts from "../components/profile/posts/Posts";
-import Followers from "../components/profile/followers/Followers";
-import Following from "../components/profile/following/Following";
 import ILike from "../components/profile/iLike/ILike";
+import FollowingBaseComponent from "../components/profile/followersFollowing/FollowingBaseComponent";
+// import Followers from "../components/profile/followers/Followers";
+// import Following from "../components/profile/following/Following";
 
 Vue.use(VueRouter);
 
@@ -50,12 +51,12 @@ const routes = [
          {
             path: 'seguidores',
             name: "followers",
-            component: Followers
+            component: FollowingBaseComponent
          },
          {
             path: 'seguidos',
-            name: "following",
-            component: Following
+            name: "followed",
+            component: FollowingBaseComponent
          },
          {
             path: 'me_gusta',

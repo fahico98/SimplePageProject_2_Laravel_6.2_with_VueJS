@@ -3,13 +3,11 @@
 
    <div class="grey lighten-4 mt-5">
 
-      <follower-list-element v-for="follower in followers" :key="follower.username" :follower="follower"/>
+      <user-list-element v-for="listUser in userList" :key="listUser.username" :listUser="listUser"/>
 
       <infinite-loading @infinite="addUsers">
 
-         <template v-slot:no-more>
-            <p></p>
-         </template>
+         <template v-slot:no-more><p></p></template>
 
          <template v-slot:no-results>
             <p class="blue--text text--lighten-1 mt-10" v-if="profileOwner">Aún no tienes seguidores !</p>
@@ -24,7 +22,7 @@
 
 <script>
 
-   import FollowerListElement from "./FollowerListElement";
+   import UserListElement from "./UserListElement";
    import InfiniteLoading from 'vue-infinite-loading';
    import { mapGetters } from "vuex";
    import axios from "axios";
@@ -33,18 +31,20 @@
 
       data(){
          return {
-            followers: [],
+            userList: [],
             currentPage: 0,
-            username: ""
+            username: "",
+            url: "",
          }
       },
 
       components: {
          InfiniteLoading,
-         FollowerListElement
+         UserListElement
       },
 
       mounted(){
+         this.url = this.$route.matched.some(route => route.name == "followers") ? "followers" : "followed";
          this.username = this.$route.params.username;
       },
 
@@ -65,19 +65,19 @@
 
             this.currentPage++;
 
-            await axios.get("followers/" + this.username + "/" + this.currentPage)
+            await axios.get(`followers_followed/${this.username}/${this.url}/${this.currentPage}`)
                .then((response) => {
 
                   if(response.data.length){
 
-                     if(this.followers.length){
-                        this.followers = this.followers.concat({divider: true});
+                     if(this.userList.length){
+                        this.userList = this.userList.concat({divider: true});
                      }
 
                      for(let i = 0; i < response.data.length; i++){
-                        this.followers = this.followers.concat(response.data[i]);
-                        if(i != response.data.length){
-                           this.followers = this.followers.concat({divider: true});
+                        this.userList = this.userList.concat(response.data[i]);
+                        if(i != response.data.length - 1){
+                           this.userList = this.userList.concat({divider: true});
                         }
                      }
 

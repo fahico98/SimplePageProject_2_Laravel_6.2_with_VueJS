@@ -109,61 +109,95 @@ class UserController extends Controller{
     * Get the followers to an User instance.
     *
     * @param User $user
+    * @param String $users
     * @param int $page
     * @return \Illuminate\Http\JsonResponse
     */
-   public function followers(User $user, $page){
+   public function followersFollowed(User $user, $users, $page){
 
       $user->load([
-         "followers.profile_picture" => function($query){
+         $users . ".profile_picture" => function($query){
             global $page;
             return $query->offset(20 * ($page - 1))->limit(20);
          }
       ]);
 
-      return response()->json(
-         $user->followers
-            ->makeHidden([
-               "id",
-               "country",
-               "city",
-               "phone_number",
-               "email",
-               "biography",
-               "pivot"
-            ])
-      );
+      $toHide = [
+         "id",
+         "country",
+         "city",
+         "phone_number",
+         "email",
+         "biography",
+         "pivot"
+      ];
+
+      return $users == "followers"
+         ? response()->json($user->followers->makeHidden($toHide))
+         : response()->json($user->followed->makeHidden($toHide));
    }
 
-   /**
-    * Get the users followed by an User instance.
-    *
-    * @param User $user
-    * @param int $page
-    * @return \Illuminate\Http\JsonResponse
-    */
-   public function following(User $user, $page){
+   // /**
+   //  * Get the followers to an User instance.
+   //  *
+   //  * @param User $user
+   //  * @param String $users
+   //  * @param int $page
+   //  * @return \Illuminate\Http\JsonResponse
+   //  */
+   // public function followers(User $user, $page){
 
-      $user->load([
-         "following.profile_picture" => function($query){
-            global $page;
-            return $query->offset(20 * ($page - 1))->limit(20);
-         }
-      ]);
+   //    $user->load([
+   //       "followers.profile_picture" => function($query){
+   //          global $page;
+   //          return $query->offset(20 * ($page - 1))->limit(20);
+   //       }
+   //    ]);
 
-      return response()->json(
-         $user->following
-            ->makeHidden([
-               "id",
-               "country",
-               "city",
-               "phone_number",
-               "email",
-               "biography",
-               "pivot"
-            ])
-      );
-   }
+   //    return response()->json(
+   //       $user->followers
+   //          ->makeHidden([
+   //             "id",
+   //             "country",
+   //             "city",
+   //             "phone_number",
+   //             "email",
+   //             "biography",
+   //             "pivot"
+   //          ])
+   //    );
+   // }
+
+   // /**
+   //  * Get the followers to an User instance.
+   //  *
+   //  * @param User $user
+   //  * @param String $users
+   //  * @param int $page
+   //  * @return \Illuminate\Http\JsonResponse
+   //  */
+   // public function following(User $user, $page){
+
+   //    $user->load([
+   //       "following.profile_picture" => function($query){
+   //          global $page;
+   //          return $query->offset(20 * ($page - 1))->limit(20);
+   //       }
+   //    ]);
+
+   //    return response()->json(
+   //       $user->followers
+   //          ->makeHidden([
+   //             "id",
+   //             "country",
+   //             "city",
+   //             "phone_number",
+   //             "email",
+   //             "biography",
+   //             "pivot"
+   //          ])
+   //    );
+   // }
 
    /**
     * Set an User instance to follow other.
