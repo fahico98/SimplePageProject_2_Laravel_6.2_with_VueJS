@@ -43,13 +43,7 @@ class AuthController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function me(){
-
       $user = Auth::user()->load("role", "profile_picture");
-
-      if(!$user->profile_picture){
-         $user->setRelation("profile_picture", UserProfilePicture::find(1));
-      }
-
       return response()->json($user);
    }
 

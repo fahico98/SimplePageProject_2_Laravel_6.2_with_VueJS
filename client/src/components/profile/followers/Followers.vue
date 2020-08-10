@@ -1,13 +1,9 @@
 
 <template>
 
-   <div class="grey lighten-4">
+   <div class="grey lighten-4 mt-5">
 
-      {{ followers }}
-
-      <!-- <v-list subheader>
-
-      </v-list> -->
+      <follower-list-element v-for="follower in followers" :key="follower.username" :follower="follower"/>
 
       <infinite-loading @infinite="addUsers">
 
@@ -28,6 +24,7 @@
 
 <script>
 
+   import FollowerListElement from "./FollowerListElement";
    import InfiniteLoading from 'vue-infinite-loading';
    import { mapGetters } from "vuex";
    import axios from "axios";
@@ -43,7 +40,8 @@
       },
 
       components: {
-         InfiniteLoading
+         InfiniteLoading,
+         FollowerListElement
       },
 
       mounted(){
@@ -67,19 +65,28 @@
 
             this.currentPage++;
 
-            // let url = this.$route.matched.some(route => route.name == "profile")
-            //    ? "followers/" + this.currentPage + "/" + this.username
-            //    : "posts/index/" + this.currentPage;
-
             await axios.get("followers/" + this.username + "/" + this.currentPage)
                .then((response) => {
 
                   if(response.data.length){
-                     this.followers = this.followers.concat(response.data);
+
+                     if(this.followers.length){
+                        this.followers = this.followers.concat({divider: true});
+                     }
+
+                     for(let i = 0; i < response.data.length; i++){
+                        this.followers = this.followers.concat(response.data[i]);
+                        if(i != response.data.length){
+                           this.followers = this.followers.concat({divider: true});
+                        }
+                     }
+
                      $state.loaded();
+
                      if(response.data.length < 20){
                         $state.complete();
                      }
+
                   }else{
                      $state.complete();
                   }

@@ -113,13 +113,25 @@ class UserController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function followers(User $user, $page){
+
+      $user->load([
+         "followers.profile_picture" => function($query){
+            global $page;
+            return $query->offset(20 * ($page - 1))->limit(20);
+         }
+      ]);
+
       return response()->json(
-         $user->load([
-            "followers" => function($query){
-               global $page;
-               return $query->offset(20 * ($page - 1))->limit(20);
-            }
-         ])
+         $user->followers
+            ->makeHidden([
+               "id",
+               "country",
+               "city",
+               "phone_number",
+               "email",
+               "biography",
+               "pivot"
+            ])
       );
    }
 
@@ -131,13 +143,25 @@ class UserController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function following(User $user, $page){
+
+      $user->load([
+         "following.profile_picture" => function($query){
+            global $page;
+            return $query->offset(20 * ($page - 1))->limit(20);
+         }
+      ]);
+
       return response()->json(
-         $user->load([
-            "following" => function($query){
-               global $page;
-               return $query->offset(20 * ($page - 1))->limit(20);
-            }
-         ])
+         $user->following
+            ->makeHidden([
+               "id",
+               "country",
+               "city",
+               "phone_number",
+               "email",
+               "biography",
+               "pivot"
+            ])
       );
    }
 

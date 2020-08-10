@@ -16,7 +16,7 @@
             </v-carousel>
 
             <v-card-title>
-               <div @click.prevent="goToProfile(post.user.username)" style="cursor: pointer">
+               <div @click.prevent="goToProfile()" style="cursor: pointer">
                   <span class="black--text">{{ post.user.name }}&nbsp;{{ post.user.lastname }}&nbsp;</span>
                   <span class="font-weight-light grey--text">{{ post.user.username }}</span>
                </div>
@@ -47,13 +47,10 @@
 
                   <delete-post-modal-form :postId="post.id"/>
 
-                  <!-- <v-btn icon class="mx-0" color="blue lighten-1" @click.prevent="">
-                     <v-icon>mdi-trash-can-outline</v-icon>
-                  </v-btn> -->
-
                   <v-chip small dark v-if="inProfile()" class="mx-2" color="blue lighten-1">
                      {{ permissionName }}
                   </v-chip>
+
                </div>
 
             </v-card-actions>
@@ -168,12 +165,12 @@
             this.post.dislikes++;
          },
 
-         goToProfile(username){
-            this.$router.push({name: "profile", params: {username: username}});
+         goToProfile(){
+            this.$router.push({name: "posts", params: {username: this.post.user.username}});
          },
 
          inProfile(){
-            return this.$route.name == "profile";
+            return this.$route.matched.some(route => route.name == "profile");
          }
       }
    }

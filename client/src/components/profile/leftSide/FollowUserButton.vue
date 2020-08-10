@@ -5,7 +5,7 @@
 
       <v-btn small depressed width="100%" class="text-capitalize" :dark="!following" :light="following" v-ripple="false"
          :color="following ? 'grey lighten-1' : 'blue lighten-1'" @click.prevent="followUnfollow()">
-         {{ following ? "Dejar de seguir" : "Seguir" }}
+         {{ following ? "Siguiendo" : "Seguir" }}
       </v-btn>
 
    </v-container>
@@ -53,9 +53,6 @@
                if(this.following){
 
                   axios.delete("unfollow/" + this.username)
-                     .then((response) => {
-                        console.log(response.data);
-                     })
                      .catch((error) => {
                         console.log(error);
                      });
@@ -63,9 +60,6 @@
                }else{
 
                   axios.post("follow/" + this.username)
-                     .then((response) => {
-                        console.log(response.data);
-                     })
                      .catch((error) => {
                         console.log(error);
                      });

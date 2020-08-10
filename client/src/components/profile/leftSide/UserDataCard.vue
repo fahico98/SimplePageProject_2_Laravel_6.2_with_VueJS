@@ -32,7 +32,7 @@
          </v-row>
 
          <v-row class="mt-5" v-if="!profileOwner">
-            <follow-user-form :username="cardUserData.username" :following="cardUserData.following"
+            <follow-user-button :username="cardUserData.username" :following="cardUserData.following"
                @changeFollowingState="changeFollowing()"/>
          </v-row>
 
@@ -92,7 +92,7 @@
 
    import AddEditBioModalForm from "../modals/AddEditBioModalForm";
    import ProfilePictureModalForm from "../modals/ProfilePictureModalForm";
-   import FollowUserForm from "../leftSide/FollowUserForm";
+   import FollowUserButton from "../leftSide/FollowUserButton";
    import { mapActions, mapGetters } from "vuex";
    import axios from "axios";
 
@@ -101,7 +101,7 @@
       components: {
          AddEditBioModalForm,
          ProfilePictureModalForm,
-         FollowUserForm
+         FollowUserButton
       },
 
       props: {
@@ -155,7 +155,6 @@
 
          changeProfilePicture(profilePicture){
             this.cardUserData.profile_picture = profilePicture;
-            this.correctImageUrl();
             this.setProfilePicture(this.cardUserData.profile_picture);
          },
 
