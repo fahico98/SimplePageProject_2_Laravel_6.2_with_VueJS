@@ -13,6 +13,7 @@ use App\Post;
 
 use App\Dislike;
 use App\Like;
+use App\User;
 
 class PostController extends Controller{
 
@@ -64,7 +65,7 @@ class PostController extends Controller{
          }
       }
 
-      return response()->json($post->with(["user.profile_picture", "images", "postPermission"]));
+      return response()->json($post);
    }
 
    /**
@@ -102,6 +103,31 @@ class PostController extends Controller{
     */
    public function destroy(Post $post){
       return response()->json($post->delete());
+   }
+
+   /**
+    * Return all posts that given user likes.
+    *
+    * @param User $user
+    * @param int $page
+    * @return \Illuminate\Http\Response
+    */
+   public function likedPosts(User $user, $page){
+
+      // return response()->json(
+
+      // );
+
+      $user->load([
+         "liked_posts" => function($query){
+            global $page;
+            return $query
+               ->orderBy("created_at", "desc")
+               ->offset(5 * ($page - 1))
+               ->limit(5);
+         }]);
+
+      return response()->json($user->liked_posts);
    }
 
    /**

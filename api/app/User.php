@@ -26,8 +26,8 @@ class User extends Authenticatable implements JWTSubject{
       "country",
       "city",
       "phone_number",
-      'email',
-      'password',
+      "email",
+      "password",
       "biography"
    ];
 
@@ -38,8 +38,8 @@ class User extends Authenticatable implements JWTSubject{
     */
    protected $hidden = [
       "role_id",
-      'password',
-      'remember_token',
+      "password",
+      "remember_token",
       "email_verified_at",
       "deleted_at",
       "created_at",
@@ -52,17 +52,24 @@ class User extends Authenticatable implements JWTSubject{
     * @var array
     */
    protected $casts = [
-      'email_verified_at' => 'datetime',
+      "email_verified_at" => "datetime",
    ];
 
    /**
-    * The accessors to append to the model's array form.
+    * The accessors to append to the model"s array form.
     *
     * @var array
     */
    protected $appends = [
       "following"
    ];
+
+   /**
+    * The relationships that should always be loaded.
+    *
+    * @var array
+    */
+   protected $with = ["profile_picture"];
 
    /**
     * Return true if the authenticated user follow the current user.
@@ -85,7 +92,7 @@ class User extends Authenticatable implements JWTSubject{
       return $this->getKey();
    }
 
-    /**
+   /**
     * Return a key value array, containing any custom claims to be added to the JWT.
     *
     * @return array
@@ -95,7 +102,7 @@ class User extends Authenticatable implements JWTSubject{
    }
 
    public function getRouteKeyName(){
-      return 'username';
+      return "username";
    }
 
    public function role(){
@@ -119,11 +126,11 @@ class User extends Authenticatable implements JWTSubject{
    }
 
    public function followers(){
-      return $this->belongsToMany(User::class, 'follower_followed', 'followed_id', 'follower_id');
+      return $this->belongsToMany(User::class, "follower_followed", "followed_id", "follower_id");
    }
 
    public function followed(){
-      return $this->belongsToMany(User::class, 'follower_followed', 'follower_id', 'followed_id');
+      return $this->belongsToMany(User::class, "follower_followed", "follower_id", "followed_id");
    }
 
    // public function isAdmin(){

@@ -46,6 +46,17 @@ class Post extends Model{
    ];
 
    /**
+    * The relationships that should always be loaded.
+    *
+    * @var array
+    */
+   protected $with = [
+      "user",
+      "post_permission",
+      "images"
+   ];
+
+   /**
     * Return true if the authenticated user likes the post.
     *
     * @return Boolean
@@ -71,22 +82,22 @@ class Post extends Model{
       $user = User::select("id")->where("username", $username)->first();
       return !$user
          ? false
-         : Post::with(["user.profile_picture", "images", "postPermission"])
-            ->where("user_id", $user->id)
+         : Post::where("user_id", $user->id)
             ->orderBy("created_at", "desc")
             ->offset(5 * ($page - 1))
             ->limit(5);
    }
 
    public function scopeAllPosts($query, $page){
-      return Post::with(["user.profile_picture", "images", "postPermission"])
-         ->orderBy("created_at", "desc")
+      return Post::orderBy("created_at", "desc")
          ->offset(5 * ($page - 1))
          ->limit(5);
    }
 
    public function user(){
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(User::class)
+         ->select(["id", 'username', 'name', 'lastname'])
+         ->with("profile_picture");
    }
 
    public function usersWhoLike(){
@@ -97,7 +108,7 @@ class Post extends Model{
       return $this->belongsToMany(User::class, "user_dislike_post");
    }
 
-   public function postPermission(){
+   public function post_permission(){
       return $this->belongsTo(PostPermission::class);
    }
 

@@ -15,12 +15,14 @@
                </v-tab>
 
                <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
-                  <router-view></router-view>
+                  <router-view :key="$route.path"/>
                </v-tab-item>
 
             </v-tabs>
 
-            <div v-else-if="inHome" class="mx-2"><posts/></div>
+            <div v-else-if="inHome" class="mx-2">
+               <posts/>
+            </div>
 
          </div>
 
@@ -43,10 +45,10 @@
             tab: null,
             username: "",
             tabs: [
-               { id: 1, name: "Publicaciones", route: "publicaciones" },
-               { id: 2, name: "Seguidores", route: "seguidores" },
-               { id: 3, name: "Seguidos", route: "seguidos" },
-               { id: 4, name: "Me gusta", route: "me_gusta" }
+               { id: 1, name: "Publicaciones", route: "publicaciones"},
+               { id: 2, name: "Seguidores", route: "seguidores"},
+               { id: 3, name: "Seguidos", route: "seguidos"},
+               { id: 4, name: "Me gusta", route: "me_gusta"}
             ],
             cardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
                password: "", role_id: "", profile_picture: "", biography: ""},
@@ -112,15 +114,7 @@
                   console.log(error);
                }
             }
-         },
-
-         // bottomVisible(){
-         //    const scrollY = window.scrollY;
-         //    const visible = document.documentElement.clientHeight;
-         //    const pageHeight = document.documentElement.scrollHeight;
-         //    const bottomOfPage = visible + scrollY >= pageHeight;
-         //    return bottomOfPage || (pageHeight < visible);
-         // },
+         }
       }
    }
 

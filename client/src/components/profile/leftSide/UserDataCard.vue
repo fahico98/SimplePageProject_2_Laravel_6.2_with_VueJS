@@ -1,7 +1,7 @@
 
 <template>
 
-   <v-container class="my-5 px-12">
+   <v-container class="my-3 px-10">
 
       <div class="ma-0 pa-0" v-if="cardUserData.username == ''">
          <v-skeleton-loader class="mx-auto mb-5" type="avatar"></v-skeleton-loader>

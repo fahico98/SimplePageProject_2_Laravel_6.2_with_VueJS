@@ -32,8 +32,6 @@ Route::group(["namespace" => "API"], function(){
    Route::get("email_exists/{email?}", "UserController@emailExists");
 
    Route::get("followers_followed/{user}/{users}/{page}", "UserController@followersFollowed");
-   // Route::get("followers/{user}/{page}", "UserController@following");
-   // Route::get("following/{user}/{page}", "UserController@following");
 
    Route::post("follow/{username}", "UserController@follow");
    Route::delete("unfollow/{username}", "UserController@unfollow");
@@ -48,9 +46,13 @@ Route::group(["namespace" => "API"], function(){
       Route::post("update", "PostController@update");
       Route::delete("delete/{post}", "PostController@destroy");
       Route::get("index/{page}/{username?}", "PostController@index");
+
       Route::post("like/{post_id}/{dislike}", "PostController@like");
       Route::post("dislike/{post_id}/{like}", "PostController@dislike");
+
       Route::post("undo_like/{post_id}", "PostController@undoLike");
       Route::post("undo_dislike/{post_id}", "PostController@undoDislike");
+
+      Route::get("liked_posts/{user}/{page}", "PostController@likedPosts");
    });
 });

@@ -20,17 +20,8 @@ class UserController extends Controller{
     * @return \Illuminate\Http\JsonResponse
     */
    public function publicUserData($username){
-
-      $user = User::where("username", $username)->with("profile_picture")->first();
+      $user = User::where("username", $username)->first();
       return $user ? response()->json($user) : response()->json(false);
-
-      // if($user){
-      //    if(!$user->profile_picture){
-      //       $user->setRelation("profile_picture", UserProfilePicture::find(1));
-      //    }
-      //    return response()->json($user);
-      // }
-      // return response()->json(false);
    }
 
    /**
@@ -116,7 +107,7 @@ class UserController extends Controller{
    public function followersFollowed(User $user, $users, $page){
 
       $user->load([
-         $users . ".profile_picture" => function($query){
+         $users => function($query){
             global $page;
             return $query->offset(20 * ($page - 1))->limit(20);
          }
@@ -136,68 +127,6 @@ class UserController extends Controller{
          ? response()->json($user->followers->makeHidden($toHide))
          : response()->json($user->followed->makeHidden($toHide));
    }
-
-   // /**
-   //  * Get the followers to an User instance.
-   //  *
-   //  * @param User $user
-   //  * @param String $users
-   //  * @param int $page
-   //  * @return \Illuminate\Http\JsonResponse
-   //  */
-   // public function followers(User $user, $page){
-
-   //    $user->load([
-   //       "followers.profile_picture" => function($query){
-   //          global $page;
-   //          return $query->offset(20 * ($page - 1))->limit(20);
-   //       }
-   //    ]);
-
-   //    return response()->json(
-   //       $user->followers
-   //          ->makeHidden([
-   //             "id",
-   //             "country",
-   //             "city",
-   //             "phone_number",
-   //             "email",
-   //             "biography",
-   //             "pivot"
-   //          ])
-   //    );
-   // }
-
-   // /**
-   //  * Get the followers to an User instance.
-   //  *
-   //  * @param User $user
-   //  * @param String $users
-   //  * @param int $page
-   //  * @return \Illuminate\Http\JsonResponse
-   //  */
-   // public function following(User $user, $page){
-
-   //    $user->load([
-   //       "following.profile_picture" => function($query){
-   //          global $page;
-   //          return $query->offset(20 * ($page - 1))->limit(20);
-   //       }
-   //    ]);
-
-   //    return response()->json(
-   //       $user->followers
-   //          ->makeHidden([
-   //             "id",
-   //             "country",
-   //             "city",
-   //             "phone_number",
-   //             "email",
-   //             "biography",
-   //             "pivot"
-   //          ])
-   //    );
-   // }
 
    /**
     * Set an User instance to follow other.
@@ -225,7 +154,7 @@ class UserController extends Controller{
     * @param String $username
     * @return \Illuminate\Http\JsonResponse
     */
-    public function unfollow($username){
+   public function unfollow($username){
 
       $user = User::select("id")
          ->where("username", $username)
