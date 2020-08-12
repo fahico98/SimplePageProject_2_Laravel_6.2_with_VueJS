@@ -17,6 +17,8 @@ use App\User;
 
 class PostController extends Controller{
 
+   const PER_PAGE = 10;
+
    /**
     * Display a listing of the resource.
     *
@@ -114,17 +116,13 @@ class PostController extends Controller{
     */
    public function likedPosts(User $user, $page){
 
-      // return response()->json(
-
-      // );
-
       $user->load([
          "liked_posts" => function($query){
             global $page;
             return $query
                ->orderBy("created_at", "desc")
-               ->offset(5 * ($page - 1))
-               ->limit(5);
+               ->offset(self::PER_PAGE * ($page - 1))
+               ->limit(self::PER_PAGE);
          }]);
 
       return response()->json($user->liked_posts);

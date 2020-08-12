@@ -19,7 +19,6 @@
          </template>
 
       </infinite-loading>
-
    </div>
 
 </template>

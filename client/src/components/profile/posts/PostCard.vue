@@ -16,11 +16,18 @@
             </v-carousel>
 
             <v-card-title>
+
                <div @click.prevent="goToProfile()" style="cursor: pointer">
                   <span class="black--text">{{ post.user.name }}&nbsp;{{ post.user.lastname }}&nbsp;</span>
                   <span class="font-weight-light grey--text">{{ post.user.username }}</span>
                </div>
+
+               <v-spacer></v-spacer>
+
+               <span class="caption font-weight-light grey--text">{{ post.created_at_for_humans }}</span>
+
             </v-card-title>
+
 
             <v-card-subtitle class="pt-2 black--text">
                <span class="body-1 font-weight-bold">{{ post.title }}</span>&nbsp;{{ post.content }}

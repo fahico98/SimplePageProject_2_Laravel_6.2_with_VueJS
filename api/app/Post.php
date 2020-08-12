@@ -5,8 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class Post extends Model{
+
+   const PER_PAGE = 10;
 
    /**
     * The attributes that are mass assignable.
@@ -42,7 +45,8 @@ class Post extends Model{
     */
    protected $appends = [
       "i_like",
-      "i_dislike"
+      "i_dislike",
+      "created_at_for_humans"
    ];
 
    /**
@@ -78,6 +82,15 @@ class Post extends Model{
          ->exists();
    }
 
+   /**
+    * Return true if the authenticated user dislikes the post.
+    *
+    * @return Boolean
+    */
+   public function getCreatedAtForHumansAttribute(){
+      return Carbon::parse($this->attributes["created_at"])->diffForHumans();
+   }
+
    public function scopePostsByUser($query, $page, $username){
 
       $user = User::select("id")->where("username", $username)->first();
@@ -86,16 +99,16 @@ class Post extends Model{
          if($user->id == Auth::user()->id){
             return Post::where("user_id", $user->id)
                ->orderBy("created_at", "desc")
-               ->offset(5 * ($page - 1))
-               ->limit(5);;
+               ->offset(self::PER_PAGE * ($page - 1))
+               ->limit(self::PER_PAGE);;
          }else{
             $id = $user->following ? 3 : 1;
             $sign = $user->following ? "<>" : "=";
             return Post::where("user_id", $user->id)
                ->where("post_permission_id", $sign, $id)
                ->orderBy("created_at", "desc")
-               ->offset(5 * ($page - 1))
-               ->limit(5);
+               ->offset(self::PER_PAGE * ($page - 1))
+               ->limit(self::PER_PAGE);
          }
       }
 
@@ -105,15 +118,14 @@ class Post extends Model{
    public function scopeAllPosts($query, $page){
 
       $followedPosts = Post::whereIn('user_id', Auth::user()->followed->pluck('id'))
-         ->where("user_id", "<>", Auth::user()->id)
          ->where("post_permission_id", "<>", 3);
 
-      return Post::where("user_id", Auth::user()->id)
-         ->where("post_permission_id", 1)
+      return Post::where("user_id", "=", Auth::user()->id)
+         ->where("post_permission_id", "=", 1)
          ->union($followedPosts)
          ->orderBy("created_at", "desc")
-         ->offset(5 * ($page - 1))
-         ->limit(5);
+         ->offset(self::PER_PAGE * ($page - 1))
+         ->limit(self::PER_PAGE);
    }
 
    public function user(){
