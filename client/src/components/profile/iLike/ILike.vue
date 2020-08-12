@@ -69,7 +69,6 @@
 
             await axios.get(`posts/liked_posts/${this.username}/${this.currentPage}`)
                .then((response) => {
-                  console.log(response.data);
                   if(response.data.length){
                      this.posts = this.posts.concat(response.data);
                      $state.loaded();

@@ -10,8 +10,8 @@
                <v-icon>mdi-pencil-outline</v-icon>
             </v-btn>
 
-            <v-btn small dark depressed v-else-if="action == 'create'" v-ripple="false" color="blue lighten-1" width="100%"
-               class="text-capitalize" v-bind="attrs" v-on="on">Publicar</v-btn>
+            <v-btn dark depressed v-else-if="action == 'create'" v-ripple="false" color="blue lighten-1" width="100%"
+               class="text-capitalize mb-5" v-bind="attrs" v-on="on">publicar</v-btn>
 
          </template>
 

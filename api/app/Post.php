@@ -79,17 +79,39 @@ class Post extends Model{
    }
 
    public function scopePostsByUser($query, $page, $username){
+
       $user = User::select("id")->where("username", $username)->first();
-      return !$user
-         ? false
-         : Post::where("user_id", $user->id)
-            ->orderBy("created_at", "desc")
-            ->offset(5 * ($page - 1))
-            ->limit(5);
+
+      if($user){
+         if($user->id == Auth::user()->id){
+            return Post::where("user_id", $user->id)
+               ->orderBy("created_at", "desc")
+               ->offset(5 * ($page - 1))
+               ->limit(5);;
+         }else{
+            $id = $user->following ? 3 : 1;
+            $sign = $user->following ? "<>" : "=";
+            return Post::where("user_id", $user->id)
+               ->where("post_permission_id", $sign, $id)
+               ->orderBy("created_at", "desc")
+               ->offset(5 * ($page - 1))
+               ->limit(5);
+         }
+      }
+
+      return false;
    }
 
    public function scopeAllPosts($query, $page){
-      return Post::orderBy("created_at", "desc")
+
+      $followedPosts = Post::whereIn('user_id', Auth::user()->followed->pluck('id'))
+         ->where("user_id", "<>", Auth::user()->id)
+         ->where("post_permission_id", "<>", 3);
+
+      return Post::where("user_id", Auth::user()->id)
+         ->where("post_permission_id", 1)
+         ->union($followedPosts)
+         ->orderBy("created_at", "desc")
          ->offset(5 * ($page - 1))
          ->limit(5);
    }
