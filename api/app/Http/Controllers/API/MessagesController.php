@@ -18,16 +18,15 @@ class MessagesController extends Controller{
       return $user->talks_received->merge($user->talks_sended);
    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+   /**
+    * Store a newly created resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+   public function store(Request $request){
+
+   }
 
     /**
      * Display the specified resource.

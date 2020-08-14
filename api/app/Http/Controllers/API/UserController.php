@@ -97,6 +97,26 @@ class UserController extends Controller{
    }
 
    /**
+    * Return all users followed by the authenticated user using the like statement.
+    *
+    * @param String $username
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function searchFollowed($username){
+
+      $user = Auth::user();
+
+      $user->load([
+         "followed" => function($query){
+            global $username;
+            return $query->where("username", "like", "%$username%");
+         }
+      ]);
+
+      return response()->json($user->followed);
+   }
+
+   /**
     * Get the followers to an User instance.
     *
     * @param User $user

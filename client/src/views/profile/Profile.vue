@@ -6,7 +6,8 @@
          <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
          <right-bar class="grey lighten-4"/>
 
-         <div class="mx-2">
+         <!-- <div class="mx-2"> -->
+         <div>
 
             <posts v-if="inRoute('auth_home')" class="mx-1"/>
 

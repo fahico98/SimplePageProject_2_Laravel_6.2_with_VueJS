@@ -36,9 +36,10 @@ Route::group(["namespace" => "API"], function(){
    Route::post("follow/{username}", "UserController@follow");
    Route::delete("unfollow/{username}", "UserController@unfollow");
 
+   Route::get("search_followed/{username}", "UserController@searchFollowed");
+
    Route::get("server_messages", "ServerMessageController@index");
    Route::get("testimonials", "ServerMessageController@testimonials");
-
 
    Route::group(["prefix" => "posts"], function(){
 
@@ -59,5 +60,6 @@ Route::group(["namespace" => "API"], function(){
    Route::group(["prefix" => "messages"], function(){
 
       Route::get("index", "MessagesController@index");
+      Route::post("send", "MessagesController@store");
    });
 });
