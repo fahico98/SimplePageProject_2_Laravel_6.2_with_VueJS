@@ -12,6 +12,9 @@ import Posts from "../components/profile/posts/Posts";
 import ILike from "../components/profile/iLike/ILike";
 import FollowingBaseComponent from "../components/profile/followersFollowing/FollowingBaseComponent";
 
+// import Messages from "../components/profile/messages/Messages";
+// import Settings from "../components/profile/settings/Settings";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -35,7 +38,16 @@ const routes = [
       name: "auth_home",
       component: Profile
    },
-
+   {
+      path: "/mensajes",
+      name: "messages",
+      component: Profile
+   },
+   {
+      path: "/configuracion",
+      name: "settings",
+      component: Profile
+   },
    {
       path: "/:username",
       name: "profile",
@@ -69,6 +81,7 @@ const routes = [
    },
    {
       path: "*",
+      name: "404",
       component: View404
    }
 ];

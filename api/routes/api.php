@@ -55,4 +55,9 @@ Route::group(["namespace" => "API"], function(){
 
       Route::get("liked_posts/{user}/{page}", "PostController@likedPosts");
    });
+
+   Route::group(["prefix" => "messages"], function(){
+
+      Route::get("index", "MessagesController@index");
+   });
 });

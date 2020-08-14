@@ -133,6 +133,14 @@ class User extends Authenticatable implements JWTSubject{
       return $this->belongsToMany(User::class, "follower_followed", "follower_id", "followed_id");
    }
 
+   public function talks_received(){
+      return $this->hasMany(Talk::class, "recipient_id");
+   }
+
+   public function talks_sended(){
+      return $this->hasMany(Talk::class, "sender_id");
+   }
+
    // public function isAdmin(){
    //    return $this->role->name === "administrator";
    // }

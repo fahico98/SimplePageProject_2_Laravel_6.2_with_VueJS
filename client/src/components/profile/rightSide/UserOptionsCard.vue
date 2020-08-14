@@ -9,9 +9,10 @@
          <v-divider></v-divider>
 
          <v-list-item-group class="my-3">
-            <v-list-item class="mx-0 px-0" :ripple="false" v-for="element in elements" :key="element.name" @click.prevent="">
+            <v-list-item class="mx-0 px-0" :ripple="false" v-for="element in elements" :key="element.name">
 
-               <v-btn depressed text :ripple="false" color="blue lighten-1" width="100%" @click.prevent="element.click()">
+               <v-btn @click.prevent="element.route == 'logout' ? logout() : goToRoute(element.route)" depressed text
+                  :ripple="false" color="blue lighten-1" width="100%">
                   <p class="pa-0 ma-0 mr-auto" width="100%">
                      <v-icon left class="mr-4">{{ element.icon }}</v-icon>
                      <span class="subtitle-2 text-capitalize">{{ element.name }}</span>
@@ -38,10 +39,10 @@
       data(){
          return {
             elements: [
-               { name: "inicio", icon: "mdi-home", click: this.home},
-               { name: "mensajes", icon: "mdi-email", click: this.logout},
-               { name: "configuración", icon: "mdi-cog", click: this.logout},
-               { name: "cerrar sesión", icon: "mdi-logout", click: this.logout}
+               { name: "inicio", icon: "mdi-home", route: "auth_home"},
+               { name: "mensajes", icon: "mdi-email", route: "messages"},
+               { name: "configuración", icon: "mdi-cog", route: "settings"},
+               { name: "cerrar sesión", icon: "mdi-logout", route: "logout"}
             ]
          }
       },
@@ -73,8 +74,8 @@
                });
          },
 
-         home(){
-            this.$router.push({name: "auth_home"});
+         goToRoute(routeName){
+            this.$router.push({name: routeName});
          }
       }
    }

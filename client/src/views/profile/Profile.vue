@@ -8,7 +8,13 @@
 
          <div class="mx-2">
 
-            <v-tabs grow v-if="inProfile" v-model="tab" background-color="transparent" color="blue lighten-1">
+            <posts v-if="inRoute('auth_home')" class="mx-1"/>
+
+            <messages v-else-if="inRoute('messages')"/>
+
+            <settings v-else-if="inRoute('settings')"/>
+
+            <v-tabs grow v-else v-model="tab" background-color="transparent" color="blue lighten-1">
 
                <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
                   {{ tab.name }}
@@ -20,9 +26,6 @@
 
             </v-tabs>
 
-            <div v-else-if="inHome" class="mx-2">
-               <posts/>
-            </div>
 
          </div>
 
@@ -35,6 +38,8 @@
    import Posts from "../../components/profile/posts/Posts";
    import LeftBar from "../../components/profile/leftSide/LeftBar";
    import RightBar from "../../components/profile/rightSide/RightBar";
+   import Messages from "../../components/profile/messages/Messages";
+   import Settings from "../../components/profile/settings/Settings";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
@@ -60,22 +65,16 @@
       components: {
          RightBar,
          LeftBar,
-         Posts
+         Posts,
+         Messages,
+         Settings
       },
 
       computed: {
          ...mapGetters({
             authenticated: "auth/authenticated",
             user: "auth/user"
-         }),
-
-         inProfile(){
-            return this.$route.matched.some(route => route.name == 'profile');
-         },
-
-         inHome(){
-            return this.$route.matched.some(route => route.name == 'auth_home');
-         }
+         })
       },
 
       mounted(){
@@ -83,37 +82,43 @@
       },
 
       beforeRouteUpdate(to, from, next){
-         if(from.params.username != to.params.username){
-            this.posts = [];
-            this.currentPage = 0;
-            this.cardUserData = this.emptyCardUserData;
-            this.init(to.params.username);
+         if(this.inRoute("profile")){
+            if(from.params.username != to.params.username){
+               this.posts = [];
+               this.currentPage = 0;
+               this.cardUserData = this.emptyCardUserData;
+               this.init(to.params.username);
+            }
+            next();
          }
-         next();
       },
 
       methods: {
 
          async init(username){
-            if(this.$route.matched.some(route => route.name == "profile")){
-               this.username = username;
-               let response;
-               try{
-                  if(this.authenticated){
-                     if(this.username === this.user.username){
-                        this.cardUserData = this.user;
-                     }else{
-                        response = await axios.get("public_user_data/" + this.username);
-                        this.cardUserData = response.data;
-                     }
+
+            this.username = username;
+            let response;
+
+            try{
+               if(this.authenticated){
+                  if(this.username === this.user.username){
+                     this.cardUserData = this.user;
                   }else{
                      response = await axios.get("public_user_data/" + this.username);
                      this.cardUserData = response.data;
                   }
-               }catch(error){
-                  console.log(error);
+               }else{
+                  response = await axios.get("public_user_data/" + this.username);
+                  this.cardUserData = response.data;
                }
+            }catch(error){
+               console.log(error);
             }
+         },
+
+         inRoute(routeName){
+            return this.$route.matched.some(route => route.name == routeName);
          }
       }
    }

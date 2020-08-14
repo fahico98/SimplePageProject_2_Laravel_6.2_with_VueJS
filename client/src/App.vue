@@ -8,7 +8,7 @@
          <div><router-view :key="$route.path"/></div>
       </v-main>
 
-      <main-footer v-if="$route.matched.every(route => route.name != 'profile') && $route.name != 'auth_home'"/>
+      <main-footer v-if="footerPermission()"/>
    </v-app>
 
 </template>
@@ -22,9 +22,34 @@
 
       name: 'App',
 
+      data(){
+         return {
+            noFooterRoutes: [
+               "profile",
+               "auth_home",
+               "messages",
+               "settings"
+            ]
+         }
+      },
+
       components: {
          MainAppBar,
          MainFooter
+      },
+
+      methods: {
+
+         footerPermission(){
+            for(var i = 0; i < this.noFooterRoutes.length; i++){
+               for(var j = 0; j < this.$route.matched.length; j++){
+                  if(this.noFooterRoutes[i] == this.$route.matched[j].name){
+                     return false;
+                  }
+               }
+            }
+            return true;
+         }
       }
    };
 

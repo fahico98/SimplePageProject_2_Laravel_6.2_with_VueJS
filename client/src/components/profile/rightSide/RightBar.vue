@@ -3,7 +3,7 @@
 
    <v-navigation-drawer width="25%" right permanent clipped app light>
       <div>
-         <v-container fluid>
+         <v-container fluid class="ma-0 pa-0">
             <v-row justify="center" align="center">
                <user-options-card/>
             </v-row>
