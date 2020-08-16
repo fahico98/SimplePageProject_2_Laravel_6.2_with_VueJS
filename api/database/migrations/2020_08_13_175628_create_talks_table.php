@@ -16,7 +16,7 @@ class CreateTalksTable extends Migration{
          $table->bigIncrements('id');
          $table->bigInteger("sender_id")->unsigned();
          $table->bigInteger("recipient_id")->unsigned();
-         $table->integer("messages_number");
+         $table->integer("messages_number")->default(0);
          $table->timestamps();
       });
    }

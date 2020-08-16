@@ -96,28 +96,27 @@ class UserController extends Controller{
          : response()->json(User::where("email", $email)->exists());
    }
 
+   // /**
+   //  * Return all users followed by the authenticated user using the like statement.
+   //  *
+   //  * @param String $username
+   //  * @return \Illuminate\Http\JsonResponse
+   //  */
+   // public function searchFollowed($username){
+
+   //    $user = Auth::user();
+
+   //    $user->load([
+   //       "followed" => function($query) use ($username){
+   //          $query->where("username", "like", "%$username%");
+   //       }
+   //    ]);
+
+   //    return response()->json($user->followed);
+   // }
+
    /**
-    * Return all users followed by the authenticated user using the like statement.
-    *
-    * @param String $username
-    * @return \Illuminate\Http\JsonResponse
-    */
-   public function searchFollowed($username){
-
-      $user = Auth::user();
-
-      $user->load([
-         "followed" => function($query){
-            global $username;
-            return $query->where("username", "like", "%$username%");
-         }
-      ]);
-
-      return response()->json($user->followed);
-   }
-
-   /**
-    * Get the followers to an User instance.
+    * Get the followers or followed users of an User instance returning 20 user per page.
     *
     * @param User $user
     * @param String $users
@@ -142,6 +141,30 @@ class UserController extends Controller{
          "biography",
          "pivot"
       ];
+
+      return $users == "followers"
+         ? response()->json($user->followers->makeHidden($toHide))
+         : response()->json($user->followed->makeHidden($toHide));
+   }
+
+   /**
+    * Get all the follower or followed users of the authenticated user.
+    *
+    * @param String $users
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function allFollowersFollowed($users){
+
+      $toHide = [
+         "country",
+         "city",
+         "phone_number",
+         "email",
+         "biography",
+         "pivot"
+      ];
+
+      $user = Auth::user();
 
       return $users == "followers"
          ? response()->json($user->followers->makeHidden($toHide))

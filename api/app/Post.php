@@ -117,11 +117,14 @@ class Post extends Model{
 
    public function scopeAllPosts($query, $page){
 
+      $publicPosts = Post::where("post_permission_id", 1);
+
       $followedPosts = Post::whereIn('user_id', Auth::user()->followed->pluck('id'))
          ->where("post_permission_id", "<>", 3);
 
       return Post::where("user_id", "=", Auth::user()->id)
          ->where("post_permission_id", "=", 1)
+         ->union($publicPosts)
          ->union($followedPosts)
          ->orderBy("created_at", "desc")
          ->offset(self::PER_PAGE * ($page - 1))

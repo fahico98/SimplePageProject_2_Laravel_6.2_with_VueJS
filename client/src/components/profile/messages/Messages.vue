@@ -2,9 +2,11 @@
 <template>
 
    <div>
-      <v-app>
+      <!-- <v-app> -->
 
-         <v-footer class="white" style="width: 50%; margin-left: 25%;" height="90" padless fixed app>
+
+
+         <!-- <v-footer class="grey lighten-4" style="width: 50%; margin-left: 25%;" height="90" padless fixed app>
             <v-container fluid>
 
                <v-form @submit.prevent="">
@@ -12,7 +14,7 @@
 
                      <v-col class="ma-0 pa-0" cols="11">
                         <v-textarea no-resize dense outlined v-model="message" rows="2" width="100%" color="blue lighten-1"
-                           @input="$v.message.$touch()" :error-messages="messageErrors"/>
+                           background-color="white" @input="$v.message.$touch()" :error-messages="messageErrors"/>
                      </v-col>
 
                      <v-col class="ma-0 pa-0" cols="1">
@@ -26,9 +28,9 @@
                </v-form>
 
             </v-container>
-         </v-footer>
+         </v-footer> -->
 
-         <v-container class="ma-0" style="margin-top: 160px;">
+         <v-container class="ma-0 pa-0 grey lighten-4" style="margin-top: 160px;">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci eaque quia aperiam blanditiis
             explicabo voluptate quam, magnam perspiciatis sint ab nemo exercitationem accusamus! Incidunt
             laudantium at, deserunt adipisci delectus quo!
@@ -88,7 +90,7 @@
             </template>
          </v-snackbar>
 
-      </v-app>
+      <!-- </v-app> -->
    </div>
 
 </template>
