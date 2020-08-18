@@ -80,7 +80,7 @@
       methods: {
 
          goToProfile(){
-            this.$router.push({name: "posts", params: {username: this.listUser.username}});
+            this.$router.push({name: "profile", params: {username: this.listUser.username}});
          },
 
          followUnfollow(){

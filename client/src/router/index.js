@@ -7,6 +7,7 @@ import Login from "../views/auth/Login";
 import Register from "../views/auth/Register";
 import Profile from "../views/profile/Profile";
 import View404 from "../views/View404";
+import Messages from "../views/profile/Messages";
 
 import Posts from "../components/profile/posts/Posts";
 import ILike from "../components/profile/iLike/ILike";
@@ -41,7 +42,7 @@ const routes = [
    {
       path: "/mensajes",
       name: "messages",
-      component: Profile
+      component: Messages
    },
    {
       path: "/configuracion",

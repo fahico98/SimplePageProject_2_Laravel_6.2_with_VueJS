@@ -11,7 +11,7 @@
             </div>
          </template>
 
-         <v-card>
+         <v-card :loading="loading">
 
             <v-card-title class="headline pt-5">Buscar usuario</v-card-title>
 
@@ -80,6 +80,7 @@
       data(){
          return {
             browsedUsername: "",
+            loading: false,
             dialog: false,
             skeleton: true,
             followed: []
@@ -134,11 +135,11 @@
          },
 
          async newTalk(user){
-            this.dialog = false;
-            this.$emit("skeleton");
+            this.loading = "blue lighten-1";
             await axios.post("messages/new_talk", {recipient_id: user.id})
                .then((response) => {
                   if(response.data){
+                     this.dialog = false;
                      this.$emit("newTalk", {
                         messages_number: 0,
                         recipient: user,

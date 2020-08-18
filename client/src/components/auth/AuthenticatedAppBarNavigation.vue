@@ -95,12 +95,14 @@
          },
 
          goToProfile(){
-            this.$router.push(
-               {
-                  name: "posts",
-                  params: {username: this.user.username}
-               }
-            );
+            if(this.$route.params.username != this.user.username){
+               this.$router.push(
+                  {
+                     name: "posts",
+                     params: {username: this.user.username}
+                  }
+               );
+            }
          },
 
          goTo(routeName){

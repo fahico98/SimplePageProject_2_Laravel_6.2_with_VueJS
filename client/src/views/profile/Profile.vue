@@ -2,34 +2,26 @@
 <template>
 
    <v-container class="ma-0 pa-0">
+      <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
+      <right-bar class="grey lighten-4"/>
 
-         <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
-         <right-bar class="grey lighten-4"/>
+      <div class="mx-2">
 
-         <div class="mx-2">
-         <!-- <div> -->
+         <posts v-if="inRoute('auth_home')" class="mx-1"/>
 
-            <posts v-if="inRoute('auth_home')" class="mx-1"/>
+         <v-tabs grow v-else v-model="tab" background-color="transparent" color="blue lighten-1">
 
-            <messages v-else-if="inRoute('messages')"/>
+            <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
+               {{ tab.name }}
+            </v-tab>
 
-            <settings v-else-if="inRoute('settings')"/>
+            <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
+               <router-view :key="$route.path"/>
+            </v-tab-item>
 
-            <v-tabs grow v-else v-model="tab" background-color="transparent" color="blue lighten-1">
+         </v-tabs>
 
-               <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
-                  {{ tab.name }}
-               </v-tab>
-
-               <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
-                  <router-view :key="$route.path"/>
-               </v-tab-item>
-
-            </v-tabs>
-
-
-         </div>
-
+      </div>
    </v-container>
 
 </template>
@@ -39,8 +31,6 @@
    import Posts from "../../components/profile/posts/Posts";
    import LeftBar from "../../components/profile/leftSide/LeftBar";
    import RightBar from "../../components/profile/rightSide/RightBar";
-   import Messages from "../../components/profile/messages/Messages";
-   import Settings from "../../components/profile/settings/Settings";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
@@ -66,9 +56,7 @@
       components: {
          RightBar,
          LeftBar,
-         Posts,
-         Messages,
-         Settings
+         Posts
       },
 
       computed: {
@@ -83,7 +71,7 @@
       },
 
       beforeRouteUpdate(to, from, next){
-         if(this.inRoute("profile")){
+         if(this.$route.matched.some(route => route.name == "profile")){
             if(from.params.username != to.params.username){
                this.posts = [];
                this.currentPage = 0;

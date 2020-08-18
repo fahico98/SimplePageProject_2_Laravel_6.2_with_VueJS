@@ -5,14 +5,14 @@
 
       <!----------------------------------------- Profile ----------------------------------------->
 
-      <user-data-card v-if="$route.matched.some(route => route.name == 'profile')" :cardUserData="cardUserData"/>
+      <user-data-card v-if="inRoute('profile')" :cardUserData="cardUserData"/>
 
       <!----------------------------------------- Messages ----------------------------------------->
 
-      <talks-list v-if="$route.matched.some(route => route.name == 'messages')"/>
+      <talks-list v-if="inRoute('messages')" :talk="talk" @talkAdded="talkAdded()"/>
 
-      <template v-slot:prepend v-if="$route.matched.some(route => route.name == 'messages')">
-         <followed-browser @newTalk="addTalk($event)" @skeleton="skeleton()"/>
+      <template v-if="inRoute('messages')" v-slot:prepend>
+         <followed-browser @newTalk="addTalk($event)"/>
       </template>
 
       <!----------------------------------------- Auth home ----------------------------------------->
@@ -31,6 +31,17 @@
 
    export default {
 
+      data(){
+         return {
+
+            //----------------------------------------- Messages -----------------------------------------
+
+            talk: {},
+
+            //--------------------------------------------------------------------------------------------
+         }
+      },
+
       components: {
          FollowedBrowser,
          UserDataCard,
@@ -39,7 +50,8 @@
 
       props: {
          cardUserData: {
-            type: Object
+            type: Object,
+            required: false
          }
       },
 
@@ -48,6 +60,25 @@
             authenticated: "auth/authenticated",
             user: "auth/user"
          }),
+      },
+
+      methods: {
+
+         inRoute(routeName){
+            return this.$route.matched.some(route => route.name == routeName);
+         },
+
+         //------------------------------------------- Messages ------------------------------------------
+
+         addTalk(talk){
+            this.talk = talk;
+         },
+
+         talkAdded(){
+            this.talk = {};
+         }
+
+         //-----------------------------------------------------------------------------------------------
       }
    }
 

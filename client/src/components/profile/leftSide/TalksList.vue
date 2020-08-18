@@ -3,10 +3,7 @@
 
    <v-container class="my-0 px-5">
 
-
-
       <v-list flat>
-
 
          <!-- <v-divider></v-divider> -->
 
@@ -39,12 +36,15 @@
                      </v-list-item-avatar>
 
                      <v-list-item-content>
+
                         <v-list-item-title>
                            <span class="blue--text text--lighten-1">{{ completeName(talk.recipient) }}</span>
                         </v-list-item-title>
+
                         <v-list-item-subtitle>
                            <span>{{ talk.recipient.username }}</span>
                         </v-list-item-subtitle>
+
                      </v-list-item-content>
 
                   </template>
@@ -72,22 +72,29 @@
          }
       },
 
+      props: {
+         talk: {
+            type: Object,
+            default: null,
+            required: true
+         }
+      },
+
+      watch: {
+         talk(val){
+            if(val){
+               let talk = val;
+               this.talks.splice(0, 1, talk);
+               this.$emit("talkAdded");
+            }
+         }
+      },
+
       components: {
          // FollowedBrowser
       },
 
       methods: {
-
-         skeleton(){
-            if(this.talks.length){
-               this.talks.unshift({ divider: true });
-            }
-            this.talks.unshift({ skeleton: true });
-         },
-
-         addTalk(talk){
-            this.talks.splice(0, 1, talk);
-         },
 
          completeName(user){
             return `${user.name} ${user.lastname}`;

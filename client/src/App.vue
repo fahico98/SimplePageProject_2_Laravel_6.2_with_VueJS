@@ -5,7 +5,9 @@
       <main-app-bar/>
 
       <v-main class="grey lighten-4">
-         <div><router-view :key="$route.path"/></div>
+         <div>
+            <router-view :key="$route.path"/>
+         </div>
       </v-main>
 
       <main-footer v-if="footerPermission()"/>

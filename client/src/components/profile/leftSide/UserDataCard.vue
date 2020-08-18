@@ -129,11 +129,11 @@
          },
 
          completeName(){
-            return this.cardUserData.name + ' ' + this.cardUserData.lastname;
+            return `${this.cardUserData.name} ${this.cardUserData.lastname}`;
          },
 
          location(){
-            return this.cardUserData.city + " - " + this.cardUserData.country;
+            return `${this.cardUserData.city} - ${this.cardUserData.country}`;
          },
 
          isBio(){
