@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\UserProfilePicture;
 use App\User;
+use App\Talk;
 
 class UserController extends Controller{
 
@@ -152,17 +153,32 @@ class UserController extends Controller{
     *
     * @return \Illuminate\Http\JsonResponse
     */
-   public function followedWithoutTalk(){
+   public function followedFollowersWithoutTalk(){
 
       $user = Auth::user();
-      $talksSended = $user->talks_sended;
-      $recipientsIds = $talksSended->map(
-         function ($talk) {
+
+      $allTalks = Talk::where("sender_id", $user->id)
+         ->orWhere("recipient_id", $user->id)
+         ->get();
+
+      $recipientsIds = $allTalks->map(
+         function($talk) use ($user){
+            $attr = $talk->recipient_id == $user->id ? "sender_id" : "recipient_id";
             return collect($talk->toArray())
-               ->only('recipient_id')
+               ->only($attr)
                ->all();
          }
       );
+
+      // $user = Auth::user();
+      // $talksSended = $user->talks_sended;
+      // $recipientsIds = $talksSended->map(
+      //    function($talk){
+      //       return collect($talk->toArray())
+      //          ->only('recipient_id')
+      //          ->all();
+      //    }
+      // );
 
       $toHide = [
          "country",

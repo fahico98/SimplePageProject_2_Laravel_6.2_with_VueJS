@@ -28,17 +28,23 @@
                   <template v-else>
 
                      <v-list-item-avatar>
-                        <v-img :src="correctedImageUrl(talk.recipient)"></v-img>
+                        <v-img :src="correctedImageUrl(talk)"></v-img>
                      </v-list-item-avatar>
 
                      <v-list-item-content>
                         <v-list-item-title>
-                           <span class="blue--text text--lighten-1">{{ completeName(talk.recipient) }}</span>
+                           <span class="blue--text text--lighten-1">{{ completeName(talk) }}</span>
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                           <span>{{ talk.recipient.username }}</span>
+                           <span>
+                              {{ talk.recipient.id == user.id ? talk.sender.username : talk.recipient.username }}
+                           </span>
                         </v-list-item-subtitle>
                      </v-list-item-content>
+
+                     <!-- <v-list-item-action>
+                        <v-chip small dark style="cursor: pointer" class="ma-2 blue lighten-1">999</v-chip>
+                     </v-list-item-action> -->
 
                   </template>
 
@@ -63,6 +69,7 @@
 <script>
 
    import InfiniteLoading from 'vue-infinite-loading';
+   import { mapGetters } from "vuex";
    import axios from "axios";
 
    export default {
@@ -118,6 +125,13 @@
          }
       },
 
+      computed: {
+         ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user"
+         }),
+      },
+
       methods: {
 
          loadTalks($state){
@@ -146,11 +160,13 @@
                });
          },
 
-         completeName(user){
+         completeName(talk){
+            let user = talk.recipient.id == this.user.id ? talk.sender : talk.recipient;
             return `${user.name} ${user.lastname}`;
          },
 
-         correctedImageUrl(user){
+         correctedImageUrl(talk){
+            let user = talk.recipient.id == this.user.id ? talk.sender : talk.recipient;
             return user.profile_picture
                ? axios.defaults.baseURL.replace("/api", "") + user.profile_picture.url.replace("public/", "storage/")
                : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";

@@ -32,7 +32,7 @@ Route::group(["namespace" => "API"], function(){
    Route::get("email_exists/{email?}", "UserController@emailExists");
 
    Route::get("followers_followed/{user}/{users}/{page}", "UserController@followersFollowed");
-   Route::get("followed_without_talk", "UserController@followedWithoutTalk");
+   Route::get("followed_followers_without_talk", "UserController@followedFollowersWithoutTalk");
 
    Route::post("follow/{username}", "UserController@follow");
    Route::delete("unfollow/{username}", "UserController@unfollow");

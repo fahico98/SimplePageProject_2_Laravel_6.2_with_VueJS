@@ -25,8 +25,7 @@
                      <span class="px-2">Eliminar</span>
                   </v-btn>
 
-                  <v-btn depressed light @click="dialog = false" class="mb-2 ml-3 text-capitalize" v-ripple="false"
-                     color="grey lighten-1">
+                  <v-btn depressed outlined @click="dialog = false" class="mb-2 ml-3 text-capitalize" color="blue lighten-1">
                      <span class="px-2">Cancelar</span>
                   </v-btn>
 

@@ -19,50 +19,49 @@
                Puedes enviar mensajes instantaneos a cualquiera de los usuarios que estas siguiendo.
             </v-card-text>
 
-               <v-text-field dense outlined color="blue lighten-1" label="Nombre de usuario" class="px-5"
-                  append-icon="mdi-magnify" v-model="browsedUsername"/>
+            <v-text-field dense outlined color="blue lighten-1" label="Nombre de usuario" class="px-5"
+               append-icon="mdi-magnify" v-model="browsedUsername"/>
 
-               <v-divider></v-divider>
+            <v-divider></v-divider>
 
-               <v-card-text style="height: 300px;" class="px-2">
+            <v-card-text style="height: 300px;" class="px-2">
 
-                  <div class="ma-0 pa-0" v-if="skeleton">
-                     <v-skeleton-loader class="ma-0 pa-0" type="list-item-avatar-two-line" v-for="i in new Array(10)" :key="i"/>
-                  </div>
+               <div class="ma-0 pa-0" v-if="skeleton">
+                  <v-skeleton-loader class="ma-0 pa-0" type="list-item-avatar-two-line" v-for="i in new Array(10)" :key="i"/>
+               </div>
 
-                  <v-list flat v-else>
+               <v-list flat v-else>
 
-                     <v-list-item class="px-2" style="cursor: pointer" v-for="(listUser, index) in filteredFollowed"
-                        :key="index" @click.prevent="newTalk(listUser, index)">
+                  <v-list-item class="px-2" style="cursor: pointer" v-for="(listUser, index) in filteredFollowed"
+                     :key="index" @click.prevent="newTalk(listUser, index)">
 
-                        <v-list-item-avatar>
-                           <v-img :src="correctedImageUrl(listUser)"></v-img>
-                        </v-list-item-avatar>
+                     <v-list-item-avatar>
+                        <v-img :src="correctedImageUrl(listUser)"></v-img>
+                     </v-list-item-avatar>
 
-                        <v-list-item-content>
+                     <v-list-item-content>
 
-                           <v-list-item-title>
-                              <span class="blue--text text--lighten-1">{{ completeName(listUser) }}</span>
-                           </v-list-item-title>
+                        <v-list-item-title>
+                           <span class="blue--text text--lighten-1">{{ completeName(listUser) }}</span>
+                        </v-list-item-title>
 
-                           <v-list-item-subtitle>
-                              <span>{{ listUser.username }}</span>
-                           </v-list-item-subtitle>
+                        <v-list-item-subtitle>
+                           <span>{{ listUser.username }}</span>
+                        </v-list-item-subtitle>
 
-                        </v-list-item-content>
+                     </v-list-item-content>
 
-                     </v-list-item>
-                  </v-list>
-               </v-card-text>
+                  </v-list-item>
+               </v-list>
+            </v-card-text>
 
-               <v-divider></v-divider>
+            <v-divider></v-divider>
 
-               <v-card-actions class="ma-2">
-                  <v-btn depressed dark v-ripple="false" class="text-capitalize" color="blue lighten-1"
-                     @click="dialog = false">
-                     <span class="px-2">Cancelar</span>
-                  </v-btn>
-               </v-card-actions>
+            <v-card-actions class="ma-2">
+               <v-btn outlined class="text-capitalize" color="blue lighten-1" @click="dialog = false">
+                  <span class="px-2">Cancelar</span>
+               </v-btn>
+            </v-card-actions>
 
          </v-card>
 
@@ -111,7 +110,7 @@
       },
 
       mounted(){
-         axios.get("followed_without_talk")
+         axios.get("followed_followers_without_talk")
             .then((response) => {
                if(response.data){
                   this.followed = response.data;

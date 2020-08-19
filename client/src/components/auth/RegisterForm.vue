@@ -40,10 +40,11 @@
             class="ma-0 pa-0 mt-1" @input="$v.form.password_confirmation.$touch()" @blur="$v.form.password_confirmation.$touch()"
             :error-messages="confPasswordErrors" type="password" outlined dense required></v-text-field>
 
-         <v-btn class="mt-1" type="submit" color="blue lighten-1 text-capitalize" dark depressed>Enviar</v-btn>
+         <v-btn class="mt-1" type="submit" color="blue lighten-1 text-capitalize" dark depressed>enviar</v-btn>
 
-         <v-btn class="mt-1" color="grey lighten-1 text-capitalize ml-2" @click="borrarCampos()" light depressed>
-            Borrar campos</v-btn>
+         <v-btn outlined depressed color="blue lighten-1" class="mt-1 ml-2 text-capitalize" @click="borrarCampos()">
+            borrar campos
+         </v-btn>
 
       </v-form>
    </div>

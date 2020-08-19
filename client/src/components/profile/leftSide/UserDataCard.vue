@@ -63,8 +63,8 @@
                   </p>
                </v-col>
                <v-col cols="1" class="ma-0 pa-0">
-                  <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" justify="left" class="ma-0 pa-0"
-                     :action="'edit'" :bioProp="cardUserData.biography"/>
+                  <add-edit-bio-modal-form @bioChangedSuccessfully="changeBio($event)" @bioRemovedSuccessfully="removeBio()"
+                     justify="left" class="ma-0 pa-0" :action="'edit'" :bioProp="cardUserData.biography"/>
                </v-col>
             </v-row>
 
@@ -151,6 +151,11 @@
          changeBio(bio){
             this.cardUserData.biography = bio;
             this.setBio(bio);
+         },
+
+         removeBio(){
+            this.cardUserData.biography = "";
+            this.setBio("");
          },
 
          changeProfilePicture(profilePicture){

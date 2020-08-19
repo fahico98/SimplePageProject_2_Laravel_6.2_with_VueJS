@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Messages;
+use App\Message;
 use App\Talk;
 
 class MessagesController extends Controller{
@@ -21,8 +21,8 @@ class MessagesController extends Controller{
     */
    public function index($id, $page){
       return response()->json(
-         Messages::where("talk_id", $id)
-            ->orederBy("created_at", "desc")
+         Message::where("talk_id", $id)
+            ->orderBy("created_at", "desc")
             ->offset(20 * ($page - 1))
             ->limit(20)
             ->get()
@@ -68,13 +68,16 @@ class MessagesController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function store(Request $request){
-      return response()->json(
-         Message::insert([
-            "content" => $request->content,
-            "recipient_id" => $request->recipient_id,
-            "sender_id" => Auth::user()->id
-         ])
-      );
+
+      $message = new Message;
+      $message->content = $request->content;
+      $message->talk_id = $request->talk_id;
+      $message->sender_id = Auth::user()->id;
+
+      $message->save();
+      $message->refresh();
+
+      return response()->json($message);
    }
 
     /**

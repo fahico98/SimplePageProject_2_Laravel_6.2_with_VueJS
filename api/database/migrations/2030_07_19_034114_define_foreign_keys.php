@@ -49,6 +49,11 @@ class DefineForeignKeys extends Migration{
          $table->foreign("sender_id")->references("id")->on("users")->onDelete("cascade");
          $table->foreign("recipient_id")->references("id")->on("users")->onDelete("cascade");
       });
+
+      Schema::table("messages", function(Blueprint $table){
+         $table->foreign("sender_id")->references("id")->on("users")->onDelete("cascade");
+         $table->foreign("talk_id")->references("id")->on("talks")->onDelete("cascade");
+      });
    }
 
    /**
@@ -88,6 +93,11 @@ class DefineForeignKeys extends Migration{
       Schema::table("talks", function(Blueprint $table){
          $table->dropForeign("talks_sender_id_foreign");
          $table->dropForeign("talks_recipient_id_foreign");
+      });
+
+      Schema::table("messages", function(Blueprint $table){
+         $table->dropForeign("messages_sender_id_foreign");
+         $table->dropForeign("messages_talk_id_foreign");
       });
    }
 }

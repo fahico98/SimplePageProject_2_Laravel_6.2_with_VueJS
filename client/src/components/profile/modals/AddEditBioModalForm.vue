@@ -8,7 +8,7 @@
          <v-btn small dark depressed v-if="action == 'store'" v-ripple="false" color="blue lighten-1" width="100%"
             class="text-capitalize" v-bind="attrs" v-on="on">agregar biografia</v-btn>
 
-         <v-btn small icon class="ml-2" v-else-if="action == 'edit'" v-ripple="false" v-bind="attrs" v-on="on">
+         <v-btn small icon class="ml-2" v-else-if="action == 'edit'" v-bind="attrs" v-on="on">
             <v-icon small dense color="blue lighten-1">mdi-pencil-outline</v-icon>
          </v-btn>
 
@@ -21,10 +21,17 @@
                label="Biografía" @input="$v.bio.$touch()" :error-messages="bioErrors"/>
 
             <v-card-actions>
+
                <v-btn depressed dark v-ripple="false" @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize"
                   color="blue lighten-1">
                   <span class="px-2">Guardar</span>
                </v-btn>
+
+               <v-btn v-if="action == 'edit'" depressed outlined @click="removeBio()" class="mb-2 ml-2 text-capitalize"
+                  color="blue lighten-1">
+                  <span class="px-2">quitar biografía</span>
+               </v-btn>
+
             </v-card-actions>
 
          </v-form>
@@ -97,11 +104,17 @@
       },
 
       methods: {
+
          submit(){
+
             if(!this.loading){
+
                this.$v.$touch();
+
                if(!this.$v.$invalid){
+
                   this.loading = "blue lighten-1";
+
                   axios.post("store_bio", {bio: this.bio})
                      .then((response) => {
                         if(response.data){
@@ -116,6 +129,18 @@
                      });
                }
             }
+         },
+
+         removeBio(){
+
+            this.loading = false;
+            this.dialog = false;
+            this.$emit("bioRemovedSuccessfully");
+
+            axios.post("store_bio", {bio: ""})
+               .catch((error) => {
+                  console.log(error);
+               });
          }
       }
    }

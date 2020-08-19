@@ -6,11 +6,11 @@
 
          <template v-slot:activator="{ on, attrs }">
 
-            <v-btn icon class="mx-0" v-if="action == 'edit'" color="blue lighten-1" v-ripple="false" v-bind="attrs" v-on="on">
+            <v-btn icon class="mx-0" v-if="action == 'edit'" color="blue lighten-1" v-bind="attrs" v-on="on">
                <v-icon>mdi-pencil-outline</v-icon>
             </v-btn>
 
-            <v-btn dark depressed v-else-if="action == 'create'" v-ripple="false" color="blue lighten-1" width="100%"
+            <v-btn dark depressed v-else-if="action == 'create'" color="blue lighten-1" width="100%"
                class="text-capitalize mb-5" v-bind="attrs" v-on="on">publicar</v-btn>
 
          </template>
@@ -38,17 +38,17 @@
 
                <v-card-actions>
 
-                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize" v-ripple="false"
+                  <v-btn depressed dark @click="submit()" type="submit" class="mb-2 ml-3 text-capitalize"
                      color="blue lighten-1">
                      <span class="px-2">{{ action == "edit" ? "Guardar cambios" : "Publicar" }}</span>
                   </v-btn>
 
-                  <v-btn depressed light v-ripple="false" class="mb-2 ml-3 text-capitalize" color="grey lighten-1"
-                     v-if="action == 'create'" @click="limpiarCampos()">
+                  <v-btn outlined class="mb-2 ml-3 text-capitalize" color="blue lighten-1" v-if="action == 'create'"
+                     @click="limpiarCampos()">
                      <span class="px-2">Limpiar campos</span>
                   </v-btn>
 
-                  <v-btn depressed light v-ripple="false" class="mb-2 ml-3 text-capitalize" color="grey lighten-1"
+                  <v-btn outlined class="mb-2 ml-3 text-capitalize" color="blue lighten-1"
                      @click="loading ? dialog = dialog : dialog = false">
                      <span class="px-2">Cancelar</span>
                   </v-btn>

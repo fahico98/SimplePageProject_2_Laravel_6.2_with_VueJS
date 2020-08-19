@@ -1,12 +1,11 @@
 
 <template>
 
-   <div v-if="talk.id != 0" style="display: inline">
+   <div style="display: inline">
       <v-dialog v-model="dialog" width="600px" height="500px">
 
          <template v-slot:activator="{ on, attrs }">
-            <v-btn text depressed class="mx-0 text-capitalize" color="blue lighten-1" v-ripple="false"
-               width="100%" v-bind="attrs" v-on="on">
+            <v-btn text depressed class="mx-0 text-capitalize" color="blue lighten-1" width="100%" v-bind="attrs" v-on="on">
                <v-icon>mdi-email-plus-outline</v-icon><span class="ml-2">Nuevo mensajes</span>
             </v-btn>
          </template>
@@ -20,14 +19,15 @@
                <v-textarea no-resize outlined v-model="message" color="blue lighten-1" rows="4" class="px-5" label="Mensaje"
                   @input="$v.message.$touch()" :error-messages="messageErrors"/>
 
-               <v-card-actions>
+               <v-card-actions class="mt-0 pt-0">
 
-                  <v-btn depressed dark @click="send()" type="submit" class="mb-2 ml-3 text-capitalize" v-ripple="false"
-                     color="blue lighten-1">Enviar
+                  <v-btn depressed dark v-ripple="false" color="blue lighten-1" class="mb-2 ml-3 px-4 text-capitalize"
+                     type="submit" @click="send()">
+                     Enviar
                   </v-btn>
 
-                  <v-btn depressed text light v-ripple="false" class="mb-2 ml-3 text-capitalize" color="blue lighten-1"
-                     @click="dialog = false">cancelar
+                  <v-btn outlined light class="mb-2 ml-3 px-4 text-capitalize" color="blue lighten-1" @click="dialog = false">
+                     cancelar
                   </v-btn>
 
                </v-card-actions>
@@ -42,6 +42,7 @@
 <script>
 
    import { maxLength, required } from "vuelidate/lib/validators";
+   import { mapGetters } from "vuex";
    import axios from "axios";
 
    export default {
@@ -51,6 +52,15 @@
             loading: false,
             dialog: false,
             message: ""
+         }
+      },
+
+      watch: {
+         dialog(dialog){
+            if(!dialog){
+               this.message = "";
+               this.$v.$reset();
+            }
          }
       },
 
@@ -67,11 +77,16 @@
 
       computed: {
 
+         ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user"
+         }),
+
          messageErrors(){
             const errors = [];
             if(!this.$v.message.$dirty){ return errors; }
-            !this.$v.message.maxLength && errors.push('El mensaje que intenta enviar es demasiado largo.');
-            !this.$v.message.required && errors.push('No puede enviar un mensaje vacío.');
+            !this.$v.message.maxLength && errors.push('El mensaje que intentas enviar es demasiado largo.');
+            !this.$v.message.required && errors.push('No puedes enviar un mensaje vacío.');
             return errors;
          }
       },
@@ -79,18 +94,24 @@
       methods: {
 
          send(){
+
             if(!this.loading){
+
                this.$v.$touch();
+
                if(!this.$v.$invalid){
+
                   this.loading = "blue lighten-1";
+
                   axios.post("messages/send", {
                         content: this.message,
-                        recipient_id: this.talk.recipient.id
+                        talk_id: this.talk.id
                      })
                      .then((response) => {
                         if(response.data){
                            this.$emit("sendedMessage", response.data);
                            this.loading = false;
+                           this.dialog = false;
                         }
                      })
                      .catch((error) => {
