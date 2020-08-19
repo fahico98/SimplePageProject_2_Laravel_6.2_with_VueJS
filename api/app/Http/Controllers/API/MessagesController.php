@@ -7,28 +7,43 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Messages;
 use App\Talk;
 
 class MessagesController extends Controller{
 
    /**
-    * Display a listing of the resource.
+    * Return all messages of a Talk instance using pagination.
     *
+    * @param Integer $id
+    * @param Integer $page
     * @return \Illuminate\Http\Response
     */
-   public function index(){
-      $user = Auth::user();
-      return $user->talks_received->merge($user->talks_sended);
+   public function index($id, $page){
+      return response()->json(
+         Messages::where("talk_id", $id)
+            ->orederBy("created_at", "desc")
+            ->offset(20 * ($page - 1))
+            ->limit(20)
+            ->get()
+      );
    }
 
    /**
-    * Store a newly created resource in storage.
+    * Get every Talk instances in which authenticated user is involved.
     *
-    * @param  \Illuminate\Http\Request  $request
+    * @param Integer $page
     * @return \Illuminate\Http\Response
     */
-   public function store(Request $request){
-
+    public function talks($page){
+      return response()->json(
+         Talk::where("sender_id", Auth::user()->id)
+            ->orWhere("recipient_id", Auth::user()->id)
+            ->orderBy("updated_at", "desc")
+            ->offset(20 * ($page - 1))
+            ->limit(20)
+            ->get()
+      );
    }
 
    /**
@@ -47,31 +62,20 @@ class MessagesController extends Controller{
    }
 
    /**
-    * Get every Talk instances in which authenticated user is involved.
+    * Store a new Message instance.
     *
+    * @param Request $request
     * @return \Illuminate\Http\Response
     */
-   public function talks(){
+   public function store(Request $request){
       return response()->json(
-         Talk::where("sender_id", Auth::user()->id)
-            ->orWhere("recipient_id", Auth::user()->id)
-            ->orderBy("updated_at", "desc")
-            ->offset(20 * ($page - 1))
-            ->limit(20)
-            ->get()
+         Message::insert([
+            "content" => $request->content,
+            "recipient_id" => $request->recipient_id,
+            "sender_id" => Auth::user()->id
+         ])
       );
    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

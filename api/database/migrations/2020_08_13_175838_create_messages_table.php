@@ -15,7 +15,7 @@ class CreateMessagesTable extends Migration{
       Schema::create('messages', function (Blueprint $table) {
          $table->bigIncrements('id');
          $table->bigInteger("talk_id")->unsigned();
-         $table->string("content", 120);
+         $table->text("content");
          $table->boolean("deleted_by_sender")->default(0);
          $table->boolean("deleted_by_recipient")->default(0);
          $table->boolean("readed")->default(0);

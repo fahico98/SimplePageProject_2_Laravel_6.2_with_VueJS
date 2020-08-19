@@ -1,20 +1,18 @@
 
 <template>
 
-   <v-container class="my-0 px-5">
+   <v-container class="ma-0 py-0 px-5">
 
-      <v-list flat>
+      <v-divider></v-divider>
 
-         <!-- <v-divider></v-divider> -->
-
-         <v-list-item-group class="my-0">
+      <v-list flat class="py-0 my-0">
+         <v-list-item-group class="my-0 py-0">
 
             <div class="ma-0 pa-0" v-for="(talk, index) in talks" :key="index">
 
                <v-divider v-if="talk.divider"></v-divider>
-               <!-- <v-skeleton-loader class="ma-0 pa-0" type="list-item-avatar-three-line"/> -->
 
-               <v-list-item v-else class="px-2" style="cursor: pointer">
+               <v-list-item v-else class="px-2" style="cursor: pointer" @click.prevent="selectedTalk(talk)">
 
                   <v-container class="ma-0 pa-0" v-if="talk.skeleton">
                      <v-row class="ma-0 pa-0 my-2">
@@ -25,8 +23,6 @@
                            <v-skeleton-loader class="mx-auto" type="sentences"></v-skeleton-loader>
                         </v-col>
                      </v-row>
-                     <!-- <v-skeleton-loader class="ma-0 pa-0" width="100%" height="50%" type="list-item-avatar-two-line"
-                        v-if="talk.skeleton"/> -->
                   </v-container>
 
                   <template v-else>
@@ -36,22 +32,27 @@
                      </v-list-item-avatar>
 
                      <v-list-item-content>
-
                         <v-list-item-title>
                            <span class="blue--text text--lighten-1">{{ completeName(talk.recipient) }}</span>
                         </v-list-item-title>
-
                         <v-list-item-subtitle>
                            <span>{{ talk.recipient.username }}</span>
                         </v-list-item-subtitle>
-
                      </v-list-item-content>
 
                   </template>
 
                </v-list-item>
-
             </div>
+
+            <infinite-loading ref="infiniteLoading" @infinite="loadTalks">
+               <template v-slot:no-more>
+                  <p class="blue--text text--lighten-1 my-2 body-2">...</p>
+               </template>
+               <template v-slot:no-results>
+                  <p :class="'blue--text text--lighten-1 body-2 ' + marginClass">{{ noResultsMessage }}</p>
+               </template>
+            </infinite-loading>
 
          </v-list-item-group>
       </v-list>
@@ -61,14 +62,21 @@
 
 <script>
 
-   // import FollowedBrowser from "./FollowedBrowser";
+   import InfiniteLoading from 'vue-infinite-loading';
    import axios from "axios";
 
    export default {
 
+      components: {
+         InfiniteLoading
+      },
+
       data(){
          return {
-            talks: []
+            talks: [],
+            currentPage: 0,
+            noResultsMessage: "Aún no tienes conversaciones !",
+            marginClass: "mt-5"
          }
       },
 
@@ -77,24 +85,66 @@
             type: Object,
             default: null,
             required: true
+         },
+         skeleton: {
+            type: Boolean,
+            required: true
          }
       },
 
       watch: {
          talk(val){
             if(val){
-               let talk = val;
+               let buffer = new Object();
+               let talk = new Object();
+               buffer.data = val;
+               talk = buffer.data;
                this.talks.splice(0, 1, talk);
                this.$emit("talkAdded");
+            }
+         },
+
+         skeleton(val){
+            if(val){
+               if(this.marginClass == "mt-5"){
+                  this.noResultsMessage = "...";
+                  this.marginClass = "mt-2";
+               }
+               if(this.talks.length){
+                  this.talks.unshift({ divider: true });
+               }
+               this.talks.unshift({ skeleton: true });
             }
          }
       },
 
-      components: {
-         // FollowedBrowser
-      },
-
       methods: {
+
+         loadTalks($state){
+            this.currentPage++;
+            axios.get(`messages/talks/${this.currentPage}`)
+               .then((response) => {
+                  if(response.data){
+                     if(response.data.length){
+                        for(var i = 0; i < response.data.length; i++){
+                           if(this.talks.length){
+                              this.talks.unshift({ divider: true });
+                           }
+                           this.talks.unshift(response.data[i]);
+                        }
+                        $state.loaded();
+                        if(response.data.length < 20){
+                           $state.complete();
+                        }
+                     }else{
+                        $state.complete();
+                     }
+                  }
+               })
+               .catch((error) => {
+                  console.log(error);
+               });
+         },
 
          completeName(user){
             return `${user.name} ${user.lastname}`;
@@ -105,6 +155,10 @@
                ? axios.defaults.baseURL.replace("/api", "") + user.profile_picture.url.replace("public/", "storage/")
                : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
          },
+
+         selectedTalk(talk){
+            this.$emit("selectedTalk", talk);
+         }
       }
    }
 

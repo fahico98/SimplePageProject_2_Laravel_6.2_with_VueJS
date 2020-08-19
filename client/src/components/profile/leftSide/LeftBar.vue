@@ -9,10 +9,11 @@
 
       <!----------------------------------------- Messages ----------------------------------------->
 
-      <talks-list v-if="inRoute('messages')" :talk="talk" @talkAdded="talkAdded()"/>
+      <talks-list v-if="inRoute('messages')" :talk="talk" :skeleton="skeleton" @talkAdded="skeleton = false"
+         @selectedTalk="selectedTalk($event)"/>
 
-      <template v-if="inRoute('messages')" v-slot:prepend>
-         <followed-browser @newTalk="addTalk($event)"/>
+      <template v-if="inRoute('messages')" height="100px" v-slot:prepend>
+         <followed-browser @newTalk="addTalk($event)" @skeleton="skeleton = true"/>
       </template>
 
       <!----------------------------------------- Auth home ----------------------------------------->
@@ -37,6 +38,7 @@
             //----------------------------------------- Messages -----------------------------------------
 
             talk: {},
+            skeleton: false
 
             //--------------------------------------------------------------------------------------------
          }
@@ -49,10 +51,16 @@
       },
 
       props: {
+
+         //----------------------------------------- Profile ------------------------------------------
+
          cardUserData: {
             type: Object,
             required: false
          }
+
+         //--------------------------------------------------------------------------------------------
+
       },
 
       computed: {
@@ -74,8 +82,8 @@
             this.talk = talk;
          },
 
-         talkAdded(){
-            this.talk = {};
+         selectedTalk(talk){
+            this.$emit("selectedTalk", talk);
          }
 
          //-----------------------------------------------------------------------------------------------

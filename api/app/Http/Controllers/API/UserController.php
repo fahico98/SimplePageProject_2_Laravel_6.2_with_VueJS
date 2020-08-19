@@ -148,12 +148,21 @@ class UserController extends Controller{
    }
 
    /**
-    * Get all the follower or followed users of the authenticated user.
+    * Get all the followed users who has no talk with the authenticated user.
     *
-    * @param String $users
     * @return \Illuminate\Http\JsonResponse
     */
-   public function allFollowersFollowed($users){
+   public function followedWithoutTalk(){
+
+      $user = Auth::user();
+      $talksSended = $user->talks_sended;
+      $recipientsIds = $talksSended->map(
+         function ($talk) {
+            return collect($talk->toArray())
+               ->only('recipient_id')
+               ->all();
+         }
+      );
 
       $toHide = [
          "country",
@@ -164,11 +173,14 @@ class UserController extends Controller{
          "pivot"
       ];
 
-      $user = Auth::user();
+      $user->load([
+         "followed" => function($query) use ($recipientsIds){
+            $query->whereNotIn("followed_id", $recipientsIds->toArray());
+         }
+      ])
+      ->makeHidden($toHide);
 
-      return $users == "followers"
-         ? response()->json($user->followers->makeHidden($toHide))
-         : response()->json($user->followed->makeHidden($toHide));
+      return response()->json($user->followed);
    }
 
    /**

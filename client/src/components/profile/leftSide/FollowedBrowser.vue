@@ -6,12 +6,12 @@
 
          <template v-slot:activator="{ on, attrs }">
             <div class="pa-5 d-flex">
-               <v-btn dark depressed v-ripple="false" color="blue lighten-1" width="100%" class="text-capitalize mb-5"
+               <v-btn dark depressed v-ripple="false" color="blue lighten-1" width="100%" class="text-capitalize"
                   v-bind="attrs" v-on="on">Nueva conversación</v-btn>
             </div>
          </template>
 
-         <v-card :loading="loading">
+         <v-card>
 
             <v-card-title class="headline pt-5">Buscar usuario</v-card-title>
 
@@ -32,8 +32,8 @@
 
                   <v-list flat v-else>
 
-                     <v-list-item class="px-2" style="cursor: pointer" v-for="listUser in filteredFollowed" :key="listUser.id"
-                        @click.prevent="newTalk(listUser)">
+                     <v-list-item class="px-2" style="cursor: pointer" v-for="(listUser, index) in filteredFollowed"
+                        :key="index" @click.prevent="newTalk(listUser, index)">
 
                         <v-list-item-avatar>
                            <v-img :src="correctedImageUrl(listUser)"></v-img>
@@ -58,7 +58,8 @@
                <v-divider></v-divider>
 
                <v-card-actions class="ma-2">
-                  <v-btn depressed dark v-ripple="false" class="text-capitalize" color="blue lighten-1" @click="dialog = false">
+                  <v-btn depressed dark v-ripple="false" class="text-capitalize" color="blue lighten-1"
+                     @click="dialog = false">
                      <span class="px-2">Cancelar</span>
                   </v-btn>
                </v-card-actions>
@@ -110,7 +111,7 @@
       },
 
       mounted(){
-         axios.get("all_followers_followed/followed")
+         axios.get("followed_without_talk")
             .then((response) => {
                if(response.data){
                   this.followed = response.data;
@@ -134,12 +135,14 @@
                : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
          },
 
-         async newTalk(user){
-            this.loading = "blue lighten-1";
+         async newTalk(user, index){
+            this.$emit("skeleton");
+            this.dialog = false;
             await axios.post("messages/new_talk", {recipient_id: user.id})
                .then((response) => {
                   if(response.data){
                      this.dialog = false;
+                     this.followed.splice(index, 1);
                      this.$emit("newTalk", {
                         messages_number: 0,
                         recipient: user,

@@ -32,7 +32,7 @@ Route::group(["namespace" => "API"], function(){
    Route::get("email_exists/{email?}", "UserController@emailExists");
 
    Route::get("followers_followed/{user}/{users}/{page}", "UserController@followersFollowed");
-   Route::get("all_followers_followed/{users}", "UserController@allFollowersFollowed");
+   Route::get("followed_without_talk", "UserController@followedWithoutTalk");
 
    Route::post("follow/{username}", "UserController@follow");
    Route::delete("unfollow/{username}", "UserController@unfollow");
@@ -58,9 +58,9 @@ Route::group(["namespace" => "API"], function(){
 
    Route::group(["prefix" => "messages"], function(){
 
-      Route::get("index", "MessagesController@index");
+      Route::get("index/{talk_id}/{page}", "MessagesController@index");
+      Route::get("talks/{page}", "MessagesController@talks");
       Route::post("new_talk", "MessagesController@newTalk");
-      Route::get("talks", "MessagesController@talks");
       Route::post("send", "MessagesController@store");
    });
 });
