@@ -5,14 +5,16 @@
       <v-dialog v-model="dialog" width="600px" height="500px">
 
          <template v-slot:activator="{ on, attrs }">
-            <v-btn text depressed class="mx-0 text-capitalize" color="blue lighten-1" width="100%" v-bind="attrs" v-on="on">
+            <v-btn text large depressed class="mx-0 text-capitalize" color="blue lighten-1" width="100%" v-bind="attrs" v-on="on">
                <v-icon>mdi-email-plus-outline</v-icon><span class="ml-2">Nuevo mensajes</span>
             </v-btn>
          </template>
 
          <v-card :loading="loading">
 
-            <v-card-title class="headline pt-5">Nuevo mensaje</v-card-title>
+            <v-card-title class="headline pt-5">
+               Nuevo mensaje para {{ talk.recipient_id == user.id ? talk.sender.name : talk.recipient.name }}
+            </v-card-title>
 
             <v-form class="mt-5 pa-0" @submit.prevent="">
 

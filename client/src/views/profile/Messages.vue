@@ -1,22 +1,13 @@
 
 <template>
 
-   <v-container class="ma-0 pa-0 grey lighten-4">
+   <v-container class="ma-0 pa-0">
 
       <left-bar class="grey lighten-4" @selectedTalk="catchSelectedTalk($event)"/>
       <right-bar class="grey lighten-4"/>
 
-      <div class="mx-2">
-
+      <div>
          <v-container class="ma-0 pa-0" width="100%">
-
-            <!-- <v-row>
-               <v-col cols="12">
-                  <send-message-modal-form v-if="selectedTalk.id != 0" :talk="selectedTalk"
-                     @sendedMessage="addMessage($event)"/>
-                  <v-divider class="mt-2" v-if="selectedTalk.id != 0"></v-divider>
-               </v-col>
-            </v-row> -->
 
             <infinite-loading v-if="selectedTalk.id != 0" class="align-self-end" @infinite="loadMessages">
                <template v-slot:no-more>
@@ -29,17 +20,17 @@
 
 
             <div class="ma-0 pa-0" v-for="(message, index) in messages" :key="index">
-               <message-container :message="message"/>
-               <v-row class="my-2 pa-0">
+               <!-- <v-row class="ma-0 pa-0">
                   <v-divider></v-divider>
-               </v-row>
+               </v-row> -->
+               <message-container :message="message"/>
             </div>
 
-            <div class="ma-0 pa-0 mt-2">
-               <send-message-modal-form v-if="selectedTalk.id != 0" :talk="selectedTalk" @sendedMessage="addMessage($event)"/>
-               <!-- <v-row class="my-2 pa-0">
+            <div class="ma-0 pa-0 mb-4">
+               <v-row class="mb-2 pa-0">
                   <v-divider class="mt-0" v-if="selectedTalk.id != 0"></v-divider>
-               </v-row> -->
+               </v-row>
+               <send-message-modal-form v-if="selectedTalk.id != 0" :talk="selectedTalk" @sendedMessage="addMessage($event)"/>
             </div>
 
          </v-container>
@@ -124,7 +115,7 @@
          },
 
          addMessage(message){
-            this.messages.unshift(message);
+            this.messages.push(message);
          },
 
          catchSelectedTalk(talk){

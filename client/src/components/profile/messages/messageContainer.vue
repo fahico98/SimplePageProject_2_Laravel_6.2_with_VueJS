@@ -1,24 +1,27 @@
 
 <template>
 
-   <v-container class="ma-0 pa-0 blue lighten-5" style="border-radius: 10px;">
+   <v-container class="pa-0 ma-0 my-2">
       <v-row class="ma-0 pa-0">
 
-         <v-col cols="11" v-if="mine">
-            <p class="blue--text text--lighten-1 ma-0" style="white-space: pre;">{{ trimmedContent }}</p>
+         <v-col width="100%" cols="10" class="container-border blue lighten-4" v-if="mine">
+            <div class="flex-grow-0 flex-shrink-1" width="100%" v-html="correctedContent"></div>
+            <div class="ma-0 text-caption mt-3 blue--text text--lighten-1">{{ message.created_at_for_humans }}</div>
          </v-col>
-         <v-col cols="1" v-if="mine">
-            <v-btn color="blue lighten-1" icon text small>
+         <v-col cols="1" offset="1" class="pr-0 pt-2 d-flex align-center" v-if="mine">
+            <v-btn color="blue lighten-1" class="ma-0" icon text small>
                <v-icon small title="Eliminar mensaje">mdi-close</v-icon>
             </v-btn>
          </v-col>
 
-         <v-col cols="11" v-if="!mine">
-            {{ message.content }}
+         <v-col width="100%" cols="10" offset="2" class="container-border" v-if="!mine">
+            <div class="flex-grow-0 flex-shrink-1" style="text-align:right" width="100%" v-html="correctedContent"></div>
+            <div class="ma-0 text-caption mt-3 blue--text text--lighten-1" style="text-align:right">
+               {{ message.created_at_for_humans }}
+            </div>
          </v-col>
-         <v-col cols="1" v-if="!mine">
 
-         </v-col>
+         <!-- style="white-space: pre;" -->
 
       </v-row>
    </v-container>
@@ -28,8 +31,15 @@
 <script>
 
    import { mapGetters } from "vuex";
+   // import axios from "axios";
 
    export default {
+
+      data(){
+         return {
+
+         }
+      },
 
       props: {
          message: {
@@ -49,10 +59,31 @@
             return this.message.sender_id == this.user.id;
          },
 
-         trimmedContent(){
-            return this.message.content.trim();
+         // avatar(){
+         //    let userFoto = this.mine ? this.user.profile_picture : this.message.sender.profile_picture;
+         //    return userFoto
+         //       ? axios.defaults.baseURL.replace("/api", "") + userFoto.url.replace("public/", "storage/")
+         //       : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
+         // },
+
+         correctedContent(){
+            let senderName = this.mine ? "Yo" : this.message.sender.name;
+            return "<p class='text-h6 font-weight-bold blue--text text--lighten-1 ma-0 pa-0 mb-3'>"
+               + senderName + ".</p>" + this.message.content.replace(/\n/g, "<br>").trim();
          }
       }
    }
 
 </script>
+
+<style scoped>
+
+   .container-border{
+      border-style: solid;
+      border-width: 1px;
+      border-color: #C4C4C4;
+      border-radius: 15px;
+      background-color: white;
+   }
+
+</style>

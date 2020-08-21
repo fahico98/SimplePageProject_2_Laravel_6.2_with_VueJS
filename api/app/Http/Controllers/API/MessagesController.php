@@ -22,7 +22,7 @@ class MessagesController extends Controller{
    public function index($id, $page){
       return response()->json(
          Message::where("talk_id", $id)
-            ->orderBy("created_at", "desc")
+            ->orderBy("created_at", "asc")
             ->offset(20 * ($page - 1))
             ->limit(20)
             ->get()

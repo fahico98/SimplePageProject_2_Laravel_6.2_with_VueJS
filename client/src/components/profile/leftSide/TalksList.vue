@@ -42,10 +42,6 @@
                         </v-list-item-subtitle>
                      </v-list-item-content>
 
-                     <!-- <v-list-item-action>
-                        <v-chip small dark style="cursor: pointer" class="ma-2 blue lighten-1">999</v-chip>
-                     </v-list-item-action> -->
-
                   </template>
 
                </v-list-item>
