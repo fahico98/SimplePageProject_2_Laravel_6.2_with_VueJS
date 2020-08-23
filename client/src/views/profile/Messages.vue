@@ -9,7 +9,8 @@
       <div>
          <v-container class="ma-0 pa-0" width="100%">
 
-            <infinite-loading v-if="selectedTalk.id != 0" class="align-self-end" @infinite="loadMessages">
+            <infinite-loading direction="top" v-if="selectedTalk.id != 0" class="align-self-end" @infinite="loadMessages"
+               :identifier="infiniteId">
                <template v-slot:no-more>
                   <p class="blue--text text--lighten-1 pb-2 pt-6">No hay mas mensajes !</p>
                </template>
@@ -18,12 +19,8 @@
                </template>
             </infinite-loading>
 
-
             <div class="ma-0 pa-0" v-for="(message, index) in messages" :key="index">
-               <!-- <v-row class="ma-0 pa-0">
-                  <v-divider></v-divider>
-               </v-row> -->
-               <message-container :message="message"/>
+               <message-container :message="message" @removeMessage="removeMessage($event)"/>
             </div>
 
             <div class="ma-0 pa-0 mb-4">
@@ -35,6 +32,15 @@
 
          </v-container>
       </div>
+
+      <v-snackbar v-model="snackbar" :timeout="5000" color="blue lighten-1">Mensaje eliminado !
+         <template v-slot:action="{ attrs }">
+            <v-btn text v-ripple="false" class="white--text text-capitalize" v-bind="attrs" @click="snackbar = false">
+               Ok
+            </v-btn>
+         </template>
+      </v-snackbar>
+
    </v-container>
 
 </template>
@@ -53,8 +59,11 @@
 
       data(){
          return {
+            snackbar: false,
+            begin: false,
             messages: [],
             currentPage: 0,
+            infiniteId: +new Date(),
             selectedTalk: {
                id: 0
             }
@@ -73,6 +82,7 @@
          selectedTalk(){
             this.currentPage = 0;
             this.messages = [];
+            this.infiniteId += 1;
          }
       },
 
@@ -95,13 +105,17 @@
                   .then((response) => {
                      if(response.data.length){
 
-                        this.messages = this.messages.concat(response.data);
+                        this.messages.unshift(...response.data.reverse());
                         $state.loaded();
 
                         if(response.data.length < 20){
                            $state.complete();
                         }
 
+                        if(!this.begin){
+                           this.begin = true;
+                           this.$vuetify.goTo(99999, { offset: 0, duration: 0 });
+                        }
                      }else{
                         $state.complete();
                      }
@@ -116,10 +130,28 @@
 
          addMessage(message){
             this.messages.push(message);
+            this.$vuetify.goTo(99999, {
+               offset: 0,
+               duration: 0
+            });
          },
 
          catchSelectedTalk(talk){
             this.selectedTalk = talk;
+         },
+
+         removeMessage(id){
+
+            for(var i = 0; i < this.messages.length; i++){
+               if(this.messages[i].id == id){
+                  this.messages.splice(i, 1);
+                  break;
+               }
+            }
+
+            if(!this.snackbar){
+               this.snackbar = true;
+            }
          }
       }
    }

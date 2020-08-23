@@ -142,11 +142,7 @@
                   if(response.data){
                      this.dialog = false;
                      this.followed.splice(index, 1);
-                     this.$emit("newTalk", {
-                        messages_number: 0,
-                        recipient: user,
-                        sender: this.user
-                     });
+                     this.$emit("newTalk", response.data);
                   }
                })
                .catch((error) => {

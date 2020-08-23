@@ -22,7 +22,7 @@ class MessagesController extends Controller{
    public function index($id, $page){
       return response()->json(
          Message::where("talk_id", $id)
-            ->orderBy("created_at", "asc")
+            ->orderBy("created_at", "desc")
             ->offset(20 * ($page - 1))
             ->limit(20)
             ->get()
@@ -35,15 +35,15 @@ class MessagesController extends Controller{
     * @param Integer $page
     * @return \Illuminate\Http\Response
     */
-    public function talks($page){
-      return response()->json(
-         Talk::where("sender_id", Auth::user()->id)
-            ->orWhere("recipient_id", Auth::user()->id)
-            ->orderBy("updated_at", "desc")
-            ->offset(20 * ($page - 1))
-            ->limit(20)
-            ->get()
-      );
+   public function talks($page){
+
+      $talks = Talk::where("sender_id", Auth::user()->id)
+         ->orWhere("recipient_id", Auth::user()->id)
+         ->get();
+
+      $sortedTalks = $talks->sortBy("latest_message_created_at")->toArray();
+
+      return response()->json(array_slice($sortedTalks, 20 * ($page - 1), 20));
    }
 
    /**
@@ -53,12 +53,13 @@ class MessagesController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function newTalk(Request $request){
-      return response()->json(
-         DB::table("talks")->insert([
-            "sender_id" => Auth::user()->id,
-            "recipient_id" => $request->recipient_id
-         ])
-      );
+      $talk = new Talk;
+      $talk->sender_id = Auth::user()->id;
+      $talk->recipient_id = $request->recipient_id;
+      $talk->save();
+      $talk->refresh();
+      $talk->load("sender", "recipient");
+      return response()->json($talk);
    }
 
    /**
@@ -80,26 +81,30 @@ class MessagesController extends Controller{
       return response()->json($message);
    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+   /**
+    * The authorized user has seen unread messages.
+    *
+    * @param Talk $talk
+    * @return \Illuminate\Http\Response
+    */
+   public function readMessages(Talk $talk){
+      $talk->unread_messages->each(function($message, $key){
+         $message->readed = 1;
+         $message->save();
+      });
+      return response()->json(true);
+   }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   /**
+    * Remove the specified resource from storage.
+    *
+    * @param Request $request
+    * @return \Illuminate\Http\Response
+    */
+   public function destroy(Request $request){
+      return response()->json(
+         Message::where("id", $request->message_id)
+            ->delete()
+      );
+   }
 }

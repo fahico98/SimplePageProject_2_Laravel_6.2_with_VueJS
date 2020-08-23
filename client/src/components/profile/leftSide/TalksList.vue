@@ -42,6 +42,12 @@
                         </v-list-item-subtitle>
                      </v-list-item-content>
 
+                     <v-list-item-action v-if="talk.unread_messages_count > 0">
+                        <v-chip dark small color="blue lighten-1" class="ma-2" style="cursor: pointer">
+                           {{ talk.unread_messages_count }}
+                        </v-chip>
+                     </v-list-item-action>
+
                   </template>
 
                </v-list-item>
@@ -131,21 +137,27 @@
       methods: {
 
          loadTalks($state){
+
             this.currentPage++;
+
             axios.get(`messages/talks/${this.currentPage}`)
                .then((response) => {
                   if(response.data){
                      if(response.data.length){
+
                         for(var i = 0; i < response.data.length; i++){
                            if(this.talks.length){
                               this.talks.unshift({ divider: true });
                            }
                            this.talks.unshift(response.data[i]);
                         }
+
                         $state.loaded();
+
                         if(response.data.length < 20){
                            $state.complete();
                         }
+
                      }else{
                         $state.complete();
                      }
@@ -170,6 +182,13 @@
 
          selectedTalk(talk){
             this.$emit("selectedTalk", talk);
+            if(talk.unread_messages_count){
+               axios.post(`messages/read_messages/${talk.id}`)
+                  .catch((error) => {
+                     console.log(error);
+                  })
+               talk.unread_messages_count = 0;
+            }
          }
       }
    }

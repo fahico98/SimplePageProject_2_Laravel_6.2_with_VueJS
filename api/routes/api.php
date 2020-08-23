@@ -62,5 +62,7 @@ Route::group(["namespace" => "API"], function(){
       Route::get("talks/{page}", "MessagesController@talks");
       Route::post("new_talk", "MessagesController@newTalk");
       Route::post("send", "MessagesController@store");
+      Route::post("read_messages/{talk}", "MessagesController@readMessages");
+      Route::delete("delete", "MessagesController@destroy");
    });
 });

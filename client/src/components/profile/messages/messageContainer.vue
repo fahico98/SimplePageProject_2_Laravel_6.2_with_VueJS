@@ -9,7 +9,7 @@
             <div class="ma-0 text-caption mt-3 blue--text text--lighten-1">{{ message.created_at_for_humans }}</div>
          </v-col>
          <v-col cols="1" offset="1" class="pr-0 pt-2 d-flex align-center" v-if="mine">
-            <v-btn color="blue lighten-1" class="ma-0" icon text small>
+            <v-btn icon text small color="blue lighten-1" class="ma-0" @click.prevent="deleteMessage(message.id)">
                <v-icon small title="Eliminar mensaje">mdi-close</v-icon>
             </v-btn>
          </v-col>
@@ -21,8 +21,6 @@
             </div>
          </v-col>
 
-         <!-- style="white-space: pre;" -->
-
       </v-row>
    </v-container>
 
@@ -31,13 +29,13 @@
 <script>
 
    import { mapGetters } from "vuex";
-   // import axios from "axios";
+   import axios from "axios";
 
    export default {
 
       data(){
          return {
-
+            snackbar: false
          }
       },
 
@@ -59,17 +57,23 @@
             return this.message.sender_id == this.user.id;
          },
 
-         // avatar(){
-         //    let userFoto = this.mine ? this.user.profile_picture : this.message.sender.profile_picture;
-         //    return userFoto
-         //       ? axios.defaults.baseURL.replace("/api", "") + userFoto.url.replace("public/", "storage/")
-         //       : axios.defaults.baseURL.replace("/api", "") + "storage/avatars/defaultUserPhoto.jpg";
-         // },
-
          correctedContent(){
             let senderName = this.mine ? "Yo" : this.message.sender.name;
             return "<p class='text-h6 font-weight-bold blue--text text--lighten-1 ma-0 pa-0 mb-3'>"
                + senderName + ".</p>" + this.message.content.replace(/\n/g, "<br>").trim();
+         }
+      },
+
+      methods: {
+
+         deleteMessage(id){
+
+            axios.delete("messages/delete", { params: {message_id: id }})
+               .catch((error) => {
+                  console.log(error);
+               });
+
+            this.$emit("removeMessage", id);
          }
       }
    }

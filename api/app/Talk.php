@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Auth;
+
 class Talk extends Model{
 
    /**
@@ -23,7 +25,9 @@ class Talk extends Model{
     * @var array
     */
    protected $appends = [
-      "unread_messages"
+      "unread_messages",
+      "unread_messages_count",
+      "latest_message_created_at"
    ];
 
    /**
@@ -41,10 +45,40 @@ class Talk extends Model{
     *
     * @return Integer
     */
-   public function getUnreadMessagesAttribute(){
-      return Message::where("talk_id", $this->attributes["id"])
+   public function getLatestMessageCreatedAtAttribute(){
+
+      $message = Message::select("created_at")
+         ->where("talk_id", $this->attributes["id"])
+         ->where("sender_id", "<>", Auth::user()->id)
+         ->where("readed", 0)
+         ->orderBy("created_at", "desc")
+         ->first();
+
+      return $message ? $message->created_at : 0;
+   }
+
+   /**
+    * Return the count of unread messages of this talk.
+    *
+    * @return Integer
+    */
+   public function getUnreadMessagesCountAttribute(){
+      return Message::select("id")
+         ->where("talk_id", $this->attributes["id"])
+         ->where("sender_id", "<>", Auth::user()->id)
          ->where("readed", 0)
          ->count();
+   }
+
+   /**
+    * Return the set of unread messages of this talk.
+    *
+    * @return Integer
+    */
+   public function getUnreadMessagesAttribute(){
+      return Message::where("talk_id", $this->attributes["id"])
+         ->where("sender_id", "<>", Auth::user()->id)
+         ->where("readed", 0);
    }
 
    public function messages(){
