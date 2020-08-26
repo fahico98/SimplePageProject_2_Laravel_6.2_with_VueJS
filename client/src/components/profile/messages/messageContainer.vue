@@ -9,9 +9,7 @@
             <div class="ma-0 text-caption mt-3 blue--text text--lighten-1">{{ message.created_at_for_humans }}</div>
          </v-col>
          <v-col cols="1" offset="1" class="pr-0 pt-2 d-flex align-center" v-if="mine">
-            <v-btn icon text small color="blue lighten-1" class="ma-0" @click.prevent="deleteMessage(message.id)">
-               <v-icon small title="Eliminar mensaje">mdi-close</v-icon>
-            </v-btn>
+            <delete-talk-message action="message" @eventTriggered="deleteMessage(message.id)"/>
          </v-col>
 
          <v-col width="100%" cols="10" offset="2" class="container-border" v-if="!mine">
@@ -28,6 +26,7 @@
 
 <script>
 
+   import DeleteTalkMessage from "../modals/DeleteTalkMessage";
    import { mapGetters } from "vuex";
    import axios from "axios";
 
@@ -37,6 +36,10 @@
          return {
             snackbar: false
          }
+      },
+
+      components: {
+         DeleteTalkMessage
       },
 
       props: {
@@ -68,7 +71,7 @@
 
          deleteMessage(id){
 
-            axios.delete("messages/delete", { params: {message_id: id }})
+            axios.delete("messages/delete_message", { params: {message_id: id }})
                .catch((error) => {
                   console.log(error);
                });

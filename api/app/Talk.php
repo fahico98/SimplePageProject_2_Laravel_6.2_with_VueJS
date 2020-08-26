@@ -26,8 +26,7 @@ class Talk extends Model{
     */
    protected $appends = [
       "unread_messages",
-      "unread_messages_count",
-      "latest_message_created_at"
+      "unread_messages_count"
    ];
 
    /**
@@ -39,23 +38,6 @@ class Talk extends Model{
       "sender",
       "recipient"
    ];
-
-   /**
-    * Return the count of unread messages of this talk.
-    *
-    * @return Integer
-    */
-   public function getLatestMessageCreatedAtAttribute(){
-
-      $message = Message::select("created_at")
-         ->where("talk_id", $this->attributes["id"])
-         ->where("sender_id", "<>", Auth::user()->id)
-         ->where("readed", 0)
-         ->orderBy("created_at", "desc")
-         ->first();
-
-      return $message ? $message->created_at : 0;
-   }
 
    /**
     * Return the count of unread messages of this talk.

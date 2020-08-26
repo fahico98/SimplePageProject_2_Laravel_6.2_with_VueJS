@@ -37,13 +37,23 @@ class MessagesController extends Controller{
     */
    public function talks($page){
 
-      $talks = Talk::where("sender_id", Auth::user()->id)
-         ->orWhere("recipient_id", Auth::user()->id)
-         ->get();
+      $sendedTalks = Talk::where("sender_id", Auth::user()->id)
+         ->where("deleted_by_sender", 0);
 
-      $sortedTalks = $talks->sortBy("latest_message_created_at")->toArray();
-
-      return response()->json(array_slice($sortedTalks, 20 * ($page - 1), 20));
+      return response()->json(
+         Talk::where("recipient_id", Auth::user()->id)
+            ->where("messages_number", ">", 0)
+            ->where("deleted_by_recipient", 0)
+            ->union($sendedTalks)
+            ->orderByDesc(Message::select("created_at")
+               ->where("talk_id", "talk.id")
+               ->orderBy("created_at", "desc")
+               ->limit(1)
+            )
+            ->offset(20 * ($page - 1))
+            ->limit(20)
+            ->get()
+      );
    }
 
    /**
@@ -69,6 +79,8 @@ class MessagesController extends Controller{
     * @return \Illuminate\Http\Response
     */
    public function store(Request $request){
+
+      Talk::find($request->talk_id)->increment("messages_number");
 
       $message = new Message;
       $message->content = $request->content;
@@ -96,15 +108,42 @@ class MessagesController extends Controller{
    }
 
    /**
-    * Remove the specified resource from storage.
+    * Remove a message by its id.
     *
     * @param Request $request
     * @return \Illuminate\Http\Response
     */
-   public function destroy(Request $request){
-      return response()->json(
-         Message::where("id", $request->message_id)
-            ->delete()
-      );
+   public function destroyMessage(Request $request){
+
+      $talk = Message::find($request->message_id)->talk;
+      $talk->decrement("messages_number");
+
+      return response()->json(Message::destroy($request->message_id));
+   }
+
+   /**
+    * Remove a talk by its id.
+    *
+    * @param Request $request
+    * @return \Illuminate\Http\Response
+    */
+   public function destroyTalk(Request $request){
+
+      $talk = Talk::find($request->talk_id);
+
+      if($talk->sender_id == Auth::user()->id){
+         $talk->deleted_by_sender = 1;
+      }else{
+         $talk->deleted_by_recipient = 1;
+      }
+
+      $talk->save();
+      $talk->refresh();
+
+      if($talk->deleted_by_sender == 1 && $talk->deleted_by_recipient == 1){
+         $talk->delete();
+      }
+
+      return response()->json(true);
    }
 }

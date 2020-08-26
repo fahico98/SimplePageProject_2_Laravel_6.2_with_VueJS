@@ -48,10 +48,22 @@
                         </v-chip>
                      </v-list-item-action>
 
+                     <v-list-item-action v-else>
+                        <delete-talk-message action="talk" @eventTriggered="deleteTalk(talk.id)"/>
+                     </v-list-item-action>
+
                   </template>
 
                </v-list-item>
             </div>
+
+            <v-snackbar v-model="snackbar" :timeout="5000" color="blue lighten-1">Conversación eliminada !
+               <template v-slot:action="{ attrs }">
+                  <v-btn text v-ripple="false" class="white--text text-capitalize" v-bind="attrs" @click="snackbar = false">
+                     Ok
+                  </v-btn>
+               </template>
+            </v-snackbar>
 
             <infinite-loading ref="infiniteLoading" @infinite="loadTalks">
                <template v-slot:no-more>
@@ -70,6 +82,7 @@
 
 <script>
 
+   import DeleteTalkMessage from "../modals/DeleteTalkMessage";
    import InfiniteLoading from 'vue-infinite-loading';
    import { mapGetters } from "vuex";
    import axios from "axios";
@@ -77,13 +90,15 @@
    export default {
 
       components: {
-         InfiniteLoading
+         InfiniteLoading,
+         DeleteTalkMessage
       },
 
       data(){
          return {
             talks: [],
             currentPage: 0,
+            snackbar: false,
             noResultsMessage: "Aún no tienes conversaciones !",
             marginClass: "mt-5"
          }
@@ -188,6 +203,25 @@
                      console.log(error);
                   })
                talk.unread_messages_count = 0;
+            }
+         },
+
+         deleteTalk(id){
+
+            for(var i = 0; i < this.talks.length; i++){
+               if(this.talks[i].id == id){
+                  this.talks.splice(i, 1);
+                  break;
+               }
+            }
+
+            axios.delete("messages/delete_talk", { params: {talk_id: id }})
+               .catch((error) => {
+                  console.log(error);
+               });
+
+            if(!this.snackbar){
+               this.snackbar = true;
             }
          }
       }

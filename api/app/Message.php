@@ -19,9 +19,7 @@ class Message extends Model{
       "talk_id",
       "sender_id",
       "content",
-      "readed",
-      "deleted_by_sender",
-      "deleted_by_recipient"
+      "readed"
    ];
 
    /**
