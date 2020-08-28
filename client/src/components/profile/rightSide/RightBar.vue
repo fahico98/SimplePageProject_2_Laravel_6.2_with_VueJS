@@ -5,7 +5,7 @@
       <div>
          <v-container fluid class="ma-0 pa-0">
             <v-row justify="center" align="center">
-               <user-options-card/>
+               <user-options-card @post-created="postCreated($event)"/>
             </v-row>
          </v-container>
       </div>
@@ -21,6 +21,12 @@
 
       components: {
          UserOptionsCard
+      },
+
+      methods: {
+         postCreated(post){
+            this.$emit("post-created", post);
+         }
       }
    }
 

@@ -8,6 +8,7 @@ import Register from "../views/auth/Register";
 import Profile from "../views/profile/Profile";
 import View404 from "../views/View404";
 import Messages from "../views/profile/Messages";
+import ProfileHome from "../views/profile/ProfileHome";
 
 import Posts from "../components/profile/posts/Posts";
 import ILike from "../components/profile/iLike/ILike";
@@ -37,7 +38,7 @@ const routes = [
    {
       path: "/inicio",
       name: "auth_home",
-      component: Profile
+      component: ProfileHome
    },
    {
       path: "/mensajes",

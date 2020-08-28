@@ -54,8 +54,11 @@ class PostController extends Controller{
       $post->content = $request->content;
       $post->post_permission_id = $request->postPermissionId;
       $post->user_id = Auth::user()->id;
+
       $post->save();
       $post->refresh();
+
+      $post->load("user", "images", "post_permission");
 
       if($request->hasFile("images")){
          foreach($request->file('images') as $image){
@@ -68,16 +71,6 @@ class PostController extends Controller{
       }
 
       return response()->json($post);
-   }
-
-   /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function show($id){
-      //
    }
 
    /**

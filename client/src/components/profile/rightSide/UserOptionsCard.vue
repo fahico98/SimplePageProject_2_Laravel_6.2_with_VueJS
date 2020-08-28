@@ -4,14 +4,14 @@
    <v-container class="my-0 px-8">
       <v-list flat dense>
 
-         <edit-create-post-modal-form v-if="authenticated" action="create"/>
+         <edit-create-post-modal-form action="create" @post-created="postCreated($event)"/>
 
          <v-divider></v-divider>
 
          <v-list-item-group class="my-3">
             <v-list-item class="mx-0 px-0" :ripple="false" v-for="element in elements" :key="element.name">
 
-               <v-btn @click.prevent="element.route == 'logout' ? logout() : goToRoute(element.route)" depressed text
+               <v-btn depressed text @click.prevent="element.route == 'logout' ? logout() : goToRoute(element.route)"
                   :ripple="false" color="blue lighten-1" width="100%">
                   <p class="pa-0 ma-0 mr-auto" width="100%">
                      <v-icon left class="mr-4">{{ element.icon }}</v-icon>
@@ -76,6 +76,10 @@
 
          goToRoute(routeName){
             this.$router.push({name: routeName});
+         },
+
+         postCreated(post){
+            this.$emit("post-created", post);
          }
       }
    }

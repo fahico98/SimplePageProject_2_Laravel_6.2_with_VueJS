@@ -3,20 +3,18 @@
 
    <v-container class="ma-0 pa-0">
       <left-bar class="grey lighten-4" :cardUserData="cardUserData"/>
-      <right-bar class="grey lighten-4"/>
+      <right-bar class="grey lighten-4" @post-created="catchPostCreated($event)"/>
 
       <div class="mx-2">
 
-         <posts v-if="inRoute('auth_home')" class="mx-1"/>
-
-         <v-tabs grow v-else v-model="tab" background-color="transparent" color="blue lighten-1">
+         <v-tabs grow v-model="tab" background-color="transparent" color="blue lighten-1">
 
             <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
                {{ tab.name }}
             </v-tab>
 
             <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
-               <router-view :key="$route.path"/>
+               <router-view :key="$route.path" :newPost="post"/>
             </v-tab-item>
 
          </v-tabs>
@@ -28,7 +26,6 @@
 
 <script>
 
-   import Posts from "../../components/profile/posts/Posts";
    import LeftBar from "../../components/profile/leftSide/LeftBar";
    import RightBar from "../../components/profile/rightSide/RightBar";
    import { mapGetters } from "vuex";
@@ -36,9 +33,15 @@
 
    export default {
 
+      components: {
+         RightBar,
+         LeftBar
+      },
+
       data(){
          return {
             tab: null,
+            post: {},
             username: "",
             tabs: [
                { id: 1, name: "Publicaciones", route: "publicaciones"},
@@ -49,14 +52,8 @@
             cardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
                password: "", role_id: "", profile_picture: "", biography: ""},
             emptyCardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
-               password: "", role_id: "", profile_picture: "", biography: ""}
+               password: "", role_id: "", profile_picture: "", biography: ""},
          }
-      },
-
-      components: {
-         RightBar,
-         LeftBar,
-         Posts
       },
 
       computed: {
@@ -106,8 +103,8 @@
             }
          },
 
-         inRoute(routeName){
-            return this.$route.matched.some(route => route.name == routeName);
+         catchPostCreated(post){
+            this.post = post;
          }
       }
    }

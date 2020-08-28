@@ -211,12 +211,14 @@
                      axios.post("posts/store", formData, {headers: {'Content-Type': 'multipart/form-data'}})
                         .then((response) => {
                            if(response.data){
+
+                              if(this.$route.matched.some(route => route.name == "posts") ||
+                                 this.$route.matched.some(route => route.name == "auth_home")){
+                                 this.$emit("post-created", response.data);
+                              }
+
                               this.loading = false;
                               this.dialog = false;
-                              // if(this.$route.name == "profile" && this.$route.params.username == this.user.username){
-                              //    /* Investigar si se puede hacer de forma mas elegante la redirección. */
-                              //    this.$router.go(this.$router.currentRoute);
-                              // }
                            }
                         })
                         .catch((error) => {

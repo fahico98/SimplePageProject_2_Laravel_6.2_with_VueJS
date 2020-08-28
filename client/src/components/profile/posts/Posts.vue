@@ -32,6 +32,11 @@
 
    export default {
 
+      components: {
+         InfiniteLoading,
+         PostCard
+      },
+
       data(){
          return {
             posts: [],
@@ -40,9 +45,28 @@
          }
       },
 
-      components: {
-         InfiniteLoading,
-         PostCard
+      props: {
+         newPost: {
+            type: Object,
+            required: true,
+            default: null
+         }
+      },
+
+      watch: {
+         newPost(post){
+            if(post){
+               let bufferPost = {};
+               Object.assign(bufferPost, post);
+               if(this.$route.matched.some(route => route.name == "posts")){
+                  this.posts.unshift(bufferPost);
+               }else if(this.$route.matched.some(route => route.name == "auth_home")){
+                  if(bufferPost.post_permission.id != 3){
+                     this.posts.unshift(bufferPost);
+                  }
+               }
+            }
+         }
       },
 
       mounted(){

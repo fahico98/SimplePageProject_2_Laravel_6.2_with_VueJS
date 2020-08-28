@@ -83,7 +83,9 @@
       },
 
       props: {
-         post: {type: Object}
+         post: {
+            type: Object
+         }
       },
 
       computed: {
