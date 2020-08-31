@@ -39,9 +39,9 @@
       data(){
          return {
             elements: [
-               { name: "inicio", icon: "mdi-home", route: "auth_home"},
-               { name: "mensajes", icon: "mdi-email", route: "messages"},
-               { name: "configuración", icon: "mdi-cog", route: "settings"},
+               { name: "inicio", icon: "mdi-home-outline", route: "auth_home"},
+               { name: "mensajes", icon: "mdi-email-outline", route: "messages"},
+               { name: "configuración", icon: "mdi-cog-outline", route: "settings"},
                { name: "cerrar sesión", icon: "mdi-logout", route: "logout"}
             ]
          }

@@ -7,10 +7,11 @@
 
       <div class="mx-2">
 
-         <v-tabs grow v-model="tab" background-color="transparent" color="blue lighten-1">
+         <v-tabs icons-and-text grow v-model="tab" background-color="transparent" color="blue lighten-1">
 
             <v-tab class="text-capitalize" v-ripple="false" v-for="tab of tabs" :key="tab.id" :to="tab.route" exact>
                {{ tab.name }}
+               <v-icon>{{ tab.icon }}</v-icon>
             </v-tab>
 
             <v-tab-item v-for="tab of tabs" :key="tab.id" :value="tab.route">
@@ -44,10 +45,10 @@
             post: {},
             username: "",
             tabs: [
-               { id: 1, name: "Publicaciones", route: "publicaciones"},
-               { id: 2, name: "Seguidores", route: "seguidores"},
-               { id: 3, name: "Seguidos", route: "seguidos"},
-               { id: 4, name: "Me gusta", route: "me_gusta"}
+               { id: 1, name: "Publicaciones", route: "publicaciones", icon: "mdi-post-outline"},
+               { id: 2, name: "Seguidores", route: "seguidores", icon: "mdi-account-arrow-right-outline"},
+               { id: 3, name: "Seguidos", route: "seguidos", icon: "mdi-account-arrow-left-outline"},
+               { id: 4, name: "Me gusta", route: "me_gusta", icon: "mdi-thumb-up-outline"}
             ],
             cardUserData: {username: "", name: "", lastname: "", country: "", city: "", phone_number: "", email: "",
                password: "", role_id: "", profile_picture: "", biography: ""},

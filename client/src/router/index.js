@@ -8,6 +8,7 @@ import Register from "../views/auth/Register";
 import Profile from "../views/profile/Profile";
 import View404 from "../views/View404";
 import Messages from "../views/profile/Messages";
+import Settings from "../views/profile/Settings";
 import ProfileHome from "../views/profile/ProfileHome";
 
 import Posts from "../components/profile/posts/Posts";
@@ -48,7 +49,7 @@ const routes = [
    {
       path: "/configuracion",
       name: "settings",
-      component: Profile
+      component: Settings
    },
    {
       path: "/:username",

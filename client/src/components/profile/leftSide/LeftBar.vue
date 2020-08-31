@@ -1,13 +1,18 @@
 
 <template>
 
+   <!--floating-->
    <v-navigation-drawer width="25%" permanent clipped app light>
 
       <!----------------------------------------- Profile ----------------------------------------->
 
       <user-data-card v-if="inRoute('profile')" :cardUserData="cardUserData"/>
 
-      <!----------------------------------------- Messages ----------------------------------------->
+      <!---------------------------------------- Auth home ---------------------------------------->
+
+      <!-- <outstanding-posts v-else-if="$route.name == 'auth_home'"/> -->
+
+      <!---------------------------------------- Messages ----------------------------------------->
 
       <talks-list v-if="inRoute('messages')" :talk="talk" :skeleton="skeleton" @talkAdded="skeleton = false"
          @selectedTalk="selectedTalk($event)"/>
@@ -16,9 +21,10 @@
          <followed-browser @newTalk="addTalk($event)" @skeleton="skeleton = true"/>
       </template>
 
-      <!----------------------------------------- Auth home ----------------------------------------->
+      <!---------------------------------------- Settings ----------------------------------------->
 
-      <!-- <outstanding-posts v-else-if="$route.name == 'auth_home'"/> -->
+      <!-- ... -->
+
    </v-navigation-drawer>
 
 </template>
