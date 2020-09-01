@@ -3,10 +3,9 @@
 
    <v-container class="ma-0 pa-0">
 
-      <!-- <left-bar class="grey lighten-4"/> -->
       <right-bar class="grey lighten-4"/>
 
-      <div class="mx-15 my-10">
+      <div class="ma-15">
 
          <v-container class="ma-0 pa-0">
 
@@ -18,7 +17,7 @@
                <v-divider/>
             </v-row>
 
-            <v-row class="d-flex align-center mx-0 pa-0 mt-10 mb-10">
+            <v-row class="d-flex align-center mx-0 pa-0 my-5">
                <span class="text-body-2">
                   Estos datos se muestran en la pagina de tu perfil junto con tu ubicación y tus datos de contacto.
                   Recuerda que si cambias tu nombre de usuario la url que enlaza tu pagina de perfil cambiará, por tanto,
@@ -26,8 +25,9 @@
                </span>
             </v-row>
 
-            <v-row class="d-flex align-center ma-0 pa-0 my-5">
-               <profile-data-form/>
+            <v-row class="d-flex align-center ma-0 pa-0 mt-5 mb-15">
+               <profile-data-form :name-prop="user.name" :lastanme-prop="user.lastname" :username-prop="user.username"
+                  :bio-prop="user.biography"/>
             </v-row>
 
             <v-row class="d-flex align-center ma-0 pa-0">
@@ -38,14 +38,14 @@
                <v-divider/>
             </v-row>
 
-            <v-row class="d-flex align-center mx-0 pa-0 mt-10 mb-10">
+            <v-row class="d-flex align-center mx-0 pa-0 my-5">
                <span class="text-body-2">
                   Estos datos se muestrarán tu pagina de perfil si así lo deseas, tienes la opción de mostrarselo solamente
                   a las personas que te siguén o puedes hacer que sea visible solo para tí.
                </span>
             </v-row>
 
-            <v-row class="d-flex align-center ma-0 pa-0 my-5">
+            <v-row class="d-flex align-center ma-0 pa-0 mt-5 mb-15">
                <location-data-form/>
             </v-row>
 
@@ -57,7 +57,7 @@
                <v-divider/>
             </v-row>
 
-            <v-row class="d-flex align-center mx-0 pa-0 mt-10 mb-10">
+            <v-row class="d-flex align-center mx-0 pa-0 my-5">
                <span class="text-body-2">
                   Los datos de contacto se muestran en tu perfil según tus preferencias, puedes hacerlos visibles para
                   todo el mundo, solo para tus seguidores o para nadie. Recuerda que si quieres cambiar tu correo electrónico
@@ -66,7 +66,7 @@
                </span>
             </v-row>
 
-            <v-row class="d-flex align-center ma-0 pa-0 my-5">
+            <v-row class="d-flex align-center ma-0 pa-0 mt-5 mb-15">
                <contact-data-form/>
             </v-row>
 
@@ -86,7 +86,7 @@
                <v-divider/>
             </v-row>
 
-            <v-row class="d-flex align-center mx-0 pa-0 mt-10 mb-10">
+            <v-row class="d-flex align-center mx-0 pa-0 my-5">
                <span class="text-body-2">
                   Los datos de contacto se muestran en tu perfil según tus preferencias, puedes hacerlos visibles para
                   todo el mundo, solo para tus seguidores o para nadie. Recuerda que si quieres cambiar tu correo electrónico
@@ -109,6 +109,8 @@
 
 <script>
 
+   import { mapGetters } from "vuex";
+
    // import LeftBar from "../../components/profile/leftSide/LeftBar";
    import RightBar from "../../components/profile/rightSide/RightBar";
    import ProfileDataForm from "../../components/profile/settings/ProfileDataForm";
@@ -125,8 +127,13 @@
          LocationDataForm,
          ContactDataForm,
          PasswordForm
-      }
+      },
 
+      computed: {
+         ...mapGetters({
+            user: "auth/user"
+         })
+      }
    }
 
 </script>

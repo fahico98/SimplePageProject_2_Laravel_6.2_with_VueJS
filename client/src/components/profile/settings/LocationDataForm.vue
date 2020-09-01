@@ -23,15 +23,29 @@
 
       </v-row>
 
+      <v-row class="ma-0 pa-0 mt-5">
+
+         <v-btn dark depressed class="text-capitalize" color="blue lighten-1" @click.prevent="submit()">
+            guardar cambios</v-btn>
+         <v-btn dark outlined class="text-capitalize ml-2" color="blue lighten-1">
+            restaurar</v-btn>
+
+      </v-row>
+
    </v-container>
 
 </template>
 
 <script>
 
+   import { validationMixin } from "vuelidate";
+   import { helpers, maxLength } from "vuelidate/lib/validators";
 
+   const alpha = helpers.regex("alpha", /^[ ñÑ.a-zA-Z]*$/);
 
    export default {
+
+      mixins: [validationMixin],
 
       data(){
          return {
@@ -39,6 +53,39 @@
                country: "",
                city: ""
             }
+         }
+      },
+
+      validations: {
+         form: {
+            country: {alpha, maxLength: maxLength(35)},
+            city: {alpha, maxLength: maxLength(35)}
+         }
+      },
+
+      computed: {
+
+         countryErrors(){
+            const errors = [];
+            if(!this.$v.form.country.$dirty){ return errors; }
+            !this.$v.form.country.maxLength && errors.push('El país no debe tener mas de 35 caracteres.');
+            !this.$v.form.country.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
+            return errors;
+         },
+
+         cityErrors(){
+            const errors = [];
+            if(!this.$v.form.city.$dirty){ return errors; }
+            !this.$v.form.city.maxLength && errors.push('La ciudad no debe tener mas de 35 caracteres.');
+            !this.$v.form.city.alpha && errors.push('Este campo solo admite caracteres alfabeticos.');
+            return errors;
+         }
+      },
+
+      methods: {
+
+         submit(){
+            console.log("LocationDataForm.vue component submited...!");
          }
       }
    }
