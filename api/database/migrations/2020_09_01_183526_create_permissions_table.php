@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePostPermissionsTable extends Migration{
+class CreatePermissionsTable extends Migration{
 
    /**
     * Run the migrations.
@@ -12,7 +12,7 @@ class CreatePostPermissionsTable extends Migration{
     * @return void
     */
    public function up(){
-      Schema::create('post_permissions', function(Blueprint $table){
+      Schema::create('permissions', function(Blueprint $table){
          $table->bigIncrements('id');
          $table->string("name");
       });
@@ -24,6 +24,6 @@ class CreatePostPermissionsTable extends Migration{
     * @return void
     */
    public function down(){
-      Schema::dropIfExists('post_permissions');
+      Schema::dropIfExists('permissions');
    }
 }

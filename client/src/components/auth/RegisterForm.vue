@@ -6,39 +6,47 @@
 
          <v-text-field color="blue lighten-1" v-model.trim="form.name" label="Nombre" class="ma-0 pa-0 mt-1"
             @input="$v.form.name.$touch()" @blur="$v.form.name.$touch()" :error-messages="nameErrors" outlined dense
-            required></v-text-field>
+            required/>
 
          <v-text-field color="blue lighten-1" v-model.trim="form.lastname" label="Apellido" class="ma-0 pa-0 mt-1"
             @input="$v.form.lastname.$touch()" @blur="$v.form.lastname.$touch()" :error-messages="lastnameErrors" outlined
-            dense required></v-text-field>
+            dense required/>
 
          <v-text-field color="blue lighten-1" v-model.trim="form.country" label="País" class="ma-0 pa-0 mt-1"
             @input="$v.form.country.$touch()" @blur="$v.form.country.$touch()" :error-messages="countryErrors" outlined
-            dense></v-text-field>
+            dense/>
 
          <v-text-field color="blue lighten-1" v-model.trim="form.city" label="Ciudad" class="ma-0 pa-0 mt-1"
-            @input="$v.form.city.$touch()" @blur="$v.form.city.$touch()" :error-messages="cityErrors" outlined dense>
-            </v-text-field>
+            @input="$v.form.city.$touch()" @blur="$v.form.city.$touch()" :error-messages="cityErrors" outlined dense/>
 
          <v-text-field color="blue lighten-1" v-model.trim="form.phone_number" class="ma-0 pa-0 mt-1" label="Número telefónico"
             @input="$v.form.phone_number.$touch()" @blur="$v.form.phone_number.$touch()" :error-messages="phoneNumberErrors"
-            type="number" outlined dense></v-text-field>
+            type="number" outlined dense/>
+
+         <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="470" transition="scale-transition" offset-y
+            min-width="290px">
+            <template v-slot:activator="{ on, attrs }">
+               <v-text-field outlined dense color="blue lighten-1" class="ma-0 pa-0 mt-1" v-model="form.birthday"
+                  label="Fecha de nacimiento" readonly v-bind="attrs" v-on="on"/>
+            </template>
+            <v-date-picker color="blue lighten-1" v-model="form.birthday" @input="menu = false" locale="es"/>
+         </v-menu>
 
          <v-text-field color="blue lighten-1" v-model.trim="form.email" class="ma-0 pa-0 mt-1" label="Correo electrónico"
             @input="$v.form.email.$reset()" @blur="$v.form.email.$touch()" :error-messages="emailErrors"
-            :loading="emailFieldLoading" outlined dense required></v-text-field>
+            :loading="emailFieldLoading" outlined dense required/>
 
          <v-text-field color="blue lighten-1" v-model="form.username" label="Nombre de usuario" class="ma-0 pa-0 mt-1"
             @input="$v.form.username.$reset()" @blur="$v.form.username.$touch()" :error-messages="usernameErrors"
-            :loading="usernameFieldLoading" outlined dense required></v-text-field>
+            :loading="usernameFieldLoading" outlined dense required/>
 
          <v-text-field color="blue lighten-1" v-model="form.password" label="Contraseña" class="ma-0 pa-0 mt-1"
             @input="$v.form.password.$touch()" @blur="$v.form.password.$touch()" :error-messages="passwordErrors"
-            type="password" outlined dense required></v-text-field>
+            type="password" outlined dense required/>
 
          <v-text-field color="blue lighten-1" v-model="form.password_confirmation" label="Confirmación de contraseña"
             class="ma-0 pa-0 mt-1" @input="$v.form.password_confirmation.$touch()" @blur="$v.form.password_confirmation.$touch()"
-            :error-messages="confPasswordErrors" type="password" outlined dense required></v-text-field>
+            :error-messages="confPasswordErrors" type="password" outlined dense required/>
 
          <v-btn class="mt-1" type="submit" color="blue lighten-1 text-capitalize" dark depressed>enviar</v-btn>
 
@@ -54,12 +62,13 @@
 <script>
 
    import axios from "axios";
-   import { mapActions, mapGetters } from "vuex";
    import { validationMixin } from "vuelidate";
+   import { mapActions, mapGetters } from "vuex";
+   // import { differenceInCalendarYears } from "date-fns";
    import { helpers, minLength, maxLength, email, required, numeric } from "vuelidate/lib/validators";
 
    const alpha = helpers.regex("alpha", /^[ ñÑ.a-zA-Z]*$/);
-   const alphaNum = helpers.regex("alphaNum", /^[ñÑa-zA-Z0-9]*$/)
+   const alphaNum = helpers.regex("alphaNum", /^[ñÑa-zA-Z0-9]*$/);
    const spanish = helpers.regex("spanish", /[ñÑ]/);
 
    export default {
@@ -75,6 +84,7 @@
                country: "",
                city: "",
                phone_number: null,
+               birthday: "",
                email: "",
                username: "",
                password: "",
@@ -82,6 +92,7 @@
                rememberMe: false
             },
 
+            menu: false,
             usernameFieldLoading: false,
             emailFieldLoading: false
 
@@ -105,7 +116,7 @@
                                              isUnique(value){
                                                 if (value === ''){ return true; }
                                                 this.emailFieldLoading = true;
-                                                return this.unique("auth/email_exists/" + value);
+                                                return this.unique("email_exists/" + value);
                                              }
                                           },
 
@@ -118,7 +129,7 @@
                                              isUnique(value){
                                                 if (value === ''){ return true; }
                                                 this.usernameFieldLoading = true;
-                                                return this.unique("auth/username_exists/" + value);
+                                                return this.unique("username_exists/" + value);
                                              }
                                           }
          }

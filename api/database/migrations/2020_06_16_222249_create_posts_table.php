@@ -12,10 +12,10 @@ class CreatePostsTable extends Migration{
     * @return void
     */
    public function up(){
-      Schema::create('posts', function (Blueprint $table) {
+      Schema::create('posts', function(Blueprint $table){
          $table->bigIncrements('id');
          $table->bigInteger("user_id")->unsigned();
-         $table->bigInteger("post_permission_id")->unsigned();
+         $table->bigInteger("permission_id")->unsigned();
          $table->string("title", 120);
          $table->string("content", 255);
          // $table->string("post_picture")->default("public/posts/defaultPostImage.png");

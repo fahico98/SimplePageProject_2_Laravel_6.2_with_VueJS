@@ -23,6 +23,20 @@
 
       </v-row>
 
+      <v-row class="ma-0 pa-0">
+
+         <v-col class="ma-0 pa-0 pr-3" cols="6">
+            <v-select outlined dense :items="items" v-model="post_permission_id" label="Quien puede ver mi emial ?"
+               color="blue lighten-1" class="mt-1"/>
+         </v-col>
+
+         <v-col class="ma-0 pa-0 pl-3" cols="6">
+            <v-select outlined dense :items="items" v-model="post_permission_id" label="Quien puede ver mi número telefónico ?"
+               color="blue lighten-1" class="mt-1"/>
+         </v-col>
+
+      </v-row>
+
       <v-row class="ma-0 pa-0 mt-5">
 
          <v-btn dark depressed class="text-capitalize" color="blue lighten-1" @click.prevent="submit()">

@@ -19,7 +19,7 @@ class DefineForeignKeys extends Migration{
 
       Schema::table('posts', function(Blueprint $table){
          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-         $table->foreign('post_permission_id')->references('id')->on('post_permissions')->onDelete('cascade');
+         $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
       });
 
       Schema::table("post_images", function(Blueprint $table){
@@ -54,6 +54,15 @@ class DefineForeignKeys extends Migration{
          $table->foreign("sender_id")->references("id")->on("users")->onDelete("cascade");
          $table->foreign("talk_id")->references("id")->on("talks")->onDelete("cascade");
       });
+
+      Schema::table("user_data_permissions", function(Blueprint $table){
+         $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
+         $table->foreign('birthday_permission_id')->references('id')->on('permissions')->onDelete('cascade');
+         $table->foreign('email_permission_id')->references('id')->on('permissions')->onDelete('cascade');
+         $table->foreign('phone_number_permission_id')->references('id')->on('permissions')->onDelete('cascade');
+         $table->foreign('location_permission_id')->references('id')->on('permissions')->onDelete('cascade');
+         $table->foreign('default_post_permission_id')->references('id')->on('permissions')->onDelete('cascade');
+      });
    }
 
    /**
@@ -69,7 +78,7 @@ class DefineForeignKeys extends Migration{
 
       Schema::table('posts', function(Blueprint $table){
          $table->dropForeign("posts_user_id_foreign");
-         $table->dropForeign("posts_post_permission_id_foreign");
+         $table->dropForeign("posts_permission_id_foreign");
       });
 
       Schema::table("post_images", function(Blueprint $table){
@@ -98,6 +107,15 @@ class DefineForeignKeys extends Migration{
       Schema::table("messages", function(Blueprint $table){
          $table->dropForeign("messages_sender_id_foreign");
          $table->dropForeign("messages_talk_id_foreign");
+      });
+
+      Schema::table("user_data_permissions", function(Blueprint $table){
+         $table->dropForeign("user_data_permissions_user_id_foreign");
+         $table->dropForeign("user_data_permissions_birthday_permission_id_foreign");
+         $table->dropForeign("user_data_permissions_email_permission_id_foreign");
+         $table->dropForeign("user_data_permissions_phone_number_permission_id_foreign");
+         $table->dropForeign("user_data_permissions_location_permission_id_foreign");
+         $table->dropForeign("user_data_permissions_default_post_permission_id_foreign");
       });
    }
 }

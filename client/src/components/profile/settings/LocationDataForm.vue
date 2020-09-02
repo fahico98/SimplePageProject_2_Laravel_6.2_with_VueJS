@@ -6,30 +6,31 @@
       <v-row class="ma-0 pa-0">
 
          <v-col cols="6" class="ma-0 pa-0 pr-3">
-
-            <v-text-field color="blue lighten-1" v-model.trim="form.country" label="País" class="ma-0 pa-0 mt-1"
-               @input="$v.form.country.$touch()" @blur="$v.form.country.$touch()" :error-messages="countryErrors" outlined
-               dense></v-text-field>
-
+            <v-text-field color="blue lighten-1" v-model.trim="form.country" label="País" class="ma-0 pa-0 mt-1" dense
+               @input="$v.form.country.$touch()" @blur="$v.form.country.$touch()" :error-messages="countryErrors" outlined/>
          </v-col>
 
          <v-col cols="6" class="ma-0 pa-0 pl-3">
-
             <v-text-field color="blue lighten-1" v-model.trim="form.city" label="Ciudad" class="ma-0 pa-0 mt-1"
-               @input="$v.form.city.$touch()" @blur="$v.form.city.$touch()" :error-messages="cityErrors" outlined dense>
-               </v-text-field>
+               @input="$v.form.city.$touch()" @blur="$v.form.city.$touch()" :error-messages="cityErrors" outlined dense/>
+         </v-col>
 
+      </v-row>
+
+      <v-row class="ma-0 pa-0">
+
+         <v-col class="ma-0 pa-0 pr-3" cols="6">
+            <v-select outlined dense :items="items" v-model="post_permission_id" label="Quien puede ver mi ubicación ?"
+               color="blue lighten-1" class="mt-1"/>
          </v-col>
 
       </v-row>
 
       <v-row class="ma-0 pa-0 mt-5">
-
          <v-btn dark depressed class="text-capitalize" color="blue lighten-1" @click.prevent="submit()">
             guardar cambios</v-btn>
          <v-btn dark outlined class="text-capitalize ml-2" color="blue lighten-1">
             restaurar</v-btn>
-
       </v-row>
 
    </v-container>

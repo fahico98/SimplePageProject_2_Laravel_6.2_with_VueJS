@@ -19,7 +19,7 @@ class Post extends Model{
     */
    protected $fillable = [
       "user_id",
-      "post_permission_id",
+      "permission_id",
       "title",
       "content",
       "likes",
@@ -33,7 +33,7 @@ class Post extends Model{
     */
    protected $hidden = [
       "user_id",
-      "post_permission_id",
+      "permission_id",
       "deleted_at",
       "created_at",
       "updated_at"
@@ -106,7 +106,7 @@ class Post extends Model{
             $id = $user->following ? 3 : 1;
             $sign = $user->following ? "<>" : "=";
             return Post::where("user_id", $user->id)
-               ->where("post_permission_id", $sign, $id)
+               ->where("permission_id", $sign, $id)
                ->orderBy("created_at", "desc")
                ->offset(self::PER_PAGE * ($page - 1))
                ->limit(self::PER_PAGE);
@@ -118,13 +118,13 @@ class Post extends Model{
 
    public function scopeAllPosts($query, $page){
 
-      $publicPosts = Post::where("post_permission_id", 1);
+      $publicPosts = Post::where("permission_id", 1);
 
       $followedPosts = Post::whereIn('user_id', Auth::user()->followed->pluck('id'))
-         ->where("post_permission_id", "<>", 3);
+         ->where("permission_id", "<>", 3);
 
       return Post::where("user_id", "=", Auth::user()->id)
-         ->where("post_permission_id", "=", 1)
+         ->where("permission_id", "=", 1)
          ->union($publicPosts)
          ->union($followedPosts)
          ->orderBy("created_at", "desc")

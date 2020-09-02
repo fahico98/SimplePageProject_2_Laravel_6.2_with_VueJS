@@ -52,13 +52,13 @@ class PostController extends Controller{
       $post = new Post;
       $post->title = $request->title;
       $post->content = $request->content;
-      $post->post_permission_id = $request->postPermissionId;
+      $post->permission_id = $request->postPermissionId;
       $post->user_id = Auth::user()->id;
 
       $post->save();
       $post->refresh();
 
-      $post->load("user", "images", "post_permission");
+      $post->load("user", "images", "permission");
 
       if($request->hasFile("images")){
          foreach($request->file('images') as $image){
@@ -85,7 +85,7 @@ class PostController extends Controller{
             ->update([
                "title" => $request->title,
                "content" => $request->content,
-               "post_permission_id" => $request->postPermissionId
+               "permission_id" => $request->postPermissionId
             ])
       );
    }
